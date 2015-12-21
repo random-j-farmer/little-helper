@@ -3,11 +3,15 @@ import com.lihaoyi.workbench.Plugin._
 import spray.revolver.AppProcess
 import spray.revolver.RevolverPlugin.Revolver
 
+val akkaVersion = "2.3.14"
+val sprayVersion = "1.3.3"
+
+
 val app = crossProject.settings(
   unmanagedSourceDirectories in Compile +=
     baseDirectory.value / "shared" / "main" / "scala",
   libraryDependencies ++= Seq(
-    "com.lihaoyi" %%% "scalatags" % "0.5.2",
+    "com.lihaoyi" %%% "scalatags" % "0.5.3",
     "com.lihaoyi" %%% "upickle" % "0.3.6",
     "com.lihaoyi" %%% "utest" % "0.3.1",
     "com.lihaoyi" %%% "autowire" % "0.2.5"
@@ -19,22 +23,26 @@ val app = crossProject.settings(
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.8.2"
   ),
-  bootSnippet := "simple.Client().main(document.getElementById('contents'))"
+  bootSnippet := "me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('rlhMain'));"
 ).jvmSettings(
   Revolver.settings: _*
 ).jvmSettings(
   libraryDependencies ++= Seq(
-    "io.spray" %% "spray-can" % "1.3.3",
-    "io.spray" %% "spray-routing" % "1.3.3",
-    "com.typesafe.akka" %% "akka-actor" % "2.3.11",
-    "com.lihaoyi" % "ammonite-repl" % "0.4.8" % "test" cross CrossVersion.full
+    "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+    "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+    "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
+    "ch.qos.logback"      %  "logback-classic" % "1.1.3",
+    "io.spray" %% "spray-can" % sprayVersion,
+    "io.spray" %% "spray-routing" % sprayVersion,
+    "org.webjars" % "pure" % "0.6.0",
+    "com.lihaoyi" % "ammonite-repl" % "0.5.2" % "test" cross CrossVersion.full
   )
 )
 
-lazy val appJS = app.js
-lazy val appJVM = app.jvm.settings(
+val appJS = app.js
+val appJVM = app.jvm.settings(
   (resources in Compile) += {
-    (fastOptJS in(appJS, Compile)).value.data
+    (fastOptJS in(appJS, Compile)).value
     (artifactPath in(appJS, Compile, fastOptJS)).value
   },
   (initialCommands in (Test, console)) := """ammonite.repl.Repl.run("")"""
