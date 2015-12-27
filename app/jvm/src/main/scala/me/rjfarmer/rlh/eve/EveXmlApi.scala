@@ -118,7 +118,11 @@ class CharacterIDImplEve extends EveXmlApiImpl[Seq[CharacterIDAndName]] {
 
     import scala.concurrent.ExecutionContext.Implicits.global
 
-    val goodNames = names.map(_.trim).filterNot(_.isEmpty)
+    // LOWER CASE!
+    val goodNames = names
+      .map { _.trim }
+      .filterNot { _.isEmpty }
+      .map { _.toLowerCase }
     val namesAndCached = goodNames
       .map((str) => Pair(str, cache.get(str)))
 
@@ -126,42 +130,59 @@ class CharacterIDImplEve extends EveXmlApiImpl[Seq[CharacterIDAndName]] {
     val undefinedNames = namesAndCached.filter(_._2 == null).map(_._1)
     log.debug("complete: {} cached/ {} not in cache", defined.size, undefinedNames.size)
 
-    val result = Promise[Type]()
 
     if (undefinedNames.isEmpty) {
-      result.success(goodNames map(defined(_)))
+      // everything is cached already
+      Future.successful(extractIdAndNames(defined, goodNames))
     } else {
-      // XXX if more than a hundred or so ==> multiple requests
-      val pairs = undefinedNames map { Pair("names", _) }
-      val apiResult: Future[Type] = complete(Uri.Query(pairs:_*))
-
-      apiResult.onFailure { case ex => result.failure(ex) }
-      apiResult.onSuccess { case idsAndNames: Type =>
-        idsAndNames.foreach { ian =>
-          // log.debug("new cache entry: {}", ian)
-          cache.put(ian.characterName, ian)
+      // have to retrieve undefined names
+      completeUncached(undefinedNames)
+        .map { ians =>
+          ians.foreach { ian => cache.put(ian.characterName, ian) }
+          val combined = defined ++ ians.map { ian => Pair(ian.characterName, ian) }
+          extractIdAndNames(combined, goodNames)
         }
-        val combined = defined ++ idsAndNames.map((x) => Pair(x.characterName, x))
-        // combined may be smaller than goodnames - only existing characters are returned
-        result.success(goodNames.filter(combined.contains(_)).map(combined))
-      }
     }
-
-    result.future
   }
 
+  // extract ids and names
+  // note that characterID is set to "0" for invalid character names
+  private def extractIdAndNames(m: Map[String, CharacterIDAndName], names: Seq[String]) = {
+    names.filter(m.contains)
+      .map(m)
+      .filter { ian => ian.characterID != "0" }
+  }
+
+  /**
+   * Complete name to id resolving over rest api.
+   *
+   * When the request gets too big it seems to fail,
+   * may be the number of arguments or the URI size.
+   *
+   * 100-150 seem to be ok, 300 fails.
+   *
+   * @param names names to look up
+   * @return
+   */
+  def completeUncached(names: Seq[String]): Future[Type] = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
+    val grouped = names map { Pair("names", _) } grouped 100
+    Future.sequence(grouped map { pairs => complete(Uri.Query(pairs:_*))})
+    .map { groups => groups.flatten.toSeq }
+  }
 
   val uriPath = "/eve/CharacterID.xml.aspx"
 
+  // parse the result XML, name is LOWERCASE for caching
   def successMessage(xml: String): Seq[CharacterIDAndName] = {
     val elem = XML.loadString(xml)
     // log.debug("xml: {}", xml)
     for {
       row <- elem \\ "row"
       id = row \@ "characterID"
-      if id != "0"
     } yield {
-      CharacterIDAndName(id, row \@ "name")
+      CharacterIDAndName(id, (row \@ "name").toLowerCase)
     }
   }
 }
