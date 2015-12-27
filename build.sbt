@@ -34,6 +34,7 @@ val app = crossProject.settings(
     "ch.qos.logback"      %  "logback-classic" % "1.1.3",
     "io.spray" %% "spray-can" % sprayVersion,
     "io.spray" %% "spray-routing" % sprayVersion,
+    "io.spray" %% "spray-caching" % sprayVersion,
     "org.webjars" % "pure" % "0.6.0",
     "com.lihaoyi" % "ammonite-repl" % "0.5.2" % "test" cross CrossVersion.full
   )
@@ -41,9 +42,10 @@ val app = crossProject.settings(
 
 val appJS = app.js
 val appJVM = app.jvm.settings(
+  (mainClass in Compile) := Some("me.rjfarmer.rlh.server.Server"),
   (resources in Compile) += {
     (fastOptJS in(appJS, Compile)).value
     (artifactPath in(appJS, Compile, fastOptJS)).value
   },
-  (initialCommands in (Test, console)) := """ammonite.repl.Repl.run("")"""
+  (initialCommands in (Test, console)) := """ammonite.repl.Main.run("")"""
 )

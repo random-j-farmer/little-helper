@@ -11,7 +11,8 @@
     <logger name="akka" level="INFO" />
     <logger name="spray" level="INFO" />
 
-    <logger name="rlh" level="TRACE" />
+    <logger name="little-helper" level="TRACE" />
+    <logger name="xml-api" level="TRACE" />
 
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>

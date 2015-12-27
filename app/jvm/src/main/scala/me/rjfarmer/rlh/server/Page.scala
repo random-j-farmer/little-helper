@@ -1,4 +1,4 @@
-package me.rjfarmer.rlh.client
+package me.rjfarmer.rlh.server
 
 import scalatags.Text.all._
 import scalatags.Text.tags2
@@ -30,7 +30,7 @@ object Page {
         script(src:="/es5-shim.min.js"),
         script(src:="/es5-sham.min.js"),
         script(src:=scalaJsResource),
-        script(src:="//localhost:12345/workbench.js"),
+        // script(src:="//localhost:12345/workbench.js"),
         link(
           rel:="stylesheet",
           href:="/webjars/pure/0.6.0/pure.css"

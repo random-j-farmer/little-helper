@@ -2,6 +2,7 @@ package me.rjfarmer.rlh.client
 
 // for correct macro application
 import autowire._
+import me.rjfarmer.rlh.api.Api
 import me.rjfarmer.rlh.logging.LoggerRLH
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
@@ -27,7 +28,9 @@ object LittleHelper {
   val log = LoggerRLH("client.LittleHelper")
 
   val pilotBox = textarea(cols:=20, rows:=10).render
-  val pilotList = ul().render
+  pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
+
+  val pilotList = tbody().render
 
   def clearLogButtonClick(ev: dom.Event): Unit = {
     dom.document.getElementById("logMessages").innerHTML = ""
@@ -57,18 +60,24 @@ object LittleHelper {
       }
       dom.document.getElementById(linkTarget).removeAttribute("hidden")
     } catch {
-      case ex => log.error("Exception:", ex)
+      case ex: Exception => log.error("Exception:", ex)
     }
   }
 
   def formSubmit(ev: dom.Event): Unit = {
     ev.preventDefault()
+
     val pilotNames = pilotBox.value.split("""\n""")
-    Ajaxer[Api].listPilots(pilotNames).call().foreach { pilots =>
+    Ajaxer[Api].listCharacters(pilotNames).call().foreach { pilots =>
       log.info("Pilots: " + pilots)
       pilotList.innerHTML = ""
-      for (pilot <- pilots) {
-        pilotList.appendChild(li(pilot.toString).render)
+      for (p <- pilots) {
+        val allianceOrCorp: String = p.alliance getOrElse { p.corporation }
+        val trow = tr(id:=p.characterID,
+          td(p.characterName),
+          td(allianceOrCorp)
+          ).render
+        pilotList.appendChild(trow)
       }
     }
   }
@@ -86,7 +95,9 @@ object LittleHelper {
             pilotBox,
             button(cls:="pure-button pure-button-primary", `type`:="submit", "Submit")),
           div(cls:="pure-u-5-6",
-            pilotList)
+            table(cls:="pure-table pure-table-striped",
+              thead(tr(th("Name"), th("Alliance/Corp"))),
+            pilotList))
       ).render
     )
   }
