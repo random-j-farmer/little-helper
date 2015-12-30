@@ -36,6 +36,7 @@ val app = crossProject.settings(
     "io.spray" %% "spray-routing" % sprayVersion,
     "io.spray" %% "spray-caching" % sprayVersion,
     "org.webjars" % "pure" % "0.6.0",
+    "org.json4s" %% "json4s-jackson" % "3.3.0",
     "com.lihaoyi" % "ammonite-repl" % "0.5.2" % "test" cross CrossVersion.full
   )
 )

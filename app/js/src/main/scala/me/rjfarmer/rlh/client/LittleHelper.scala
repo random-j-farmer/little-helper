@@ -68,14 +68,20 @@ object LittleHelper {
     ev.preventDefault()
 
     val pilotNames = pilotBox.value.split("""\n""")
-    Ajaxer[Api].listCharacters(pilotNames).call().foreach { pilots =>
-      log.info("Pilots: " + pilots)
+    log.debug("calling listCharacters with " + pilotNames.size + " pilots")
+    val future = Ajaxer[Api].listCharacters(pilotNames).call()
+    future.onFailure { case ex: Throwable => dom.alert("Error: " + ex) }
+    future.foreach { pilots =>
+      log.info("listCharacters: received " + pilots.size + " pilots")
       pilotList.innerHTML = ""
       for (p <- pilots) {
-        val allianceOrCorp: String = p.alliance getOrElse { p.corporation }
-        val trow = tr(id:=p.characterID,
-          td(p.characterName),
-          td(allianceOrCorp)
+        val allianceOrCorp: String = p.info.alliance getOrElse { p.info.corporation }
+        val trow = tr(id:=p.info.characterID,
+          td(p.info.characterName),
+          td(allianceOrCorp),
+          td(p.info.characterAge),
+          td(p.zkStats.activepvp.kills),
+          td(p.zkStats.lastMonths.shipsDestroyed + "/" + p.zkStats.lastMonths.shipsLost)
           ).render
         pilotList.appendChild(trow)
       }
@@ -96,7 +102,7 @@ object LittleHelper {
             button(cls:="pure-button pure-button-primary", `type`:="submit", "Submit")),
           div(cls:="pure-u-5-6",
             table(cls:="pure-table pure-table-striped",
-              thead(tr(th("Name"), th("Alliance/Corp"))),
+              thead(tr(th("Name"), th("Alliance/Corp"), th("Age"), th("Act. Kills"), th("2 Months"))),
             pilotList))
       ).render
     )

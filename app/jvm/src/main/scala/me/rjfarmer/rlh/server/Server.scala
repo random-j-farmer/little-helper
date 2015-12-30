@@ -4,12 +4,13 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
-import me.rjfarmer.rlh.eve.EveXmlApi
+import me.rjfarmer.rlh.eve.{ZKillBoardApi, EveXmlApi}
 import spray.http.{HttpEntity, MediaTypes}
 import spray.routing.SimpleRoutingApp
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Promise, Future}
+import scala.util.{Failure, Success}
 
 
 object Router extends autowire.Server[String, upickle.default.Reader, upickle.default.Writer] {
@@ -45,11 +46,26 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout {
     }
   }
 
-  override def listCharacters(names: Seq[String]): Future[Seq[CharacterInfo]] = {
+  override def listCharacters(names: Seq[String]): Future[Seq[CharInfo]] = {
     val idsFuture = EveXmlApi.listCharacters(names)
-    idsFuture.flatMap(ids => Future.sequence(ids.map((ian) => EveXmlApi.characterInfo(ian.characterID))))
+    val result = Promise[Seq[CharInfo]]()
+    idsFuture.onComplete {
+      case Success(ids) =>
+        val f1 = Future.sequence(ids.map((ian) => EveXmlApi.characterInfo(ian.characterID)))
+        val f2 = Future.sequence(ids.map((ian) => ZKillBoardApi.zkStats(ian.characterID.toLong)))
+        f1.zip(f2).onComplete {
+          case Success(Pair(infos, zkstats)) =>
+            result.success(infos.zip(zkstats).map { pair => CharInfo(pair._1, pair._2)})
+          case Failure(ex) =>
+            result.failure(ex)
+        }
+      case Failure(ex) =>
+        result.failure(ex)
+    }
+    result.future
   }
 }
+
 
 object Boot extends RequestTimeout {
 

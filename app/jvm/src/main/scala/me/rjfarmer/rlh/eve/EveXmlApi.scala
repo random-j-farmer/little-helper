@@ -1,11 +1,15 @@
 package me.rjfarmer.rlh.eve
 
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
+import java.util.{TimeZone, Date}
+
 import akka.actor._
 import akka.event.Logging
 import akka.io.IO
 import akka.pattern.ask
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap
-import me.rjfarmer.rlh.api.{CharacterInfo, CharacterIDAndName}
+import me.rjfarmer.rlh.api.{EmploymentHistory, CharacterInfo, CharacterIDAndName}
 import me.rjfarmer.rlh.server.Boot
 import me.rjfarmer.rlh.server.Boot._
 import spray.caching.LruCache
@@ -13,6 +17,7 @@ import spray.can.Http
 import spray.http.HttpMethods._
 import spray.http._
 
+import scala.concurrent.duration.Duration
 import scala.concurrent.{Promise, Future, Await}
 import scala.util.Try
 import scala.xml.{Node, XML}
@@ -31,7 +36,7 @@ object EveXmlApi {
       println(
         Await.result(
           if (args(0) matches """[0-9]+""") {
-            characterInfoImpl.complete(args(0))
+            characterInfoImpl.complete(args(0).toLong)
           } else {
             characterIDImpl.complete(args.toSeq)
           },
@@ -43,9 +48,22 @@ object EveXmlApi {
     }
   }
 
+  /**
+   * Parses the date/time string as UTC date time.
+   *
+   * Example input: 2008-04-15 08:17:23
+   * @param dt string input
+   * @return
+   */
+  def parseDatetime(dt: String): Date = {
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
+    sdf.parse(dt)
+  }
+
   def listCharacters(names: Seq[String]): Future[Seq[CharacterIDAndName]] = characterIDImpl.complete(names)
 
-  def characterInfo(characterID: String): Future[CharacterInfo] = characterInfoImpl.complete(characterID)
+  def characterInfo(characterID: Long): Future[CharacterInfo] = characterInfoImpl.complete(characterID)
 }
 
 
@@ -150,7 +168,7 @@ class CharacterIDImplEve extends EveXmlApiImpl[Seq[CharacterIDAndName]] {
   private def extractIdAndNames(m: Map[String, CharacterIDAndName], names: Seq[String]) = {
     names.filter(m.contains)
       .map(m)
-      .filter { ian => ian.characterID != "0" }
+      .filter { ian => ian.characterID != 0 }
   }
 
   /**
@@ -182,7 +200,7 @@ class CharacterIDImplEve extends EveXmlApiImpl[Seq[CharacterIDAndName]] {
       row <- elem \\ "row"
       id = row \@ "characterID"
     } yield {
-      CharacterIDAndName(id, (row \@ "name").toLowerCase)
+      CharacterIDAndName(id.toLong, (row \@ "name").toLowerCase)
     }
   }
 }
@@ -192,11 +210,20 @@ class CharacterIDImplEve extends EveXmlApiImpl[Seq[CharacterIDAndName]] {
  */
 class CharacterInfoImplEve extends EveXmlApiImpl[CharacterInfo] {
 
-  private val cache = LruCache[Type](maxCapacity = Boot.bootConfig.getInt("little-helper.xml-api.cache.character-ids"))
+  private val cache = LruCache[Type](maxCapacity = Boot.bootConfig.getInt("little-helper.xml-api.cache.character-info"),
+   timeToLive = Duration.create(Boot.bootConfig.getDuration("little-helper.xml-api.cache-ttl.character-info",
+    TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS))
 
-  def complete(characterID: String): Future[Type] = {
+  def complete(characterID: Long): Future[Type] = {
     import scala.concurrent.ExecutionContext.Implicits.global
-    cache(characterID)(complete(Uri.Query(Pair("characterID", characterID))))
+    cache.get(characterID) match {
+      case Some(fci) => fci
+      case None =>
+        val future = complete(Uri.Query(Pair("characterID", characterID.toString)))
+        // the cache is called as side effect because we only want successful responses in there
+        future.foreach { ci => cache(characterID)(ci) }
+        future
+    }
   }
 
   val uriPath = "/eve/CharacterInfo.xml.aspx"
@@ -204,12 +231,22 @@ class CharacterInfoImplEve extends EveXmlApiImpl[CharacterInfo] {
   def successMessage(xml: String): CharacterInfo = {
     // log.debug("xml: {}", xml)
     val elem = (XML.loadString(xml) \\ "result")(0)
-    CharacterInfo(etxt(elem, "characterID"),
+
+    val eh = for {
+      history <- elem \ "rowset" if history \@ "name" == "employmentHistory"
+      row <- history \ "row"
+    } yield EmploymentHistory(row \@ "corporationID", row \@ "corporationName", row \@ "startDate")
+
+    val firstEmployment = EveXmlApi.parseDatetime(eh.last.startDate).getTime
+    val now = System.currentTimeMillis()
+    val age = (now - firstEmployment) / (1000.0d * 3600.0d * 24.0d * 365.242199d)
+
+    CharacterInfo(etxt(elem, "characterID").toLong,
       etxt(elem, "characterName"),
       etxt(elem, "race"), etxt(elem, "bloodline"), etxt(elem, "ancestry"),
-      etxt(elem, "corporationID"), etxt(elem, "corporation"), etxt(elem, "corporationDate"),
-      opttxt(elem, "allianceID"), opttxt(elem, "alliance"), opttxt(elem, "allianceDate"),
-      etxt(elem, "securityStatus").toDouble)
+      etxt(elem, "corporationID").toLong, etxt(elem, "corporation"), etxt(elem, "corporationDate"),
+      opttxt(elem, "allianceID").map(_.toLong), opttxt(elem, "alliance"), opttxt(elem, "allianceDate"),
+      etxt(elem, "securityStatus").toDouble, age, eh)
   }
 }
 
