@@ -55,7 +55,9 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout {
         val f2 = Future.sequence(ids.map((ian) => ZKillBoardApi.zkStats(ian.characterID.toLong)))
         f1.zip(f2).onComplete {
           case Success(Pair(infos, zkstats)) =>
-            result.success(infos.zip(zkstats).map { pair => CharInfo(pair._1, pair._2)})
+            result.success(infos.zip(zkstats)
+              .map { pair => CharInfo(pair._1, pair._2)}
+              .sorted(ByActiveAndDestroyed))
           case Failure(ex) =>
             result.failure(ex)
         }
@@ -76,6 +78,18 @@ object Boot extends RequestTimeout {
   implicit val bootSystem = ActorSystem("little-helper", bootConfig)
   implicit val bootTimeout = requestTimeout(bootConfig)
 
+}
+
+object ByActiveAndDestroyed extends Ordering[CharInfo] {
+  override def compare(x: CharInfo, y: CharInfo): Int = {
+    val zk1 = x.zkStats
+    val zk2 = y.zkStats
+    val act = zk2.activepvp.kills.compareTo(zk1.activepvp.kills) // reverse
+    act match {
+      case 0 => zk2.lastMonths.shipsDestroyed.compareTo(zk1.lastMonths.shipsDestroyed)
+      case _ => act
+    }
+  }
 }
 
 trait RequestTimeout {

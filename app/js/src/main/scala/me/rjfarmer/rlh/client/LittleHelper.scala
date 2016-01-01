@@ -2,7 +2,7 @@ package me.rjfarmer.rlh.client
 
 // for correct macro application
 import autowire._
-import me.rjfarmer.rlh.api.Api
+import me.rjfarmer.rlh.api.{CharInfo, Api}
 import me.rjfarmer.rlh.logging.LoggerRLH
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
@@ -77,7 +77,7 @@ object LittleHelper {
       for (p <- pilots) {
         val allianceOrCorp: String = p.info.alliance getOrElse { p.info.corporation }
         val trow = tr(id:=p.info.characterID,
-          td(p.info.characterName),
+          td( a(href:=zkillboardUrl(p), target:="_blank", p.info.characterName)),
           td(allianceOrCorp),
           td(p.info.characterAge),
           td(p.zkStats.activepvp.kills),
@@ -88,6 +88,10 @@ object LittleHelper {
     }
   }
 
+  def zkillboardUrl(p: CharInfo): String = {
+    s"""https://zkillboard.com/character/${p.info.characterID}/"""
+  }
+
   @JSExport
   def main(container: html.Div) = {
     log.info("LittleHelper.main called")
@@ -96,11 +100,11 @@ object LittleHelper {
 
     container.appendChild(
         div(cls:="pure-g",
-          form(cls:="pure-u-1-6 pure-form pure-form-stacked",
+          form(cls:="pure-u-1-3 pure-form pure-form-stacked",
             onsubmit := formSubmit _,
             pilotBox,
             button(cls:="pure-button pure-button-primary", `type`:="submit", "Submit")),
-          div(cls:="pure-u-5-6",
+          div(cls:="pure-u-2-3",
             table(cls:="pure-table pure-table-striped",
               thead(tr(th("Name"), th("Alliance/Corp"), th("Age"), th("Act. Kills"), th("2 Months"))),
             pilotList))
