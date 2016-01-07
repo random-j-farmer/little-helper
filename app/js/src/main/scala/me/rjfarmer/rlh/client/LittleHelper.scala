@@ -79,10 +79,10 @@ object LittleHelper {
         val trow = tr(id:=p.info.characterID,
           td( a(href:=zkillboardUrl(p), target:="_blank", p.info.characterName)),
           td(allianceOrCorp),
-          td(p.info.characterAge),
+          td(p.zkStats.lastMonths.shipsDestroyed + "/" + p.zkStats.lastMonths.shipsLost),
           td(p.zkStats.activepvp.kills),
-          td(p.zkStats.lastMonths.shipsDestroyed + "/" + p.zkStats.lastMonths.shipsLost)
-          ).render
+          td("%4.2f".format(p.info.characterAge))
+        ).render
         pilotList.appendChild(trow)
       }
     }
@@ -106,7 +106,7 @@ object LittleHelper {
             button(cls:="pure-button pure-button-primary", `type`:="submit", "Submit")),
           div(cls:="pure-u-2-3",
             table(cls:="pure-table pure-table-striped",
-              thead(tr(th("Name"), th("Alliance/Corp"), th("Age"), th("Act. Kills"), th("2 Months"))),
+              thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Active"), th("Age"))),
             pilotList))
       ).render
     )

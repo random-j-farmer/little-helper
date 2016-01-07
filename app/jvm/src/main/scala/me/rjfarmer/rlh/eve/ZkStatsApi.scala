@@ -3,44 +3,90 @@ package me.rjfarmer.rlh.eve
 import java.util.concurrent.TimeUnit
 import java.util.{TimeZone, Calendar}
 
-import akka.actor.ActorRef
-import akka.event.Logging
+import akka.actor._
 import akka.io.IO
 import akka.pattern.ask
-import me.rjfarmer.rlh.api.{ZkInfo, ZkActivePvP, ZkMonthStats, ZkStats}
+import akka.routing.FromConfig
+import me.rjfarmer.rlh.api._
+import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsResponse, ZkStatsRequest}
 import me.rjfarmer.rlh.server.Boot
-import me.rjfarmer.rlh.server.Boot._
-import spray.caching.LruCache
+import spray.caching.{Cache, LruCache}
 import spray.can.Http
 import spray.http.HttpMethods._
 import spray.http.{HttpResponse, HttpRequest, Uri}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Promise, Future, Await}
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 
-object ZKillBoardApi {
 
-  val zkKillBoardStats = new ZKillBoardStats
+object ZkStatsApi {
+  private val cache = LruCache[ZkStats](maxCapacity = Boot.bootConfig.getInt("little-helper.xml-api.cache.zk-stats"),
+    timeToLive = Duration.create(Boot.bootConfig.getDuration("little-helper.xml-api.cache-ttl.zk-stats",
+    TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS))
 
-  def zkStats(characterID: Long): Future[ZkStats] = {
-    zkKillBoardStats.complete(characterID)
-  }
+  def props(zkRestApi: ActorRef): Props = Props(new ZkStatsApi(cache, zkRestApi))
 
+  final case class ZkStatsRequest(characterID: Long, replyTo: Seq[ActorRef])
 
-  def main(args: Array[String]): Unit = {
+  final case class ZkStatsResponse(request: ZkStatsRequest, stats: Try[ZkStats])
+
+  def main(args: Array[String]) = {
+    import Boot._
+
     try {
-      println(
-        Await.result(
-          zkKillBoardStats.complete(args(0).toLong),
-          bootTimeout.duration
-        )
-      )
+      val eveZkStats = bootSystem.actorOf(FromConfig.props(RestZkStatsApi.props), "restZkStatsPool")
+      val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(eveZkStats)), "zkStatsPool")
+
+      println("ARG: " + args(0))
+
+      val rslt = Await.result(ask(zkStats, ZkStatsRequest(args(0).toLong, Seq())), bootTimeout.duration).asInstanceOf[ZkStatsResponse]
+      println("RESULT: " + rslt)
     } finally {
       bootSystem.shutdown()
     }
   }
+
+}
+
+/** In-Memory cached zkillboard stats */
+class ZkStatsApi (cache: Cache[ZkStats], zkRestApi: ActorRef) extends Actor with ActorLogging {
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  override def receive: Receive = {
+
+    case ZkStatsRequest(id, Seq()) =>
+      // for convenience of testing via ask
+      self ! ZkStatsRequest(id, Seq(sender()))
+
+    case request @ ZkStatsRequest(id, replyTo) =>
+      cache.get(id) match {
+        case Some(fzs) =>
+          // cached future is already completed, but whatever
+          fzs onComplete { tzs =>
+            log.debug("cached stats for character {}", id)
+            val resp = ZkStatsResponse(request, tzs)
+            request.replyTo.foreach { reply => reply ! resp }
+          }
+        case None =>
+          zkRestApi ! request.copy(replyTo = replyTo :+ self)
+      }
+
+    case ZkStatsResponse(req, tzs) =>
+      tzs match {
+        case Success(zs) =>
+          log.debug("caching zkstats for {}", req.characterID)
+          cache(req.characterID)(zs)
+        case Failure(ex) =>
+          log.debug("not caching character info response: {}", ex)
+      }
+
+    case msg =>
+      log.warning("unknown message type: {}", msg)
+  }
+
 }
 
 
@@ -54,40 +100,47 @@ object ZKillBoardApi {
 
  */
 
-class ZKillBoardStats {
 
-  private val cache = LruCache[ZkStats](maxCapacity = Boot.bootConfig.getInt("little-helper.xml-api.cache.zk-stats"),
-   timeToLive = Duration.create(Boot.bootConfig.getDuration("little-helper.xml-api.cache-ttl.zk-stats",
-    TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS))
+object RestZkStatsApi {
 
+  def props: Props = Props[RestZkStatsApi]()
+
+}
+
+/** Rest ZKillboard Stats */
+class RestZkStatsApi extends Actor with ActorLogging {
+
+  import scala.concurrent.ExecutionContext.Implicits.global
+  implicit val timeout = Boot.bootTimeout
+
+  override def receive: Receive = {
+
+    case request @ ZkStatsRequest(id, replyTo) =>
+      val fzs = complete(id)
+      fzs.onComplete { tci =>
+        val resp = ZkStatsResponse(request, tci)
+        request.replyTo.foreach { reply => reply ! resp }
+      }
+
+    case msg =>
+      log.warning("unknown message type: {}", msg)
+
+  }
 
   def uriPath: String = "/api/stats"
 
-  def hostConnector: ActorRef = Await.result(IO(Http) ? hostConnectorSetup, bootTimeout.duration)
-    .asInstanceOf[Http.HostConnectorInfo]
-    .hostConnector
+  def hostConnector: ActorRef = {
+    implicit val actorSystem = context.system
+    Await.result(ask(IO(Http),hostConnectorSetup), timeout.duration)
+      .asInstanceOf[Http.HostConnectorInfo]
+      .hostConnector
+  }
 
   def hostConnectorSetup = Http.HostConnectorSetup("zkillboard.com", port=443, sslEncryption = true)
-
-  val log = Logging(Boot.bootSystem, getClass)
 
   def httpGetUri(characterID: Long): Uri = Uri(path = Uri.Path(uriPath + "/characterID/" + characterID))
 
   def complete(characterID: Long): Future[ZkStats] = {
-    import scala.concurrent.ExecutionContext.Implicits.global
-    cache.get(characterID) match {
-      case Some(fci) => fci
-      case None =>
-        val future = completeUncached(characterID)
-        // the cache is called as side effect because we only want successful responses in there
-        future.foreach { ci => cache(characterID)(ci) }
-        future
-    }
-  }
-
-  def completeUncached(characterID: Long): Future[ZkStats] = {
-    import Boot._
-    import scala.concurrent.ExecutionContext.Implicits.global
     val uri = httpGetUri(characterID)
     log.debug("http get: {}", uri)
     val httpFuture = ask(hostConnector, HttpRequest(GET, httpGetUri(characterID)))
@@ -104,8 +157,6 @@ class ZKillBoardStats {
     }
     promise.future
   }
-
-
 
   import org.json4s._
   import org.json4s.JsonAST._
@@ -227,13 +278,13 @@ class ZKillBoardStats {
     val v = m.get(s)
     v match {
       case Some(value) => value match {
-          case d: Double => Some(d)
-          case bd: BigDecimal => Some(bd.toDouble)
-          case l: Long => Some(l.toDouble)
-          case i: Int => Some(i.toDouble)
-          case bi: BigInt => Some(bi.toDouble)
-          case _ => None
-        }
+        case d: Double => Some(d)
+        case bd: BigDecimal => Some(bd.toDouble)
+        case l: Long => Some(l.toDouble)
+        case i: Int => Some(i.toDouble)
+        case bi: BigInt => Some(bi.toDouble)
+        case _ => None
+      }
       case None => None
     }
 
