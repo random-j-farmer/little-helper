@@ -30,6 +30,7 @@ object LittleHelper {
   val pilotBox = textarea(cols:=20, rows:=10).render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
 
+  val corpList = tbody().render
   val pilotList = tbody().render
 
   def clearLogButtonClick(ev: dom.Event): Unit = {
@@ -64,6 +65,8 @@ object LittleHelper {
     }
   }
 
+  def allianceOrCorp(p: CharInfo): String = p.info.alliance getOrElse { p.info.corporation }
+
   def formSubmit(ev: dom.Event): Unit = {
     ev.preventDefault()
 
@@ -73,12 +76,30 @@ object LittleHelper {
     future.onFailure { case ex: Throwable => dom.alert("Error: " + ex) }
     future.foreach { pilots =>
       log.info("listCharacters: received " + pilots.size + " pilots")
+
+      val cutoff = math.max(2.0d, pilots.size/10.0d)
+      val byCorp: Seq[Seq[CharInfo]] = pilots.groupBy(allianceOrCorp).values.toSeq
+        .filter(group => group.size >= cutoff)
+        .sortWith((a,b) => a.size > b.size)
+      val other = pilots.size - byCorp.map(_.size).sum
+
+      corpList.innerHTML = ""
+      for (group <- byCorp) {
+        corpList.appendChild(tr(
+          td(allianceOrCorp(group.head)),
+          td(group.size)).render)
+      }
+      if (other > 0) {
+        corpList.appendChild(tr(
+          td("Other"),
+          td(other)).render)
+      }
+
       pilotList.innerHTML = ""
       for (p <- pilots) {
-        val allianceOrCorp: String = p.info.alliance getOrElse { p.info.corporation }
         val trow = tr(id:=p.info.characterID,
           td( a(href:=zkillboardUrl(p), target:="_blank", p.info.characterName)),
-          td(allianceOrCorp),
+          td(allianceOrCorp(p)),
           td(p.zkStats.lastMonths.shipsDestroyed + "/" + p.zkStats.lastMonths.shipsLost),
           td(p.zkStats.activepvp.kills),
           td("%4.2f".format(p.info.characterAge))
@@ -105,9 +126,14 @@ object LittleHelper {
             pilotBox,
             button(cls:="pure-button pure-button-primary", `type`:="submit", "Submit")),
           div(cls:="pure-u-2-3",
+            h2("Pilot count by Alliance/Corp"),
+            table(cls:="pure-table pure-table-striped",
+              thead(tr(th("Alliance/Corp"), th("# Pilots"))),
+              corpList),
+            h2("Pilots"),
             table(cls:="pure-table pure-table-striped",
               thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Active"), th("Age"))),
-            pilotList))
+              pilotList))
       ).render
     )
   }

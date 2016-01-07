@@ -63,7 +63,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout {
   private def listIds(names: Seq[String]): Future[Seq[CharacterIDAndName]] = {
     ask(characterID, CharacterIDRequest(names, Seq(), Seq()))
       .asInstanceOf[Future[CharacterIDResponse]]
-      .map(resp => resp.fullResult.get)
+      .map(resp => resp.fullResult.get.filter(ian => ian.characterID != 0L))
   }
 
   private def characterInfo(id: Long): Future[CharacterInfo] = {
