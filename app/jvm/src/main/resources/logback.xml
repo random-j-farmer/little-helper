@@ -4,15 +4,15 @@
         <target>System.out</target>
         <encoder>
             <!--<pattern>%date{MM/dd HH:mm:ss} %-6level[%logger{0}]: %msg%n</pattern>-->
-            <pattern>%-6level[%logger{0}]: %msg%n</pattern>
+            <pattern>%date{MM-dd HH:mm:ss} %-6level[%logger{0}]: %msg%n</pattern>
         </encoder>
     </appender>
 
     <logger name="akka" level="INFO" />
     <logger name="spray" level="INFO" />
 
-    <logger name="little-helper" level="TRACE" />
-    <logger name="xml-api" level="TRACE" />
+    <logger name="little-helper" level="DEBUG" />
+    <logger name="xml-api" level="DEBUG" />
 
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>

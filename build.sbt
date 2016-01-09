@@ -6,7 +6,6 @@ import spray.revolver.RevolverPlugin.Revolver
 val akkaVersion = "2.3.14"
 val sprayVersion = "1.3.3"
 
-
 val app = crossProject.settings(
   unmanagedSourceDirectories in Compile +=
     baseDirectory.value / "shared" / "main" / "scala",
@@ -16,8 +15,9 @@ val app = crossProject.settings(
     "com.lihaoyi" %%% "utest" % "0.3.1",
     "com.lihaoyi" %%% "autowire" % "0.2.5"
   ),
-  scalaVersion := "2.11.7"
-).jsSettings(
+  scalaVersion := "2.11.7")
+.enablePlugins(JavaAppPackaging)
+.jsSettings(
   workbenchSettings: _*
 ).jsSettings(
   libraryDependencies ++= Seq(
