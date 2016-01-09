@@ -1,12 +1,12 @@
 package me.rjfarmer.rlh.eve
 
 import akka.actor._
-import akka.routing.FromConfig
 import akka.pattern.ask
-import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap
+import akka.routing.FromConfig
 import me.rjfarmer.rlh.api.CharacterIDAndName
-import me.rjfarmer.rlh.eve.CharacterIDApi.{CharacterIDResponse, CharacterIDRequest}
+import me.rjfarmer.rlh.eve.CharacterIDApi.{CharacterIDRequest, CharacterIDResponse}
 import me.rjfarmer.rlh.server.Boot
+import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
 
 import scala.concurrent.{Await, Future}
@@ -79,12 +79,11 @@ trait CharacterIDBatcher {
 
 object CharacterIDApi {
 
-  private val cache: ConcurrentLinkedHashMap[String, CharacterIDAndName] = new ConcurrentLinkedHashMap.Builder[String, CharacterIDAndName]()
-    .initialCapacity(16)
-    .maximumWeightedCapacity(Boot.bootConfig.getInt("little-helper.xml-api.cache.character-ids"))
-    .build()
 
-  def props(eveCharacterID: ActorRef): Props = Props(new CharacterIDApi(cache, eveCharacterID))
+  def props(cacheManager: CacheManager, eveCharacterID: ActorRef): Props = {
+    val cache = cacheManager.getCache("characterIDCache", classOf[String], classOf[CharacterIDAndName])
+    Props(new CharacterIDApi(cache, eveCharacterID))
+  }
 
   final case class CharacterIDRequest(names: Seq[String], alreadyKnown: Seq[CharacterIDAndName], replyTo: Seq[ActorRef])
 
@@ -109,7 +108,7 @@ object CharacterIDApi {
 
     try {
       val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
-      val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(eveCharacterID)), "characterIDPool")
+      val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
 
       println("ARGS: " + args.mkString(", "))
 
@@ -133,7 +132,7 @@ object CharacterIDApi {
  * The in-memory cache is shared between all instances of this actor.
  *
  */
-class CharacterIDApi (cache: ConcurrentLinkedHashMap[String, CharacterIDAndName],
+class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
                        eveCharacterID: ActorRef)
   extends Actor with ActorLogging with CharacterIDBatcher {
 

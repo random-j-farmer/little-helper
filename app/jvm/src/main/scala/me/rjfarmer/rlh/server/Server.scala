@@ -6,10 +6,12 @@ import akka.pattern.ask
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
-import me.rjfarmer.rlh.eve.CharacterIDApi.{CharacterIDResponse, CharacterIDRequest}
+import me.rjfarmer.rlh.eve.CharacterIDApi._
 import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoResponse, CharacterInfoRequest}
 import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsResponse, ZkStatsRequest}
 import me.rjfarmer.rlh.eve._
+import org.ehcache.CacheManagerBuilder
+import org.ehcache.config.xml.XmlConfiguration
 import spray.http.{HttpEntity, MediaTypes}
 import spray.routing.SimpleRoutingApp
 
@@ -30,13 +32,15 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout {
   import Boot._
 
   val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
-  val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(eveCharacterID)), "characterIDPool")
+  val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
   val eveCharacterInfo = bootSystem.actorOf(FromConfig.props(EveCharacterInfoApi.props), "eveCharacterInfoPool")
-  val characterInfo = bootSystem.actorOf(FromConfig.props(CharacterInfoApi.props(eveCharacterInfo)), "characterInfoPool")
+  val characterInfo = bootSystem.actorOf(FromConfig.props(CharacterInfoApi.props(cacheManager, eveCharacterInfo)), "characterInfoPool")
   val eveZkStats = bootSystem.actorOf(FromConfig.props(RestZkStatsApi.props), "restZkStatsPool")
-  val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(eveZkStats)), "zkStatsPool")
+  val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(cacheManager, eveZkStats)), "zkStatsPool")
 
   def main(args: Array[String]): Unit = {
+
+    Runtime.getRuntime.addShutdownHook(CacheManagerShutdownHook)
 
     startServer(bootHost, port = bootPort) {
       get {
@@ -108,10 +112,24 @@ object Boot extends RequestTimeout {
   val bootConfig = ConfigFactory.load()
   val bootHost = bootConfig.getString("http.host")
   val bootPort = bootConfig.getInt("http.port")
+  val cacheManager = CacheManagerBuilder.newCacheManager(new XmlConfiguration(getClass.getClassLoader.getResource("little-cache.xml")))
+
+  cacheManager.init()
 
   implicit val bootSystem = ActorSystem("little-helper", bootConfig)
   implicit val bootTimeout = requestTimeout(bootConfig)
 
+
+  object CacheManagerShutdownHook extends Thread {
+
+    override def run(): Unit = {
+      println("Shutting down actor system")
+      bootSystem.shutdown()
+      println("Shutting down cache manager")
+      cacheManager.close()
+    }
+
+  }
 }
 
 object ByActiveAndDestroyed extends Ordering[CharInfo] {
@@ -135,6 +153,5 @@ trait RequestTimeout {
     FiniteDuration(d.length, d.unit)
   }
 }
-
 
 

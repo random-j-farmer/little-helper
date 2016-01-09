@@ -5,3 +5,4 @@ target/
 .settings/
 .idea/
 *.iml
+app/jvm/little-cache.ehc/

@@ -34,10 +34,9 @@ val app = crossProject.settings(
     "ch.qos.logback"      %  "logback-classic" % "1.1.3",
     "io.spray" %% "spray-can" % sprayVersion,
     "io.spray" %% "spray-routing" % sprayVersion,
-    "io.spray" %% "spray-caching" % sprayVersion,
     "org.webjars" % "pure" % "0.6.0",
     "org.json4s" %% "json4s-jackson" % "3.3.0",
-    "com.h2database" % "h2" % "1.4.190",
+    "org.ehcache" % "ehcache" % "3.0.0.m4",
     "com.lihaoyi" % "ammonite-repl" % "0.5.2" % "test" cross CrossVersion.full
   )
 )

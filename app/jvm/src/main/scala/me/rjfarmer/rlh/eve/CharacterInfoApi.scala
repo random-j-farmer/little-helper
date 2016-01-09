@@ -1,28 +1,24 @@
 package me.rjfarmer.rlh.eve
 
-import java.util.concurrent.TimeUnit
-
 import akka.actor._
-import akka.routing.FromConfig
 import akka.pattern.ask
-import me.rjfarmer.rlh.api.{EmploymentHistory, CharacterInfo}
-import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoResponse, CharacterInfoRequest}
+import akka.routing.FromConfig
+import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory}
+import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoRequest, CharacterInfoResponse}
 import me.rjfarmer.rlh.server.Boot
-import spray.caching.{Cache, LruCache}
+import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
 
 import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success, Try}
 import scala.xml.XML
 
 object CharacterInfoApi {
 
-  private val cache = LruCache[CharacterInfo](maxCapacity = Boot.bootConfig.getInt("little-helper.xml-api.cache.character-info"),
-    timeToLive = Duration.create(Boot.bootConfig.getDuration("little-helper.xml-api.cache-ttl.character-info",
-    TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS))
-
-  def props(eveCharacterInfo: ActorRef): Props = Props(new CharacterInfoApi(cache, eveCharacterInfo))
+  def props(cacheManager: CacheManager, eveCharacterInfo: ActorRef): Props = {
+    val cache = cacheManager.getCache("characterInfoCache", classOf[java.lang.Long], classOf[CharacterInfo])
+    Props(new CharacterInfoApi(cache, eveCharacterInfo))
+  }
 
   final case class CharacterInfoRequest(characterID: Long, replyTo: Seq[ActorRef])
 
@@ -34,7 +30,7 @@ object CharacterInfoApi {
 
     try {
       val eveCharacterInfo = bootSystem.actorOf(FromConfig.props(EveCharacterInfoApi.props), "eveCharacterInfoPool")
-      val characterInfo = bootSystem.actorOf(FromConfig.props(CharacterInfoApi.props(eveCharacterInfo)), "characterInfoPool")
+      val characterInfo = bootSystem.actorOf(FromConfig.props(CharacterInfoApi.props(cacheManager, eveCharacterInfo)), "characterInfoPool")
 
       println("ARG: " + args(0))
 
@@ -57,10 +53,8 @@ object CharacterInfoApi {
  * @param cache lru cache
  * @param eveCharacterInfo actorref for eve xml api
  */
-class CharacterInfoApi (cache: Cache[CharacterInfo], eveCharacterInfo: ActorRef)
+class CharacterInfoApi (cache: Cache[java.lang.Long, CharacterInfo], eveCharacterInfo: ActorRef)
   extends Actor with ActorLogging {
-
-  import scala.concurrent.ExecutionContext.Implicits.global
 
 
   override def receive: Receive = {
@@ -70,23 +64,20 @@ class CharacterInfoApi (cache: Cache[CharacterInfo], eveCharacterInfo: ActorRef)
       self ! CharacterInfoRequest(id, Seq(sender()))
 
     case request@CharacterInfoRequest(id, replyTo) =>
-      cache.get(id) match {
-        case Some(fci) =>
-          // cached future is already completed, but whatever
-          fci onComplete { tci =>
-            log.debug("cached character info for character {}", id)
-            val resp = CharacterInfoResponse(request, tci)
-            request.replyTo.foreach { reply => reply ! resp }
-          }
-        case None =>
-          eveCharacterInfo ! request.copy(replyTo = replyTo :+ self)
+      val ci = cache.get(id)
+      if (ci == null) {
+        eveCharacterInfo ! request.copy(replyTo = replyTo :+ self)
+      } else {
+        log.debug("cached character info for character {}", id)
+        val resp = CharacterInfoResponse(request, Success(ci))
+        request.replyTo.foreach { reply => reply ! resp }
       }
 
     case CharacterInfoResponse(req, tci) =>
       tci match {
         case Success(ci) =>
           log.debug("caching character info for {}", req.characterID)
-          cache(req.characterID)(ci)
+          cache.put(req.characterID, ci)
         case Failure(ex) =>
           log.debug("not caching character info response: {}", ex)
       }

@@ -1,32 +1,30 @@
 package me.rjfarmer.rlh.eve
 
-import java.util.concurrent.TimeUnit
-import java.util.{TimeZone, Calendar}
+import java.util.{Calendar, TimeZone}
 
 import akka.actor._
 import akka.io.IO
 import akka.pattern.ask
 import akka.routing.FromConfig
 import me.rjfarmer.rlh.api._
-import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsResponse, ZkStatsRequest}
+import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsRequest, ZkStatsResponse}
 import me.rjfarmer.rlh.server.Boot
-import spray.caching.{Cache, LruCache}
+import org.ehcache.{Cache, CacheManager}
 import spray.can.Http
 import spray.http.HttpMethods._
-import spray.http.{HttpResponse, HttpRequest, Uri}
+import spray.http.{HttpRequest, HttpResponse, Uri}
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Promise, Future, Await}
+import scala.concurrent.{Await, Future, Promise}
 import scala.util.{Failure, Success, Try}
 
 
 
 object ZkStatsApi {
-  private val cache = LruCache[ZkStats](maxCapacity = Boot.bootConfig.getInt("little-helper.xml-api.cache.zk-stats"),
-    timeToLive = Duration.create(Boot.bootConfig.getDuration("little-helper.xml-api.cache-ttl.zk-stats",
-    TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS))
 
-  def props(zkRestApi: ActorRef): Props = Props(new ZkStatsApi(cache, zkRestApi))
+  def props(cacheManager: CacheManager, zkRestApi: ActorRef): Props = {
+    val cache = cacheManager.getCache("zkStatsCache", classOf[java.lang.Long], classOf[ZkStats])
+    Props(new ZkStatsApi(cache, zkRestApi))
+  }
 
   final case class ZkStatsRequest(characterID: Long, replyTo: Seq[ActorRef])
 
@@ -37,7 +35,7 @@ object ZkStatsApi {
 
     try {
       val eveZkStats = bootSystem.actorOf(FromConfig.props(RestZkStatsApi.props), "restZkStatsPool")
-      val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(eveZkStats)), "zkStatsPool")
+      val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(cacheManager, eveZkStats)), "zkStatsPool")
 
       println("ARG: " + args(0))
 
@@ -51,9 +49,7 @@ object ZkStatsApi {
 }
 
 /** In-Memory cached zkillboard stats */
-class ZkStatsApi (cache: Cache[ZkStats], zkRestApi: ActorRef) extends Actor with ActorLogging {
-
-  import scala.concurrent.ExecutionContext.Implicits.global
+class ZkStatsApi (cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef) extends Actor with ActorLogging {
 
   override def receive: Receive = {
 
@@ -62,23 +58,20 @@ class ZkStatsApi (cache: Cache[ZkStats], zkRestApi: ActorRef) extends Actor with
       self ! ZkStatsRequest(id, Seq(sender()))
 
     case request @ ZkStatsRequest(id, replyTo) =>
-      cache.get(id) match {
-        case Some(fzs) =>
-          // cached future is already completed, but whatever
-          fzs onComplete { tzs =>
-            log.debug("cached stats for character {}", id)
-            val resp = ZkStatsResponse(request, tzs)
-            request.replyTo.foreach { reply => reply ! resp }
-          }
-        case None =>
-          zkRestApi ! request.copy(replyTo = replyTo :+ self)
+      val zks = cache.get(id)
+      if (zks == null) {
+        zkRestApi ! request.copy(replyTo = replyTo :+ self)
+      } else {
+        log.debug("cached stats for character {}", id)
+        val resp = ZkStatsResponse(request, Success(zks))
+        request.replyTo.foreach { reply => reply ! resp }
       }
 
     case ZkStatsResponse(req, tzs) =>
       tzs match {
         case Success(zs) =>
           log.debug("caching zkstats for {}", req.characterID)
-          cache(req.characterID)(zs)
+          cache.put(req.characterID, zs)
         case Failure(ex) =>
           log.debug("not caching character info response: {}", ex)
       }
@@ -159,7 +152,6 @@ class RestZkStatsApi extends Actor with ActorLogging {
   }
 
   import org.json4s._
-  import org.json4s.JsonAST._
   import org.json4s.jackson.JsonMethods._
 
   object YearAndMonth extends Ordering[ZkMonthStats] {
