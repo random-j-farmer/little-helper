@@ -1,0 +1,10 @@
+(A) Some indication about busy/not-busy status (i.e. server request in progress)
+(A) Give time of scan
+(A) allow easy override of resource files (i.e. put some dir into classpath) - no re-deply of jar just for a config change
+(A) Log request times (server + client)
+(A) Log errors (client), no alert but some kind of message
+(B) Re-write so failing requests don't give error, but additional message about incomplete information +WsRewrite
+(B) Keep request timeouts short and use outdated, cached information on xml api /zkillboard errors +WsRewrite
+(B) Request data that arrives after the timeout should still be cached and used the next time around +WsRewrite
+D-Scan
+Shopping list
