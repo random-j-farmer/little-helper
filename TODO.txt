@@ -7,7 +7,7 @@ D-Scan
 Shopping list
 
 
-
+x (A) Pilot count
 x (A) Some indication about busy/not-busy status (i.e. server request in progress)
 x (A) Give time of scan
 x (A) Log request times (server + client)

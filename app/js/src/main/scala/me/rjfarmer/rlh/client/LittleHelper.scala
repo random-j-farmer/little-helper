@@ -49,6 +49,7 @@ object LittleHelper {
 
   var respTs = System.currentTimeMillis()
   val respTimeAgo = span().render
+  val pilotCount = span().render
 
   val pilotBox = textarea(cols:=20, rows:=10).render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
@@ -137,6 +138,7 @@ object LittleHelper {
 
     respTs = System.currentTimeMillis()
     respTimeAgo.innerHTML = responseTimeAgo
+    pilotCount.innerHTML = s"${pilots.size} pilots, "
 
     val cutoff = math.max(2.0d, pilots.size/10.0d)
     val byCorp: Seq[Seq[CharInfo]] = pilots.groupBy(allianceOrCorp).values.toSeq
@@ -206,8 +208,8 @@ object LittleHelper {
             pilotBox,
             submitButton),
           div(cls:="pure-u-2-3",
-            h1(respTimeAgo),
-            h2("Pilot count by Alliance/Corp"),
+            h1(pilotCount, respTimeAgo),
+            h2("Pilots by Alliance/Corp"),
             table(cls:="pure-table pure-table-striped",
               thead(tr(th("Alliance/Corp"), th("# Pilots"))),
               corpList),
