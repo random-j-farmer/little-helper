@@ -1,12 +1,15 @@
-(A) Some indication about busy/not-busy status (i.e. server request in progress)
-(A) Give time of scan
-(A) allow easy override of resource files (i.e. put some dir into classpath) - no re-deply of jar just for a config change
-(A) Log request times (server + client)
-(A) Log errors (client), no alert but some kind of message
-(A) Corporation: Link to eve-who
+(B) allow easy override of resource files (i.e. put some dir into classpath) - no re-deply of jar just for a config change
 (B) Actorize request-pipeline (i.e. reduce use of futures) +WsRewrite
 (C) Re-write so failing requests don't give error, but additional message about incomplete information +WsRewrite
 (C) Keep request timeouts short and use outdated, cached information on xml api /zkillboard errors +WsRewrite
 (C) Request data that arrives after the timeout should still be cached and used the next time around +WsRewrite
 D-Scan
 Shopping list
+
+
+
+x (A) Some indication about busy/not-busy status (i.e. server request in progress)
+x (A) Give time of scan
+x (A) Log request times (server + client)
+x (A) Log errors (client), no alert but some kind of message
+x (A) Corporation: Link to eve-who

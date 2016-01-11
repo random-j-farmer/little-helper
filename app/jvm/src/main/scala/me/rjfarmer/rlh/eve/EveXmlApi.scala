@@ -40,6 +40,7 @@ trait EveXmlApi[T] {
   def complete(query: Uri.Query): Future[T] = {
     import Boot._
     import scala.concurrent.ExecutionContext.Implicits.global
+    val started = System.currentTimeMillis()
     val uri = httpGetUri(query)
     log.debug("http get: {}", uri)
     val httpFuture = ask(hostConnector, HttpRequest(GET, httpGetUri(query)))
@@ -47,10 +48,11 @@ trait EveXmlApi[T] {
     httpFuture onSuccess {
       case resp: HttpResponse =>
         if (resp.status.isSuccess) {
-          log.debug("http get: {} ===> {}", uri, resp.status.intValue)
+          log.debug("http get: {} ===> {} in {}ms", uri, resp.status.intValue, System.currentTimeMillis - started)
           promise.complete(Try(successMessage(resp.entity.data.asString)))
         } else {
-          log.debug("http get error: {} {}", resp.status.intValue, resp.entity.data.asString)
+          log.debug("http get error: {} {} after {}ms", resp.status.intValue, resp.entity.data.asString,
+            System.currentTimeMillis - started)
           promise.failure(new IllegalArgumentException("http result not ok: " + resp.status.intValue))
         }
     }

@@ -134,6 +134,7 @@ class RestZkStatsApi extends Actor with ActorLogging {
   def httpGetUri(characterID: Long): Uri = Uri(path = Uri.Path(uriPath + "/characterID/" + characterID))
 
   def complete(characterID: Long): Future[ZkStats] = {
+    val started = System.currentTimeMillis()
     val uri = httpGetUri(characterID)
     log.debug("http get: {}", uri)
     val httpFuture = ask(hostConnector, HttpRequest(GET, httpGetUri(characterID)))
@@ -141,10 +142,11 @@ class RestZkStatsApi extends Actor with ActorLogging {
     httpFuture onSuccess {
       case resp: HttpResponse =>
         if (resp.status.isSuccess) {
-          log.debug("http get: {} ===> {}", uri, resp.status.intValue)
+          log.debug("http get: {} ===> {} in {}ms", uri, resp.status.intValue, System.currentTimeMillis() - started)
           promise.complete(Try(successMessage(characterID, resp.entity.data.asString)))
         } else {
-          log.debug("http get error: {} {}", resp.status.intValue, resp.entity.data.asString)
+          log.debug("http get error: {} {} after {}ms", resp.status.intValue, resp.entity.data.asString,
+            System.currentTimeMillis() - started)
           promise.failure(new IllegalArgumentException("http result not ok: " + resp.status.intValue))
         }
     }
