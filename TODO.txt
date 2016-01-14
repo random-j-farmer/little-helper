@@ -1,8 +1,12 @@
+(A) README.md and LICENSE.md +github
+(A) Detect valid character names +github http://community.eveonline.com/support/policies/eve-user-policy/
+(A) show system name if IGB
 (B) allow easy override of resource files (i.e. put some dir into classpath) - no re-deply of jar just for a config change
 (B) Actorize request-pipeline (i.e. reduce use of futures) +WsRewrite
 (C) Re-write so failing requests don't give error, but additional message about incomplete information +WsRewrite
 (C) Keep request timeouts short and use outdated, cached information on xml api /zkillboard errors +WsRewrite
 (C) Request data that arrives after the timeout should still be cached and used the next time around +WsRewrite
+(D) Have Client detect Server changes (e.g. git tree), ask for reload
 D-Scan
 Shopping list
 
