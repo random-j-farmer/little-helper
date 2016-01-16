@@ -19,14 +19,8 @@ object EveCharacterNameTest extends TestSuite {
       'threeParts {
         assert(EveCharacterName.isValidCharacterName("Random J Farmer"))
       }
-      'maximalSinglePart {
-        assert(EveCharacterName.isValidCharacterName("AbcdefghijAbcdefghij1234"))
-      }
-      'maximalMiddle {
-        assert(EveCharacterName.isValidCharacterName("Abcdefghij1 Abcdefghij12 Abcdefghij12"))
-      }
-      'maximalNoMiddle {
-        assert(EveCharacterName.isValidCharacterName("AbcdefghijAbcdefghij1234 Abcdefghij12"))
+      'alsoLegal {
+        assert(EveCharacterName.isValidCharacterName("Wolf SteinerDavion"))
       }
     }
 
@@ -37,20 +31,8 @@ object EveCharacterNameTest extends TestSuite {
       'fourParts {
         assert(! EveCharacterName.isValidCharacterName("a b c d"))
       }
-      'singlePartTooLong {
-        assert(! EveCharacterName.isValidCharacterName("AbcdefghijAbcdefghij12345"))
-      }
-      'firstOrMiddleTooLong {
-        assert(! EveCharacterName.isValidCharacterName("Abcdefghij1 Abcdefghij123 A"))
-      }
-      'firstTooLong {
-        assert(! EveCharacterName.isValidCharacterName("AbcdefghijAbcdefghij12345 A"))
-      }
-      'lastTooLong {
-        assert(! EveCharacterName.isValidCharacterName("A Abcdefghij123"))
-      }
-      'lastTooLongWithMiddle {
-        assert(! EveCharacterName.isValidCharacterName("A B Abcdefghij123"))
+      'tooLong {
+        assert(! EveCharacterName.isValidCharacterName("AbcdefghijAbcdefghijAbcdefghij12345678"))
       }
       'illegalCharacter {
         assert(! EveCharacterName.isValidCharacterName("{ }"))
