@@ -30,7 +30,7 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 
 object Server extends SimpleRoutingApp with Api with RequestTimeout with ShutdownIfNotBound {
 
-  import Boot.{bootTimeout => _, _}
+  import Boot._
 
   val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
@@ -43,6 +43,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 
     Runtime.getRuntime.addShutdownHook(CacheManagerShutdownHook)
 
+    // needs a multi-second timeout or it will not bind fast enough on openshift
     val response = startServer(bootHost, port = bootPort) {
       get {
         pathSingleSlash {
@@ -67,7 +68,6 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     shutdownIfNotBound(response)
   }
 
-  import Boot.bootTimeout
   implicit val timeoutDuration = bootTimeout.duration
 
   private def listIds(names: Seq[String]): Future[Seq[CharacterIDAndName]] = {
