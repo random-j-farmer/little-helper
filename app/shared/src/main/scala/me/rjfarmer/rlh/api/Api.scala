@@ -34,3 +34,4 @@ trait Api {
   def listCharacters(names: Seq[String]): Future[Seq[CharInfo]]
 
 }
+

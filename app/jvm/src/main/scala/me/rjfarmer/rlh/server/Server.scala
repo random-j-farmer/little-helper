@@ -12,6 +12,7 @@ import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsResponse, ZkStatsRequest}
 import me.rjfarmer.rlh.eve._
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
+import spray.can.Http
 import spray.http.{HttpEntity, MediaTypes}
 import spray.routing.SimpleRoutingApp
 
@@ -27,9 +28,9 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 
 }
 
-object Server extends SimpleRoutingApp with Api with RequestTimeout {
+object Server extends SimpleRoutingApp with Api with RequestTimeout with ShutdownIfNotBound {
 
-  import Boot._
+  import Boot.{bootTimeout => _, _}
 
   val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
@@ -42,7 +43,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout {
 
     Runtime.getRuntime.addShutdownHook(CacheManagerShutdownHook)
 
-    startServer(bootHost, port = bootPort) {
+    val response = startServer(bootHost, port = bootPort) {
       get {
         pathSingleSlash {
           complete {
@@ -60,8 +61,13 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout {
           }
         }
     }
+
+    // does not work because we hang in opening ehc disk cache when started
+    // multiple times
+    shutdownIfNotBound(response)
   }
 
+  import Boot.bootTimeout
   implicit val timeoutDuration = bootTimeout.duration
 
   private def listIds(names: Seq[String]): Future[Seq[CharacterIDAndName]] = {
@@ -153,5 +159,27 @@ trait RequestTimeout {
     FiniteDuration(d.length, d.unit)
   }
 }
+
+trait ShutdownIfNotBound {
+  import scala.concurrent.ExecutionContext
+  import scala.concurrent.Future
+
+  def shutdownIfNotBound(f: Future[Any])
+                        (implicit system: ActorSystem, ec: ExecutionContext) = {
+    f.mapTo[Http.Event].map {
+      case Http.Bound(address) =>
+        println(s"Interface bound to $address")
+
+      case Http.CommandFailed(cmd) =>
+        println(s"nterface could not bind: ${cmd.failureMessage}, shutting down.")
+        system.shutdown()
+    }.recover {
+      case e: Throwable =>
+        println(s"Unexpexted error binding to HTTP: ${e.getMessage}, shutting down.")
+        system.shutdown()
+    }
+  }
+}
+
 
 

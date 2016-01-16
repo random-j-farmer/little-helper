@@ -15,6 +15,7 @@ val app = crossProject.settings(
     "com.lihaoyi" %%% "utest" % "0.3.1",
     "com.lihaoyi" %%% "autowire" % "0.2.5"
   ),
+  testFrameworks += new TestFramework("utest.runner.Framework"),
   scalaVersion := "2.11.7")
 .enablePlugins(JavaAppPackaging)
 .jsSettings(

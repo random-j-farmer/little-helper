@@ -5,6 +5,7 @@ package me.rjfarmer.rlh.client
 import autowire._
 import me.rjfarmer.rlh.api.{Api, CharInfo}
 import me.rjfarmer.rlh.logging.LoggerRLH
+import me.rjfarmer.rlh.shared.EveCharacterName
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html
@@ -182,9 +183,16 @@ object LittleHelper {
 
     val tsStarted = submitStarted
 
-    val pilotNames = pilotBox.value.split("""\n""")
-    log.debug("calling listCharacters with " + pilotNames.size + " pilots")
-    val future = Ajaxer[Api].listCharacters(pilotNames).call()
+    val pilotNames = pilotBox.value.split("""\n""").map(_.trim)
+    val illegalNames = pilotNames.filterNot(EveCharacterName.isValidCharacterName)
+    if (illegalNames.nonEmpty) {
+      log.info("illegal pilot names: " + illegalNames.mkString(", "))
+    }
+
+    val validNames = pilotNames.filter(EveCharacterName.isValidCharacterName)
+
+    log.debug("calling listCharacters with " + validNames.length + " pilots")
+    val future = Ajaxer[Api].listCharacters(validNames).call()
     future.onFailure { case ex: Throwable =>
       submitError(tsStarted, ex)
     }

@@ -1,5 +1,4 @@
 (A) README.md and LICENSE.md +github
-(A) Detect valid character names +github http://community.eveonline.com/support/policies/eve-user-policy/
 (A) show system name if IGB
 (B) allow easy override of resource files (i.e. put some dir into classpath) - no re-deply of jar just for a config change
 (B) Actorize request-pipeline (i.e. reduce use of futures) +WsRewrite
@@ -7,10 +6,12 @@
 (C) Keep request timeouts short and use outdated, cached information on xml api /zkillboard errors +WsRewrite
 (C) Request data that arrives after the timeout should still be cached and used the next time around +WsRewrite
 (D) Have Client detect Server changes (e.g. git tree), ask for reload
+(D) error message when started muliple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
 
 
+x (A) Detect valid character names +github http://community.eveonline.com/support/policies/eve-user-policy/
 x (A) Pilot count
 x (A) Some indication about busy/not-busy status (i.e. server request in progress)
 x (A) Give time of scan
