@@ -14,18 +14,17 @@ object EveCharacterName {
   def isValidCharacterName(name: String): Boolean = {
 
     (name.length >= 3 && name.length <= 37) && {
-      val names = name.split(' ')
-      println("name lenghts: " + names.map(_.size).mkString(", "))
-      names.length match {
-        // firstname lastname
-        case 2 =>
-          names(0).length <= 24 &&
-            names(1).length <= 12 &&
+      name.split(' ') match {
+        case Array(name) =>
+          name.length <= 24 &&
+          isValidNamePart(name)
+        case names @ Array(firstName, lastName) =>
+          firstName.length <= 24 &&
+            lastName.length <= 12 &&
             names.forall(isValidNamePart)
-        // firstname middle lastname
-        case 3 =>
-          (names(0).length + names(1).length + 1) <= 24 &&
-            names(2).length <= 12 &&
+        case names @ Array(firstName, middleName, lastName) =>
+          (firstName.length + middleName.length + 1) <= 24 &&
+            lastName.length <= 12 &&
             names.forall(isValidNamePart)
         case _ => false
       }

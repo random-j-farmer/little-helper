@@ -10,11 +10,17 @@ object EveCharacterNameTest extends TestSuite {
       'minimal {
         assert(EveCharacterName.isValidCharacterName("a b"))
       }
+      'singlePart {
+        assert(EveCharacterName.isValidCharacterName("Mynxee"))
+      }
       'twoParts {
         assert(EveCharacterName.isValidCharacterName("Rixx Javix"))
       }
       'threeParts {
         assert(EveCharacterName.isValidCharacterName("Random J Farmer"))
+      }
+      'maximalSinglePart {
+        assert(EveCharacterName.isValidCharacterName("AbcdefghijAbcdefghij1234"))
       }
       'maximalMiddle {
         assert(EveCharacterName.isValidCharacterName("Abcdefghij1 Abcdefghij12 Abcdefghij12"))
@@ -28,11 +34,11 @@ object EveCharacterNameTest extends TestSuite {
       'tooshort {
         assert(! EveCharacterName.isValidCharacterName("ab"))
       }
-      'onePart {
-        assert(! EveCharacterName.isValidCharacterName("abc"))
-      }
       'fourParts {
         assert(! EveCharacterName.isValidCharacterName("a b c d"))
+      }
+      'singlePartTooLong {
+        assert(! EveCharacterName.isValidCharacterName("AbcdefghijAbcdefghij12345"))
       }
       'firstOrMiddleTooLong {
         assert(! EveCharacterName.isValidCharacterName("Abcdefghij1 Abcdefghij123 A"))
