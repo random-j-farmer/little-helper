@@ -70,8 +70,8 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 
   implicit val timeoutDuration = bootTimeout.duration
 
-  private def listIds(names: Seq[String]): Future[Seq[CharacterIDAndName]] = {
-    ask(characterID, CharacterIDRequest(names, Seq(), Seq()))
+  private def listIds(names: Vector[String]): Future[Vector[CharacterIDAndName]] = {
+    ask(characterID, CharacterIDRequest(names, Map(), Map(), Vector()))
       .asInstanceOf[Future[CharacterIDResponse]]
       .map(resp => resp.fullResult.get.filter(ian => ian.characterID != 0L))
   }
@@ -88,19 +88,20 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
       .map(resp => resp.stats.get)
   }
 
-  def listCharacters(names: Seq[String]): Future[Seq[CharInfo]] = {
+  def listCharacters(names: Vector[String]): Future[Vector[CharInfo]] = {
 
     val idsFuture = listIds(names)
-    val result = Promise[Seq[CharInfo]]()
+    val result = Promise[Vector[CharInfo]]()
     idsFuture.onComplete {
       case Success(ids) =>
         val f1 = Future.sequence(ids.map((ian) => characterInfo(ian.characterID)))
         val f2 = Future.sequence(ids.map((ian) => zkStats(ian.characterID)))
         f1.zip(f2).onComplete {
           case Success(Pair(infos, zkstats)) =>
-            result.success(infos.zip(zkstats)
-              .map { pair => CharInfo(pair._1, pair._2)}
-              .sorted(ByActiveAndDestroyed))
+            val infoMap = Map[Long,CharacterInfo]() ++ infos.map(ci => (ci.characterID, ci))
+            val zkMap = Map[Long,ZkStats]() ++ zkstats.map(zk => (zk.info.id, zk))
+            result.success(ids.map(ian => CharInfo(ian.characterName, infoMap.get(ian.characterID), zkMap.get(ian.characterID)))
+              .sorted(ByDestroyed))
           case Failure(ex) =>
             result.failure(ex)
         }
@@ -138,15 +139,11 @@ object Boot extends RequestTimeout {
   }
 }
 
-object ByActiveAndDestroyed extends Ordering[CharInfo] {
+object ByDestroyed extends Ordering[CharInfo] {
   override def compare(x: CharInfo, y: CharInfo): Int = {
-    val zk1 = x.zkStats
-    val zk2 = y.zkStats
-    val act = (zk2.activepvp.kills > 0).compareTo(zk1.activepvp.kills > 0) // reverse
-    act match {
-      case 0 => zk2.lastMonths.shipsDestroyed.compareTo(zk1.lastMonths.shipsDestroyed)
-      case _ => act
-    }
+    val yi = y.recentKills.getOrElse(0)
+    val xi = x.recentKills.getOrElse(0)
+    yi.compareTo(xi)
   }
 }
 

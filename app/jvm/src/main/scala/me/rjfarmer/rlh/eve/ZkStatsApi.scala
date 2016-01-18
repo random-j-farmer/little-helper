@@ -203,7 +203,7 @@ class RestZkStatsApi extends Actor with ActorLogging {
       long(info \ "killID").getOrElse(0L),
       str(info \ "name").getOrElse(""))
 
-    ZkStats(zkInfo, activePvP, lastMonths(zkMonths))
+    ZkStats(zkInfo, activePvP, lastMonths(zkMonths), System.currentTimeMillis())
 
   }
 

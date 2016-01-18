@@ -136,7 +136,8 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
       etxt(elem, "race"), etxt(elem, "bloodline"), etxt(elem, "ancestry"),
       etxt(elem, "corporationID").toLong, etxt(elem, "corporation"), etxt(elem, "corporationDate"),
       opttxt(elem, "allianceID").map(_.toLong), opttxt(elem, "alliance"), opttxt(elem, "allianceDate"),
-      etxt(elem, "securityStatus").toDouble, age, eh)
+      etxt(elem, "securityStatus").toDouble, age, eh,
+      System.currentTimeMillis())
   }
 
 }

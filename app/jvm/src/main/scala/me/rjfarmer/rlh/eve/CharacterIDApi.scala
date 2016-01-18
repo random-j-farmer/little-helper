@@ -30,10 +30,11 @@ trait CharacterIDBatcher {
    * are the map keys.
    *
    * @param names a sequence of names to look up
-   * @return a triple of undefined names (normalized), all names (normalized), map of string to result
+   * @return a tupel4 of undefined names (normalized), all names (normalized),
+   *         map of string to fresh results, map of string to result
    */
-  def partitionNames(names: Seq[String])
-  : (Seq[String], Seq[String], Map[String, CharacterIDAndName]) = {
+  def partitionNames(names: Vector[String])
+  : (Vector[String], Vector[String], Map[String, CharacterIDAndName], Map[String, CharacterIDAndName]) = {
     // LOWER CASE!
     val allNames = names
       .map { _.trim }
@@ -45,8 +46,9 @@ trait CharacterIDBatcher {
     val defined = Map[String,CharacterIDAndName]() ++
       namesAndCached.filter(_._2.isDefined).map((p) => (p._1, p._2.get))
     val undefinedNames = namesAndCached.filter(_._2.isEmpty).map(_._1)
+    val fresh = defined.filter(p => p._2.isFresh)
 
-    (undefinedNames, allNames, defined)
+    (undefinedNames, allNames, fresh, defined)
   }
 
   /**
@@ -65,13 +67,13 @@ trait CharacterIDBatcher {
    * these are filtered out.
    *
    * @param m map of string to result
-   * @param names normalized names
+   * @param names map of normalized names to character id and names
    * @return
    */
-  def extractIdAndNames(m: Map[String, CharacterIDAndName], names: Seq[String]) = {
+  def extractIdAndNames(m: Map[String, CharacterIDAndName], names: Vector[String]): Vector[CharacterIDAndName] = {
     names.filter(m.contains)
       .map(m)
-      .filter { ian => ian.characterID != 0 }
+      .filter { ian => ian.characterID != 0}
   }
 
 }
@@ -85,7 +87,10 @@ object CharacterIDApi {
     Props(new CharacterIDApi(cache, eveCharacterID))
   }
 
-  final case class CharacterIDRequest(names: Seq[String], alreadyKnown: Seq[CharacterIDAndName], replyTo: Seq[ActorRef])
+  final case class CharacterIDRequest(names: Vector[String],
+                                      fresh: Map[String, CharacterIDAndName],
+                                      cached: Map[String, CharacterIDAndName],
+                                      replyTo: Vector[ActorRef])
 
   /**
    * Character ID Response.
@@ -95,10 +100,14 @@ object CharacterIDApi {
    * @param request request for this response
    * @param result result sequence or error
    */
-  final case class CharacterIDResponse(request: CharacterIDRequest, result: Try[Seq[CharacterIDAndName]]) {
+  final case class CharacterIDResponse(request: CharacterIDRequest, result: Try[Vector[CharacterIDAndName]]) {
 
     /** results and already known (cached) values */
-    def fullResult: Try[Seq[CharacterIDAndName]] = result map { ians => request.alreadyKnown ++ ians }
+    def fullResult: Try[Vector[CharacterIDAndName]] = {
+      result map { reallyFresh =>
+        reallyFresh ++ request.cached.values
+      }
+    }
 
   }
 
@@ -112,7 +121,7 @@ object CharacterIDApi {
 
       println("ARGS: " + args.mkString(", "))
 
-      val rslt = Await.result(ask(characterID, CharacterIDRequest(args.toSeq, Seq(), Seq())), bootTimeout.duration).asInstanceOf[CharacterIDResponse]
+      val rslt = Await.result(ask(characterID, CharacterIDRequest(args.toVector, Map(), Map(), Vector())), bootTimeout.duration).asInstanceOf[CharacterIDResponse]
       println("RESULT: " + rslt.fullResult)
     } finally {
       bootSystem.shutdown()
@@ -144,28 +153,34 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
 
   override def receive: Receive = {
 
-    case CharacterIDRequest(names, alreadyKnown, Seq()) =>
+    case CharacterIDRequest(names, fresh, cached, Vector()) =>
       // for calling via ask, empty replyTo will be filled in with sender()
-      self ! CharacterIDRequest(names, alreadyKnown, Seq(sender()))
+      self ! CharacterIDRequest(names, fresh, cached, Vector(sender()))
 
-    case request @ CharacterIDRequest(names, alreadyKnown, replyTo) =>
+    case request @ CharacterIDRequest(names, _, _, replyTo) =>
+      // this is the cache!  we expect no incoming cache information
       log.debug("request for {}", names.mkString)
-      val (undefinedNames, allNames, defined) = partitionNames(names)
-      log.debug("character id request: {} cached/ {} not in cache", defined.size, undefinedNames.size)
+      val (undefinedNames, allNames, fresh, defined) = partitionNames(names)
+      log.debug("character id request: {} fresh / {} cached/ {} not in cache",
+        fresh.size, defined.size, undefinedNames.size)
 
       if (undefinedNames.isEmpty) {
-        replyTo foreach { ref =>
-          ref ! CharacterIDResponse(request, Try(extractIdAndNames(defined, allNames)))
+        if (fresh.size == defined.size) {
+          replyTo foreach { ref =>
+            ref ! CharacterIDResponse(request, Try(extractIdAndNames(fresh, allNames)))
+          }
+        } else {
+          eveCharacterID ! CharacterIDRequest(undefinedNames, fresh, defined, replyTo :+ self)
         }
       } else {
-        eveCharacterID ! CharacterIDRequest(undefinedNames, defined.values.toSeq, replyTo :+ self)
+        eveCharacterID ! CharacterIDRequest(undefinedNames, fresh, defined, replyTo :+ self)
       }
 
     case CharacterIDResponse(request, result) =>
       result match {
         case Success(ians) =>
           log.debug("caching characters: {}", ians.map(_.characterName).mkString(", "))
-          ians foreach { ian => cache.put(ian.characterName, ian) }
+          ians.foreach { ian => cache.put(ian.characterName, ian) }
         case Failure(ex) =>
           log.debug("can not cache failed request: {} {}", request, ex)
       }
@@ -193,7 +208,7 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Seq[Chara
 
   override def receive: Actor.Receive = {
 
-    case request @ CharacterIDRequest(names, alreadyKnown, replyTo) =>
+    case request @ CharacterIDRequest(names, fresh, cached, replyTo) =>
       log.debug("request {}", request)
       completeGrouped(names)
         .onComplete { _try =>
@@ -216,12 +231,12 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Seq[Chara
    * @param names names to look up
    * @return
    */
-  def completeGrouped(names: Seq[String]): Future[Seq[CharacterIDAndName]] = {
+  def completeGrouped(names: Vector[String]): Future[Vector[CharacterIDAndName]] = {
     import scala.concurrent.ExecutionContext.Implicits.global
 
     val grouped = names map { Pair("names", _) } grouped 100
     Future.sequence(grouped map { pairs => complete(Uri.Query(pairs:_*))})
-      .map { groups => groups.flatten.toSeq }
+      .map { groups => groups.flatten.toVector }
   }
 
   val uriPath = "/eve/CharacterID.xml.aspx"
@@ -230,11 +245,12 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Seq[Chara
   def successMessage(xml: String): Seq[CharacterIDAndName] = {
     val elem = XML.loadString(xml)
     // log.debug("xml: {}", xml)
+    val ts = System.currentTimeMillis()
     for {
       row <- elem \\ "row"
       id = row \@ "characterID"
     } yield {
-      CharacterIDAndName(id.toLong, (row \@ "name").toLowerCase)
+      CharacterIDAndName(id.toLong, (row \@ "name").toLowerCase, ts)
     }
   }
 
