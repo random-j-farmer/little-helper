@@ -203,7 +203,7 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Seq[Chara
   override def receive: Actor.Receive = {
 
     case request @ CharacterIDRequest(names, cached, replyTo) =>
-      log.debug("request {}", request)
+      log.debug("request: looking up {} names", names.size)
       completeGrouped(names)
         .onComplete { _try =>
           val resp = CharacterIDResponse(request, _try)
