@@ -1,14 +1,14 @@
 package me.rjfarmer.rlh.server
 
 import akka.actor.ActorSystem
-import akka.routing.FromConfig
 import akka.pattern.ask
+import akka.routing.FromConfig
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve.CharacterIDApi._
-import me.rjfarmer.rlh.eve.CharacterInfoApi.{GroupedCharacterInfoResponse, GroupedCharacterInfoRequest}
-import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsResponse, ZkStatsRequest}
+import me.rjfarmer.rlh.eve.CharacterInfoApi.{GroupedCharacterInfoRequest, GroupedCharacterInfoResponse}
+import me.rjfarmer.rlh.eve.ZkStatsApi.{GroupedZkStatsRequest, GroupedZkStatsResponse}
 import me.rjfarmer.rlh.eve._
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
@@ -17,7 +17,7 @@ import spray.http.{HttpEntity, MediaTypes}
 import spray.routing.SimpleRoutingApp
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Promise, Future}
+import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}
 
 
@@ -82,10 +82,10 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
       .map(resp => resp.infoById)
   }
 
-  private def zkStats(id: Long): Future[ZkStats] = {
-    ask(zkStats, ZkStatsRequest(id, Vector()))
-      .asInstanceOf[Future[ZkStatsResponse]]
-      .map(resp => resp.stats.get)
+  private def zkStats(ids: Vector[Long]): Future[Map[Long, ZkStats]] = {
+    ask(zkStats, GroupedZkStatsRequest(ids, None))
+      .asInstanceOf[Future[GroupedZkStatsResponse]]
+      .map(resp => resp.infoById)
   }
 
   def listCharacters(names: Vector[String]): Future[Vector[CharInfo]] = {
@@ -94,11 +94,11 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     val result = Promise[Vector[CharInfo]]()
     idsFuture.onComplete {
       case Success(ids) =>
-        val f1 = characterInfos(ids.map(_.characterID))
-        val f2 = Future.sequence(ids.map((ian) => zkStats(ian.characterID)))
+        val pureIds = ids.map(_.characterID)
+        val f1 = characterInfos(pureIds)
+        val f2 = zkStats(pureIds)
         f1.zip(f2).onComplete {
-          case Success(Pair(infoMap, zkstats)) =>
-            val zkMap = Map[Long,ZkStats]() ++ zkstats.map(zk => (zk.info.id, zk))
+          case Success(Pair(infoMap, zkMap)) =>
             result.success(ids.map(ian => CharInfo(ian.characterName, infoMap.get(ian.characterID), zkMap.get(ian.characterID)))
               .sorted(ByDestroyed))
           case Failure(ex) =>
@@ -158,8 +158,7 @@ trait RequestTimeout {
 }
 
 trait ShutdownIfNotBound {
-  import scala.concurrent.ExecutionContext
-  import scala.concurrent.Future
+  import scala.concurrent.{ExecutionContext, Future}
 
   def shutdownIfNotBound(f: Future[Any])
                         (implicit system: ActorSystem, ec: ExecutionContext) = {

@@ -88,8 +88,7 @@ trait Api {
 
 object Api {
 
-  // val apiRequestTimeoutMills = 6L * 3600L * 1000L
-  val apiRequestTimeoutMills = 10000L
+  val apiRequestTimeoutMills = 6L * 3600L * 1000L
 
 }
 

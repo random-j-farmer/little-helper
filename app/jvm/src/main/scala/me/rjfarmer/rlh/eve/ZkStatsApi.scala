@@ -5,9 +5,8 @@ import java.util.{Calendar, TimeZone}
 import akka.actor._
 import akka.io.IO
 import akka.pattern.ask
-import akka.routing.FromConfig
 import me.rjfarmer.rlh.api._
-import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsRequest, ZkStatsResponse}
+import me.rjfarmer.rlh.eve.ZkStatsApi.{GroupedZkStatsRequest, GroupedZkStatsResponse, ZkStatsRequest, ZkStatsResponse}
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.{Cache, CacheManager}
 import spray.can.Http
@@ -26,25 +25,13 @@ object ZkStatsApi {
     Props(new ZkStatsApi(cache, zkRestApi))
   }
 
-  final case class ZkStatsRequest(characterID: Long, replyTo: Seq[ActorRef])
+  final case class GroupedZkStatsRequest(ids: Vector[Long], replyTo: Option[ActorRef])
+
+  final case class GroupedZkStatsResponse(infoById: Map[Long, ZkStats])
+
+  final case class ZkStatsRequest(characterID: Long, replyTo: Option[ActorRef], cacheTo: Option[ActorRef])
 
   final case class ZkStatsResponse(request: ZkStatsRequest, stats: Try[ZkStats])
-
-  def main(args: Array[String]) = {
-    import Boot._
-
-    try {
-      val eveZkStats = bootSystem.actorOf(FromConfig.props(RestZkStatsApi.props), "restZkStatsPool")
-      val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(cacheManager, eveZkStats)), "zkStatsPool")
-
-      println("ARG: " + args(0))
-
-      val rslt = Await.result(ask(zkStats, ZkStatsRequest(args(0).toLong, Seq())), bootTimeout.duration).asInstanceOf[ZkStatsResponse]
-      println("RESULT: " + rslt)
-    } finally {
-      bootSystem.shutdown()
-    }
-  }
 
 }
 
@@ -53,20 +40,29 @@ class ZkStatsApi (cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef) ex
 
   override def receive: Receive = {
 
-    case ZkStatsRequest(id, Seq()) =>
-      // for convenience of testing via ask
-      self ! ZkStatsRequest(id, Seq(sender()))
+    case GroupedZkStatsRequest(ids, None) =>
+      // for easy asking
+      self ! GroupedZkStatsRequest(ids, Some(sender()))
 
-    case request @ ZkStatsRequest(id, replyTo) =>
-      val zks = cache.get(id)
-      if (zks == null) {
-        zkRestApi ! request.copy(replyTo = replyTo :+ self)
+    case GroupedZkStatsRequest(ids, Some(replyTo)) =>
+      val cached: Map[Long, ZkStats] = Map() ++
+        ids.map(id => (id, cache.get(id)))
+          .filter(pair => pair._2 != null)
+      val uncachedIds = ids.filterNot(cached.contains)
+      val stalest = cached.values
+        .toVector
+        .filterNot(_.isFresh)
+        .sortWith((ci1, ci2) => ci1.receivedTimestamp < ci2.receivedTimestamp)
+        .map(_.info.id)
+        .take(10)
+      val need = uncachedIds ++ stalest
+      log.debug("grouped zkstats request: {} requested / {} uncached / {} refresh stale",
+        ids.size, uncachedIds.size, stalest.size)
+      if (need.isEmpty) {
+        replyTo ! GroupedZkStatsResponse(cached)
       } else {
-        log.debug("cached stats for character {}", id)
-        val resp = ZkStatsResponse(request, Success(zks))
-        request.replyTo.foreach { reply => reply ! resp }
+        sendGroupedResponse(replyTo, cached, need)
       }
-
     case ZkStatsResponse(req, tzs) =>
       tzs match {
         case Success(zs) =>
@@ -78,6 +74,31 @@ class ZkStatsApi (cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef) ex
 
     case msg =>
       log.warning("unknown message type: {}", msg)
+  }
+
+  import Boot._
+  implicit val timeoutDuration = bootTimeout.duration
+  import scala.concurrent.ExecutionContext.Implicits.global
+
+  private def zkStats(id: Long, cc: ActorRef): Future[ZkStats] = {
+    ask(zkRestApi, ZkStatsRequest(id, None, Some(cc)))
+      .asInstanceOf[Future[ZkStatsResponse]]
+      .map(resp => resp.stats.get)
+  }
+
+  def sendGroupedResponse(replyTo: ActorRef, cached: Map[Long, ZkStats], need: Vector[Long]): Unit = {
+    Future.sequence(need.map(id => zkStats(id, self)))
+      .onComplete {
+        case Success(cis) =>
+          val result = cached ++ cis.map(zk => (zk.info.id, zk))
+          replyTo ! GroupedZkStatsResponse(result)
+        case Failure(ex) =>
+          log.error("sendGroupedResponse: using cached (stale?) response because we received an error: {}", ex)
+          // accessing cache is safe - its a concurrent cache
+          // some retrieves might have worked and are in the cache now
+          val result = cached ++ need.map(id => (id, cache.get(id))).filter(pair => pair._2 != null)
+          replyTo ! GroupedZkStatsResponse(result)
+      }
   }
 
 }
@@ -108,11 +129,16 @@ class RestZkStatsApi extends Actor with ActorLogging {
 
   override def receive: Receive = {
 
-    case request @ ZkStatsRequest(id, replyTo) =>
+    case ZkStatsRequest(id, None, cacheTo) =>
+      // for easy asking
+      self ! ZkStatsRequest(id, Some(sender()), cacheTo)
+      CharacterInfo
+    case request @ ZkStatsRequest(id, Some(replyTo), cacheTo) =>
       val fzs = complete(id)
       fzs.onComplete { tci =>
         val resp = ZkStatsResponse(request, tci)
-        request.replyTo.foreach { reply => reply ! resp }
+        replyTo ! resp
+        cacheTo.foreach(cc => cc ! resp)
       }
 
     case msg =>

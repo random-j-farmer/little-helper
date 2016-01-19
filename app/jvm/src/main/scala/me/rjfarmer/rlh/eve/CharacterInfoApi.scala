@@ -2,14 +2,13 @@ package me.rjfarmer.rlh.eve
 
 import akka.actor._
 import akka.pattern.ask
-import akka.routing.FromConfig
 import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory}
-import me.rjfarmer.rlh.eve.CharacterInfoApi.{GroupedCharacterInfoResponse, GroupedCharacterInfoRequest, CharacterInfoRequest, CharacterInfoResponse}
+import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoRequest, CharacterInfoResponse, GroupedCharacterInfoRequest, GroupedCharacterInfoResponse}
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 import scala.xml.XML
 
@@ -27,23 +26,6 @@ object CharacterInfoApi {
   final case class CharacterInfoRequest(characterID: Long, replyTo: Option[ActorRef], cacheTo: Option[ActorRef])
 
   final case class CharacterInfoResponse(request: CharacterInfoRequest, result: Try[CharacterInfo])
-
-
-  def main(args: Array[String]) = {
-    import Boot._
-
-    try {
-      val eveCharacterInfo = bootSystem.actorOf(FromConfig.props(EveCharacterInfoApi.props), "eveCharacterInfoPool")
-      val characterInfo = bootSystem.actorOf(FromConfig.props(CharacterInfoApi.props(cacheManager, eveCharacterInfo)), "characterInfoPool")
-
-      println("ARG: " + args(0))
-
-      val rslt = Await.result(ask(characterInfo, CharacterInfoRequest(args(0).toLong, None, None)), bootTimeout.duration).asInstanceOf[CharacterInfoResponse]
-      println("RESULT: " + rslt)
-    } finally {
-      bootSystem.shutdown()
-    }
-  }
 
 }
 
@@ -87,23 +69,6 @@ class CharacterInfoApi (cache: Cache[java.lang.Long, CharacterInfo], eveCharacte
         replyTo ! GroupedCharacterInfoResponse(cached)
       } else {
         sendGroupedResponse(replyTo, cached, need)
-      }
-
-
-    // XXX delete me - not really used anymore
-    case CharacterInfoRequest(id, None, cacheTo) =>
-      // for convenience of testing via ask
-      self ! CharacterInfoRequest(id, Some(sender()), cacheTo)
-
-    // XXX delete me - not really used anymore
-    case request@CharacterInfoRequest(id, Some(replyTo), _) =>
-      val ci = cache.get(id)
-      if (ci == null) {
-        eveCharacterInfo ! request.copy(cacheTo = Some(self))
-      } else {
-        log.debug("cached character info for character {}", id)
-        val resp = CharacterInfoResponse(request, Success(ci))
-        request.replyTo.foreach { reply => reply ! resp }
       }
 
     case CharacterInfoResponse(req, tci) =>
