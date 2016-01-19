@@ -2,12 +2,14 @@
 
     <ehcache:persistence directory="little-cache.ehc" />
 
+    <!-- we do  not use ehc.
+
+    it is done by the application so it can use stale information if a webservice
+    is not responding (zkillboard on busy weekends)
+    -->
     <ehcache:cache alias="characterIDCache">
         <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
         <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.CharacterIDAndName</ehcache:value-type>
-        <ehcache:expiry>
-            <ehcache:tti unit="hours">48</ehcache:tti>
-        </ehcache:expiry>
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="5000" unit="entries"/>
@@ -19,9 +21,6 @@
     <ehcache:cache alias="characterInfoCache">
         <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.Long</ehcache:key-type>
         <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.CharacterInfo</ehcache:value-type>
-        <ehcache:expiry>
-            <ehcache:tti unit="hours">6</ehcache:tti>
-        </ehcache:expiry>
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="2000" unit="entries"/>
@@ -33,9 +32,6 @@
     <ehcache:cache alias="zkStatsCache">
         <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.Long</ehcache:key-type>
         <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.ZkStats</ehcache:value-type>
-        <ehcache:expiry>
-            <ehcache:tti unit="hours">6</ehcache:tti>
-        </ehcache:expiry>
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="2000" unit="entries"/>

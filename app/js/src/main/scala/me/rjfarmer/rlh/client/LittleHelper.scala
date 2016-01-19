@@ -40,6 +40,20 @@ final case class Alliance(name: String) extends AllianceOrCorp {
 final case class Corp(name: String) extends AllianceOrCorp {
   val typ: String = "corp"
 }
+// if the rest api is slow, alliance or corp might not be known
+final case class Unknown(name: String) extends AllianceOrCorp {
+  val typ: String = "pilot"
+}
+
+object AllianceOrCorp {
+
+  def apply(ci: CharInfo): AllianceOrCorp = {
+    ci.alliance.fold {
+      ci.corporation.fold (new Unknown(ci.name).asInstanceOf[AllianceOrCorp])( name => new Corp(name))
+    } (new Alliance(_))
+  }
+
+}
 
 
 @JSExport
@@ -119,13 +133,6 @@ object LittleHelper {
     responseTimeAgo
   }
 
-  def allianceOrCorp(p: CharInfo): AllianceOrCorp = {
-    p.info.alliance match {
-      case None => Corp(p.info.corporation)
-      case Some(alli) => Alliance(alli)
-    }
-  }
-
   def submitStarted: Long = {
     addClass(submitButton, "pure-button-disabled")
     System.currentTimeMillis()
@@ -142,13 +149,13 @@ object LittleHelper {
     pilotCount.innerHTML = s"${pilots.size} pilots, "
 
     val cutoff = math.max(2.0d, pilots.size/10.0d)
-    val byCorp: Seq[Seq[CharInfo]] = pilots.groupBy(allianceOrCorp).values.toSeq
+    val byCorp: Seq[Seq[CharInfo]] = pilots.groupBy(AllianceOrCorp.apply).values.toSeq
       .filter(group => group.size >= cutoff)
       .sortWith((a,b) => a.size > b.size)
     val other = pilots.size - byCorp.map(_.size).sum
 
     corpList.innerHTML = ""
-    for (group <- byCorp; aoc = allianceOrCorp(group.head)) {
+    for (group <- byCorp; aoc = AllianceOrCorp(group.head)) {
       corpList.appendChild(tr(
         td(a(href:=aoc.uri, target:="_blank", aoc.name)),
         td(group.size)).render)
@@ -161,12 +168,11 @@ object LittleHelper {
 
     pilotList.innerHTML = ""
     for (p <- pilots) {
-      val trow = tr(id:=p.info.characterID,
-        td( a(href:=zkillboardUrl(p), target:="_blank", p.info.characterName)),
-        td(allianceOrCorp(p).name),
-        td(p.zkStats.lastMonths.shipsDestroyed + "/" + p.zkStats.lastMonths.shipsLost),
-        td(p.zkStats.activepvp.kills),
-        td("%4.2f".format(p.info.characterAge))
+      val trow = tr(
+        td( a(href:=zkillboardUrl(p), target:="_blank", p.name)),
+        td(AllianceOrCorp(p).name),
+        td(p.recentKills.getOrElse(0) + "/" + p.recentLosses.getOrElse()),
+        td("%4.2f".format(p.characterAge.getOrElse(-1.0d)))
       ).render
       pilotList.appendChild(trow)
     }
@@ -189,7 +195,7 @@ object LittleHelper {
       log.info("illegal pilot names: " + illegalNames.mkString(", "))
     }
 
-    val validNames = pilotNames.filter(EveCharacterName.isValidCharacterName)
+    val validNames = pilotNames.filter(EveCharacterName.isValidCharacterName).toVector
 
     log.debug("calling listCharacters with " + validNames.length + " pilots")
     val future = Ajaxer[Api].listCharacters(validNames).call()
@@ -200,7 +206,7 @@ object LittleHelper {
   }
 
   def zkillboardUrl(p: CharInfo): String = {
-    s"""https://zkillboard.com/character/${p.info.characterID}/"""
+    p.characterID.fold("#")(id => s"""https://zkillboard.com/character/$id/""")
   }
 
   @JSExport
@@ -223,7 +229,7 @@ object LittleHelper {
               corpList),
             h2("Pilots"),
             table(cls:="pure-table pure-table-striped",
-              thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Active"), th("Age"))),
+              thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
               pilotList))
       ).render
     )
