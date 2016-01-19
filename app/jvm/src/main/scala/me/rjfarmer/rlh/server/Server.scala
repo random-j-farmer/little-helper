@@ -7,7 +7,7 @@ import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve.CharacterIDApi._
-import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoResponse, CharacterInfoRequest}
+import me.rjfarmer.rlh.eve.CharacterInfoApi.{GroupedCharacterInfoResponse, GroupedCharacterInfoRequest}
 import me.rjfarmer.rlh.eve.ZkStatsApi.{ZkStatsResponse, ZkStatsRequest}
 import me.rjfarmer.rlh.eve._
 import org.ehcache.CacheManagerBuilder
@@ -71,19 +71,19 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   implicit val timeoutDuration = bootTimeout.duration
 
   private def listIds(names: Vector[String]): Future[Vector[CharacterIDAndName]] = {
-    ask(characterID, CharacterIDRequest(names, Map(), Map(), Vector()))
+    ask(characterID, CharacterIDRequest(names, Map(), Vector()))
       .asInstanceOf[Future[CharacterIDResponse]]
       .map(resp => resp.fullResult.get.filter(ian => ian.characterID != 0L))
   }
 
-  private def characterInfo(id: Long): Future[CharacterInfo] = {
-    ask(characterInfo, CharacterInfoRequest(id, Seq()))
-      .asInstanceOf[Future[CharacterInfoResponse]]
-      .map(resp => resp.result.get)
+  private def characterInfos(ids: Vector[Long]): Future[Map[Long,CharacterInfo]] = {
+    ask(characterInfo, GroupedCharacterInfoRequest(ids, None))
+      .asInstanceOf[Future[GroupedCharacterInfoResponse]]
+      .map(resp => resp.infoById)
   }
 
   private def zkStats(id: Long): Future[ZkStats] = {
-    ask(zkStats, ZkStatsRequest(id, Seq()))
+    ask(zkStats, ZkStatsRequest(id, Vector()))
       .asInstanceOf[Future[ZkStatsResponse]]
       .map(resp => resp.stats.get)
   }
@@ -94,11 +94,10 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     val result = Promise[Vector[CharInfo]]()
     idsFuture.onComplete {
       case Success(ids) =>
-        val f1 = Future.sequence(ids.map((ian) => characterInfo(ian.characterID)))
+        val f1 = characterInfos(ids.map(_.characterID))
         val f2 = Future.sequence(ids.map((ian) => zkStats(ian.characterID)))
         f1.zip(f2).onComplete {
-          case Success(Pair(infos, zkstats)) =>
-            val infoMap = Map[Long,CharacterInfo]() ++ infos.map(ci => (ci.characterID, ci))
+          case Success(Pair(infoMap, zkstats)) =>
             val zkMap = Map[Long,ZkStats]() ++ zkstats.map(zk => (zk.info.id, zk))
             result.success(ids.map(ian => CharInfo(ian.characterName, infoMap.get(ian.characterID), zkMap.get(ian.characterID)))
               .sorted(ByDestroyed))
@@ -119,6 +118,7 @@ object Boot extends RequestTimeout {
   val bootConfig = ConfigFactory.load()
   val bootHost = bootConfig.getString("http.host")
   val bootPort = bootConfig.getInt("http.port")
+  val refreshStale = bootConfig.getInt("little-helper.xml-api.refresh-stale")
   val cacheManager = CacheManagerBuilder.newCacheManager(new XmlConfiguration(getClass.getClassLoader.getResource("little-cache.xml")))
 
   cacheManager.init()

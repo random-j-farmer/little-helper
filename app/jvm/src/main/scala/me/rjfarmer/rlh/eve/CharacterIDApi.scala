@@ -31,10 +31,10 @@ trait CharacterIDBatcher {
    *
    * @param names a sequence of names to look up
    * @return a tupel4 of undefined names (normalized), all names (normalized),
-   *         map of string to fresh results, map of string to result
+   *         map of string to cached result
    */
   def partitionNames(names: Vector[String])
-  : (Vector[String], Vector[String], Map[String, CharacterIDAndName], Map[String, CharacterIDAndName]) = {
+  : (Vector[String], Vector[String], Map[String, CharacterIDAndName]) = {
     // LOWER CASE!
     val allNames = names
       .map { _.trim }
@@ -46,9 +46,8 @@ trait CharacterIDBatcher {
     val defined = Map[String,CharacterIDAndName]() ++
       namesAndCached.filter(_._2.isDefined).map((p) => (p._1, p._2.get))
     val undefinedNames = namesAndCached.filter(_._2.isEmpty).map(_._1)
-    val fresh = defined.filter(p => p._2.isFresh)
 
-    (undefinedNames, allNames, fresh, defined)
+    (undefinedNames, allNames, defined)
   }
 
   /**
@@ -88,7 +87,6 @@ object CharacterIDApi {
   }
 
   final case class CharacterIDRequest(names: Vector[String],
-                                      fresh: Map[String, CharacterIDAndName],
                                       cached: Map[String, CharacterIDAndName],
                                       replyTo: Vector[ActorRef])
 
@@ -121,7 +119,7 @@ object CharacterIDApi {
 
       println("ARGS: " + args.mkString(", "))
 
-      val rslt = Await.result(ask(characterID, CharacterIDRequest(args.toVector, Map(), Map(), Vector())), bootTimeout.duration).asInstanceOf[CharacterIDResponse]
+      val rslt = Await.result(ask(characterID, CharacterIDRequest(args.toVector, Map(), Vector())), bootTimeout.duration).asInstanceOf[CharacterIDResponse]
       println("RESULT: " + rslt.fullResult)
     } finally {
       bootSystem.shutdown()
@@ -153,27 +151,23 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
 
   override def receive: Receive = {
 
-    case CharacterIDRequest(names, fresh, cached, Vector()) =>
+    case CharacterIDRequest(names, cached, Vector()) =>
       // for calling via ask, empty replyTo will be filled in with sender()
-      self ! CharacterIDRequest(names, fresh, cached, Vector(sender()))
+      self ! CharacterIDRequest(names, cached, Vector(sender()))
 
-    case request @ CharacterIDRequest(names, _, _, replyTo) =>
+    case request @ CharacterIDRequest(names, _, replyTo) =>
       // this is the cache!  we expect no incoming cache information
       log.debug("request for {}", names.mkString)
-      val (undefinedNames, allNames, fresh, defined) = partitionNames(names)
-      log.debug("character id request: {} fresh / {} cached/ {} not in cache",
-        fresh.size, defined.size, undefinedNames.size)
+      val (undefinedNames, allNames, defined) = partitionNames(names)
+      log.debug("character id request: {} cached/ {} not in cache",
+        defined.size, undefinedNames.size)
 
       if (undefinedNames.isEmpty) {
-        if (fresh.size == defined.size) {
-          replyTo foreach { ref =>
-            ref ! CharacterIDResponse(request, Try(extractIdAndNames(fresh, allNames)))
-          }
-        } else {
-          eveCharacterID ! CharacterIDRequest(undefinedNames, fresh, defined, replyTo :+ self)
+        replyTo foreach { ref =>
+          ref ! CharacterIDResponse(request, Try(extractIdAndNames(defined, allNames)))
         }
       } else {
-        eveCharacterID ! CharacterIDRequest(undefinedNames, fresh, defined, replyTo :+ self)
+        eveCharacterID ! CharacterIDRequest(undefinedNames, defined, replyTo :+ self)
       }
 
     case CharacterIDResponse(request, result) =>
@@ -208,7 +202,7 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Seq[Chara
 
   override def receive: Actor.Receive = {
 
-    case request @ CharacterIDRequest(names, fresh, cached, replyTo) =>
+    case request @ CharacterIDRequest(names, cached, replyTo) =>
       log.debug("request {}", request)
       completeGrouped(names)
         .onComplete { _try =>

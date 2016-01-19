@@ -4,7 +4,7 @@ import akka.actor._
 import akka.pattern.ask
 import akka.routing.FromConfig
 import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory}
-import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoRequest, CharacterInfoResponse}
+import me.rjfarmer.rlh.eve.CharacterInfoApi.{GroupedCharacterInfoResponse, GroupedCharacterInfoRequest, CharacterInfoRequest, CharacterInfoResponse}
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
@@ -20,7 +20,11 @@ object CharacterInfoApi {
     Props(new CharacterInfoApi(cache, eveCharacterInfo))
   }
 
-  final case class CharacterInfoRequest(characterID: Long, replyTo: Seq[ActorRef])
+  final case class GroupedCharacterInfoRequest(ids: Vector[Long], replyTo: Option[ActorRef])
+
+  final case class GroupedCharacterInfoResponse(infoById: Map[Long, CharacterInfo])
+
+  final case class CharacterInfoRequest(characterID: Long, replyTo: Option[ActorRef], cacheTo: Option[ActorRef])
 
   final case class CharacterInfoResponse(request: CharacterInfoRequest, result: Try[CharacterInfo])
 
@@ -34,7 +38,7 @@ object CharacterInfoApi {
 
       println("ARG: " + args(0))
 
-      val rslt = Await.result(ask(characterInfo, CharacterInfoRequest(args(0).toLong, Seq())), bootTimeout.duration).asInstanceOf[CharacterInfoResponse]
+      val rslt = Await.result(ask(characterInfo, CharacterInfoRequest(args(0).toLong, None, None)), bootTimeout.duration).asInstanceOf[CharacterInfoResponse]
       println("RESULT: " + rslt)
     } finally {
       bootSystem.shutdown()
@@ -56,17 +60,46 @@ object CharacterInfoApi {
 class CharacterInfoApi (cache: Cache[java.lang.Long, CharacterInfo], eveCharacterInfo: ActorRef)
   extends Actor with ActorLogging {
 
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   override def receive: Receive = {
 
-    case CharacterInfoRequest(id, Seq()) =>
-      // for convenience of testing via ask
-      self ! CharacterInfoRequest(id, Seq(sender()))
 
-    case request@CharacterInfoRequest(id, replyTo) =>
+    case GroupedCharacterInfoRequest(ids, None) =>
+      // for easy asking
+      self ! GroupedCharacterInfoRequest(ids, Some(sender()))
+
+    case GroupedCharacterInfoRequest(ids, Some(replyTo)) =>
+      val cached: Map[Long, CharacterInfo] = Map() ++
+        ids.map(id => (id, cache.get(id)))
+          .filter(pair => pair._2 != null)
+      val uncachedIds = ids.filterNot(cached.contains)
+      val stalest = cached.values
+        .toVector
+        .filterNot(_.isFresh)
+        .sortWith((ci1, ci2) => ci1.receivedTimestamp < ci2.receivedTimestamp)
+        .map(_.characterID)
+        .take(10)
+      val need = uncachedIds ++ stalest
+      log.debug("grouped character info request: {} requested / {} uncached / {} refresh stale",
+        ids.size, uncachedIds.size, stalest.size)
+      if (need.isEmpty) {
+        replyTo ! GroupedCharacterInfoResponse(cached)
+      } else {
+        sendGroupedResponse(replyTo, cached, need)
+      }
+
+
+    // XXX delete me - not really used anymore
+    case CharacterInfoRequest(id, None, cacheTo) =>
+      // for convenience of testing via ask
+      self ! CharacterInfoRequest(id, Some(sender()), cacheTo)
+
+    // XXX delete me - not really used anymore
+    case request@CharacterInfoRequest(id, Some(replyTo), _) =>
       val ci = cache.get(id)
       if (ci == null) {
-        eveCharacterInfo ! request.copy(replyTo = replyTo :+ self)
+        eveCharacterInfo ! request.copy(cacheTo = Some(self))
       } else {
         log.debug("cached character info for character {}", id)
         val resp = CharacterInfoResponse(request, Success(ci))
@@ -87,6 +120,30 @@ class CharacterInfoApi (cache: Cache[java.lang.Long, CharacterInfo], eveCharacte
 
   }
 
+  import Boot._
+  implicit val timeoutDuration = bootTimeout.duration
+
+  private def characterInfo(id: Long, cc: ActorRef): Future[CharacterInfo] = {
+    ask(eveCharacterInfo, CharacterInfoRequest(id, None, Some(cc)))
+      .asInstanceOf[Future[CharacterInfoResponse]]
+      .map(resp => resp.result.get)
+  }
+
+  def sendGroupedResponse(replyTo: ActorRef, cached: Map[Long, CharacterInfo], need: Vector[Long]): Unit = {
+    Future.sequence(need.map(id => characterInfo(id, self)))
+      .onComplete {
+        case Success(cis) =>
+          val result = cached ++ cis.map(ci => (ci.characterID, ci))
+          replyTo ! GroupedCharacterInfoResponse(result)
+        case Failure(ex) =>
+          log.error("sendGroupedResponse: using cached (stale?) response because we received an error: {}", ex)
+          // accessing cache is safe - its a concurrent cache
+          // some retrieves might have worked and are in the cache now
+          val result = cached ++ need.map(id => (id, cache.get(id))).filter(pair => pair._2 != null)
+          replyTo ! GroupedCharacterInfoResponse(result)
+      }
+  }
+
 }
 
 object EveCharacterInfoApi {
@@ -104,11 +161,16 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
 
   override def receive: Receive = {
 
-    case request@CharacterInfoRequest(id, replyTo) =>
+    case CharacterInfoRequest(id, None, cacheTo) =>
+      // for easy asking
+      self ! CharacterInfoRequest(id, Some(sender()), cacheTo)
+
+    case request@CharacterInfoRequest(id, Some(replyTo), cacheTo) =>
       val fci: Future[CharacterInfo] = complete(Uri.Query(Pair("characterID", id.toString)))
       fci.onComplete { tci =>
         val resp = CharacterInfoResponse(request, tci)
-        request.replyTo.foreach { reply => reply ! resp }
+        replyTo ! resp
+        cacheTo.foreach(cc => cc ! resp)
       }
 
     case msg =>

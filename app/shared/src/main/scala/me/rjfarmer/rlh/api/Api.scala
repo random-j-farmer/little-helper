@@ -6,8 +6,9 @@ trait WebserviceResult {
 
   def receivedTimestamp: Long
 
-  def isFresh: Boolean = receivedTimestamp + Api.apiRequestTimeoutMills < System.currentTimeMillis()
-
+  def isFresh: Boolean = {
+    receivedTimestamp + Api.apiRequestTimeoutMills > System.currentTimeMillis()
+  }
 }
 
 final case class EmploymentHistory(corporationID: String, corporationName: String, startDate: String)
@@ -87,7 +88,8 @@ trait Api {
 
 object Api {
 
-  val apiRequestTimeoutMills = 6L * 3600L * 1000L
+  // val apiRequestTimeoutMills = 6L * 3600L * 1000L
+  val apiRequestTimeoutMills = 10000L
 
 }
 
