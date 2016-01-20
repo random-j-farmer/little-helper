@@ -4,6 +4,7 @@ import akka.actor._
 import akka.pattern.ask
 import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory}
 import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoRequest, CharacterInfoResponse, GroupedCharacterInfoRequest, GroupedCharacterInfoResponse}
+import me.rjfarmer.rlh.eve.EveCharacterInfoApi.CharacterInfoXml
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
@@ -115,6 +116,9 @@ object EveCharacterInfoApi {
 
   def props: Props = Props[EveCharacterInfoApi]()
 
+  /** for testing the parsing part */
+  final case class CharacterInfoXml(xml: String)
+
 }
 
 /**
@@ -138,6 +142,10 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
         cacheTo.foreach(cc => cc ! resp)
       }
 
+    case CharacterInfoXml(xml) =>
+      // for testing the xml parsing
+      sender() ! successMessage(xml)
+
     case msg =>
       log.warning("unknown message type: {}", msg)
 
@@ -154,7 +162,7 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
       row <- history \ "row"
     } yield EmploymentHistory(row \@ "corporationID", row \@ "corporationName", row \@ "startDate")
 
-    val firstEmployment = parseDatetime(eh.last.startDate).getTime
+    val firstEmployment = parseDatetime(if (eh.isEmpty) etxt(elem, "corporationDate") else eh.last.startDate).getTime
     val now = System.currentTimeMillis()
     val age = (now - firstEmployment) / (1000.0d * 3600.0d * 24.0d * 365.242199d)
 

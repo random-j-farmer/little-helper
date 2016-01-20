@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<eveapi version="2">
+    <currentTime>2016-01-20 19:04:42</currentTime>
+    <result>
+        <characterID>147078184</characterID>
+        <characterName>Forhotea Corp</characterName>
+        <race>Gallente</race>
+        <bloodlineID>7</bloodlineID>
+        <bloodline>Gallente</bloodline>
+        <ancestryID>14</ancestryID>
+        <ancestry>Miners</ancestry>
+        <corporationID>145366590</corporationID>
+        <corporation>Forhotea Corporation</corporation>
+        <corporationDate>2003-05-14 17:53:00</corporationDate>
+        <securityStatus>0</securityStatus>
+        <rowset columns="recordID,corporationID,corporationName,startDate" key="recordID" name="employmentHistory" />
+    </result>
+    <cachedUntil>2016-01-20 20:01:42</cachedUntil>
+</eveapi>
