@@ -22,6 +22,11 @@ object EveCharacterNameTest extends TestSuite {
       'alsoLegal {
         assert(EveCharacterName.isValidCharacterName("Wolf SteinerDavion"))
       }
+      'alsoLegalFromJitaLocal {
+        for (name <- Seq("Mr. Burke", "Ol' Farmer McNinja", "Pill' Cosby", "Secondary' Target")) {
+          assert(EveCharacterName.isValidCharacterName(name))
+        }
+      }
     }
 
     'invalid {

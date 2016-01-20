@@ -16,10 +16,12 @@ object EveCharacterName {
 
   def isValidCharacterName(name: String): Boolean = {
 
-    (name.length >= 3 && name.length <= 37) && {
+    (name.length >= 3 && name.length <= 37) &&
+      isValidFirstOrLast(name.head) &&
+      isValidFirstOrLast(name.last) && {
       name.split(' ') match {
-        case Array(name) =>
-          isValidNamePart(name)
+        case Array(names) =>
+          isValidNamePart(names)
         case names @ Array(_, _) =>
           names.forall(isValidNamePart)
         case names @ Array(_, _, _) =>
@@ -30,18 +32,18 @@ object EveCharacterName {
     }
   }
 
-  private val validCharacters = """^[a-zA-Z0-9-']*$""".r
+  private val validCharacters = """^[a-zA-Z0-9-'.]*$""".r
+
+  private def isValidFirstOrLast(ch: Char): Boolean = {
+    ch != '-' && ch != ''' && ch != '.'
+  }
 
   private def isValidNamePart(part: String) = {
     part.length >= 1 &&
       (part match {
         case validCharacters(_*) => true
         case _ => false
-      }) &&
-      part.head != '-' &&
-      part.head != ''' &&
-      part.last != '-' &&
-      part.last != '''
+      })
 
   }
 

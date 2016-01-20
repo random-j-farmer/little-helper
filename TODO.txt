@@ -1,4 +1,3 @@
-(A) illegal pilot names: Mr. Burke, Ol' Farmer McNinja, Pill' Cosby, Secondary' Target
 (A) 10% refresh stale with min configurable
 (A) Staleness indication in client
 (B) README.md and LICENSE.md +github
@@ -10,6 +9,7 @@ D-Scan
 Shopping list
 
 
+x (A) legal pilot names that fail current test: Mr. Burke, Ol' Farmer McNinja, Pill' Cosby, Secondary' Target
 x (A) Bugfix: Characters with empty employment history: use corporationDate field
 x (C) Re-write so failing requests don't give error, but additional message about incomplete information +ForeverCache
 x (C) Keep request timeouts short and use outdated, cached information on xml api /zkillboard errors +ForeverCache
