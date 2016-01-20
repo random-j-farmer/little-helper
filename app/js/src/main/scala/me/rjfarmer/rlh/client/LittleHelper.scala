@@ -3,7 +3,7 @@ package me.rjfarmer.rlh.client
 // for correct macro application
 
 import autowire._
-import me.rjfarmer.rlh.api.{Api, CharInfo}
+import me.rjfarmer.rlh.api.{WebserviceResult, Api, CharInfo}
 import me.rjfarmer.rlh.logging.LoggerRLH
 import me.rjfarmer.rlh.shared.EveCharacterName
 import org.scalajs.dom
@@ -167,14 +167,29 @@ object LittleHelper {
     }
 
     pilotList.innerHTML = ""
-    for (p <- pilots) {
+    val nowMillis = System.currentTimeMillis()
+    for (p <- pilots; frKlass = freshnessKlass(nowMillis, p)) {
       val trow = tr(
         td( a(href:=zkillboardUrl(p), target:="_blank", p.name)),
         td(AllianceOrCorp(p).name),
         td(p.recentKills.getOrElse(0) + "/" + p.recentLosses.getOrElse()),
-        td("%4.2f".format(p.characterAge.getOrElse(-1.0d)))
+        td(span("%4.2f".format(p.characterAge.getOrElse(-1.0d))),
+          span(`class`:=frKlass, title:=frKlass.replace('-', ' '), style:="font-size: 200%", raw("&#8226;")))
       ).render
       pilotList.appendChild(trow)
+    }
+  }
+
+  def freshnessKlass(nowMillis: Long, wsr: WebserviceResult): String = {
+    val relativeAge = (nowMillis - wsr.receivedTimestamp) / Api.apiRequestTimeoutMills.toDouble
+    if (relativeAge < 0.5d) {
+      "fresh"
+    } else if (relativeAge < 1.0d) {
+      "getting-stale"
+    } else if (relativeAge < 2.0d) {
+      "stale"
+    } else {
+      "out-of-date"
     }
   }
 

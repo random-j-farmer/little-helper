@@ -1,15 +1,12 @@
 package me.rjfarmer.rlh.eve
 
 import akka.actor._
-import akka.pattern.ask
-import akka.routing.FromConfig
 import me.rjfarmer.rlh.api.CharacterIDAndName
 import me.rjfarmer.rlh.eve.CharacterIDApi.{CharacterIDRequest, CharacterIDResponse}
-import me.rjfarmer.rlh.server.Boot
 import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 import scala.xml.XML
 
@@ -109,23 +106,6 @@ object CharacterIDApi {
 
   }
 
-
-  def main(args: Array[String]) = {
-    import Boot._
-
-    try {
-      val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
-      val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
-
-      println("ARGS: " + args.mkString(", "))
-
-      val rslt = Await.result(ask(characterID, CharacterIDRequest(args.toVector, Map(), Vector())), bootTimeout.duration).asInstanceOf[CharacterIDResponse]
-      println("RESULT: " + rslt.fullResult)
-    } finally {
-      bootSystem.shutdown()
-    }
-  }
-
 }
 
 
@@ -157,7 +137,7 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
 
     case request @ CharacterIDRequest(names, _, replyTo) =>
       // this is the cache!  we expect no incoming cache information
-      log.debug("request for {}", names.mkString)
+      log.debug("request for {} ids", names.length)
       val (undefinedNames, allNames, defined) = partitionNames(names)
       log.debug("character id request: {} cached/ {} not in cache",
         defined.size, undefinedNames.size)
@@ -173,7 +153,7 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
     case CharacterIDResponse(request, result) =>
       result match {
         case Success(ians) =>
-          log.debug("caching characters: {}", ians.map(_.characterName).mkString(", "))
+          log.debug("caching {} characters", ians.size)
           ians.foreach { ian => cache.put(ian.characterName, ian) }
         case Failure(ex) =>
           log.debug("can not cache failed request: {} {}", request, ex)

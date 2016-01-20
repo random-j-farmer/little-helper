@@ -2,7 +2,7 @@ package me.rjfarmer.rlh.eve
 
 import akka.actor._
 import akka.pattern.ask
-import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory}
+import me.rjfarmer.rlh.api.{WebserviceResult, CharacterInfo, EmploymentHistory}
 import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoRequest, CharacterInfoResponse, GroupedCharacterInfoRequest, GroupedCharacterInfoResponse}
 import me.rjfarmer.rlh.eve.EveCharacterInfoApi.CharacterInfoXml
 import me.rjfarmer.rlh.server.Boot
@@ -30,6 +30,33 @@ object CharacterInfoApi {
 
 }
 
+/** logic to decide what to fetch */
+trait CacheRefresher[T <: WebserviceResult] {
+
+  def cache: Cache[java.lang.Long, T]
+
+  def characterID(wsr: T): Long
+
+  def minRefreshStale: Int
+
+  def cachedAndNeedToRefresh(ids: Vector[Long]): (Map[Long, T], Vector[Long]) = {
+    val cached: Map[Long, T] = Map() ++
+      ids.map(id => (id, cache.get(id)))
+        .filter(pair => pair._2 != null)
+    val uncachedIds = ids.filterNot(cached.contains)
+    val refreshNum = math.max(minRefreshStale, (ids.length * 0.1d).toInt)
+    val stalest = cached.values
+      .toVector
+      .filterNot(_.isFresh)
+      .sortWith((ci1, ci2) => ci1.receivedTimestamp < ci2.receivedTimestamp)
+      .map(characterID)
+      .take(math.max(minRefreshStale, (ids.size*0.1).toInt))
+    val need = uncachedIds ++ stalest
+    (cached, need)
+  }
+
+}
+
 /**
  * Main character info api.
  *
@@ -40,10 +67,14 @@ object CharacterInfoApi {
  * @param cache lru cache
  * @param eveCharacterInfo actorref for eve xml api
  */
-class CharacterInfoApi (cache: Cache[java.lang.Long, CharacterInfo], eveCharacterInfo: ActorRef)
-  extends Actor with ActorLogging {
+class CharacterInfoApi (val cache: Cache[java.lang.Long, CharacterInfo], eveCharacterInfo: ActorRef)
+  extends Actor with ActorLogging with CacheRefresher[CharacterInfo] {
 
   import scala.concurrent.ExecutionContext.Implicits.global
+
+  override def characterID(ci: CharacterInfo) = ci.characterID
+
+  override val minRefreshStale = Boot.minRefreshStale
 
   override def receive: Receive = {
 
@@ -53,19 +84,9 @@ class CharacterInfoApi (cache: Cache[java.lang.Long, CharacterInfo], eveCharacte
       self ! GroupedCharacterInfoRequest(ids, Some(sender()))
 
     case GroupedCharacterInfoRequest(ids, Some(replyTo)) =>
-      val cached: Map[Long, CharacterInfo] = Map() ++
-        ids.map(id => (id, cache.get(id)))
-          .filter(pair => pair._2 != null)
-      val uncachedIds = ids.filterNot(cached.contains)
-      val stalest = cached.values
-        .toVector
-        .filterNot(_.isFresh)
-        .sortWith((ci1, ci2) => ci1.receivedTimestamp < ci2.receivedTimestamp)
-        .map(_.characterID)
-        .take(10)
-      val need = uncachedIds ++ stalest
-      log.debug("grouped character info request: {} requested / {} uncached / {} refresh stale",
-        ids.size, uncachedIds.size, stalest.size)
+      val (cached, need) = cachedAndNeedToRefresh(ids)
+      log.debug("grouped character info request: {} total / {} cached / {} need to refresh",
+        ids.size, cached.size, need.size)
       if (need.isEmpty) {
         replyTo ! GroupedCharacterInfoResponse(cached)
       } else {

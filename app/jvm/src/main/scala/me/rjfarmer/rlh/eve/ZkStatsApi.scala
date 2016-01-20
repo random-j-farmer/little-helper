@@ -36,7 +36,12 @@ object ZkStatsApi {
 }
 
 /** In-Memory cached zkillboard stats */
-class ZkStatsApi (cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef) extends Actor with ActorLogging {
+class ZkStatsApi (val cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef)
+  extends Actor with ActorLogging with CacheRefresher[ZkStats] {
+
+  override def characterID(zk: ZkStats) = zk.info.id
+
+  override val minRefreshStale = Boot.minRefreshStale
 
   override def receive: Receive = {
 
@@ -45,19 +50,9 @@ class ZkStatsApi (cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef) ex
       self ! GroupedZkStatsRequest(ids, Some(sender()))
 
     case GroupedZkStatsRequest(ids, Some(replyTo)) =>
-      val cached: Map[Long, ZkStats] = Map() ++
-        ids.map(id => (id, cache.get(id)))
-          .filter(pair => pair._2 != null)
-      val uncachedIds = ids.filterNot(cached.contains)
-      val stalest = cached.values
-        .toVector
-        .filterNot(_.isFresh)
-        .sortWith((ci1, ci2) => ci1.receivedTimestamp < ci2.receivedTimestamp)
-        .map(_.info.id)
-        .take(10)
-      val need = uncachedIds ++ stalest
-      log.debug("grouped zkstats request: {} requested / {} uncached / {} refresh stale",
-        ids.size, uncachedIds.size, stalest.size)
+      val (cached, need) = cachedAndNeedToRefresh(ids)
+      log.debug("grouped zkstats request: {} total / {} cached / {} need to refresh",
+        ids.size, cached.size, need.size)
       if (need.isEmpty) {
         replyTo ! GroupedZkStatsResponse(cached)
       } else {

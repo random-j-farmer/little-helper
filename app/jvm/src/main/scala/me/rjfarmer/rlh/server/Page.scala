@@ -31,10 +31,8 @@ object Page {
         script(src:="/es5-sham.min.js"),
         script(src:=scalaJsResource),
         // script(src:="//localhost:12345/workbench.js"),
-        link(
-          rel:="stylesheet",
-          href:="/webjars/pure/0.6.0/pure.css"
-        )
+        link(rel:="stylesheet", href:="/webjars/pure/0.6.0/pure.css"),
+        link(rel:="stylesheet", href:="/little-helper.css")
       ),
       body(padding:="24px",
         div(id:="rlhMenu", cls:="pure-menu pure-menu-horizontal",

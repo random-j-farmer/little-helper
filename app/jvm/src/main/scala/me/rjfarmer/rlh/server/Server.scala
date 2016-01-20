@@ -30,7 +30,9 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 
 object Server extends SimpleRoutingApp with Api with RequestTimeout with ShutdownIfNotBound {
 
-  import Boot._
+  import Boot.{bootTimeout => _, _}
+  // use longer timeouts here
+  implicit val bootTimeout = Boot.requestTimeout(bootConfig, "little-helper.xml-api.ajax-timeout-long")
 
   val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
@@ -68,7 +70,6 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     shutdownIfNotBound(response)
   }
 
-  implicit val timeoutDuration = bootTimeout.duration
 
   private def listIds(names: Vector[String]): Future[Vector[CharacterIDAndName]] = {
     ask(characterID, CharacterIDRequest(names, Map(), Vector()))
@@ -99,9 +100,11 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
         val f2 = zkStats(pureIds)
         f1.zip(f2).onComplete {
           case Success(Pair(infoMap, zkMap)) =>
+            bootSystem.log.debug("listCharacters: successful response for {} names", names.size)
             result.success(ids.map(ian => CharInfo(ian.characterName, infoMap.get(ian.characterID), zkMap.get(ian.characterID)))
               .sorted(ByDestroyed))
           case Failure(ex) =>
+            bootSystem.log.error("listCharacters: received error: {}", ex)
             result.failure(ex)
         }
       case Failure(ex) =>
@@ -118,13 +121,13 @@ object Boot extends RequestTimeout {
   val bootConfig = ConfigFactory.load()
   val bootHost = bootConfig.getString("http.host")
   val bootPort = bootConfig.getInt("http.port")
-  val refreshStale = bootConfig.getInt("little-helper.xml-api.refresh-stale")
+  val minRefreshStale = bootConfig.getInt("little-helper.xml-api.refresh-stale")
   val cacheManager = CacheManagerBuilder.newCacheManager(new XmlConfiguration(getClass.getClassLoader.getResource("little-cache.xml")))
 
   cacheManager.init()
 
   implicit val bootSystem = ActorSystem("little-helper", bootConfig)
-  implicit val bootTimeout = requestTimeout(bootConfig)
+  implicit val bootTimeout = requestTimeout(bootConfig, "little-helper.xml-api.ajax-timeout")
 
 
   object CacheManagerShutdownHook extends Thread {
@@ -150,8 +153,8 @@ object ByDestroyed extends Ordering[CharInfo] {
 trait RequestTimeout {
   import scala.concurrent.duration._
 
-  def requestTimeout(config: Config): Timeout = {
-    val t = config.getString("spray.can.server.request-timeout")
+  def requestTimeout(config: Config, configKey: String): Timeout = {
+    val t = config.getString(configKey)
     val d = Duration(t)
     FiniteDuration(d.length, d.unit)
   }

@@ -1,0 +1,4 @@
+.fresh { color: green; }
+.getting-stale { color: yellow; }
+.stale { color: orange; }
+.out-of-date { color: red; }

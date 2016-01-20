@@ -9,6 +9,7 @@ trait WebserviceResult {
   def isFresh: Boolean = {
     receivedTimestamp + Api.apiRequestTimeoutMills > System.currentTimeMillis()
   }
+
 }
 
 final case class EmploymentHistory(corporationID: String, corporationName: String, startDate: String)
@@ -48,7 +49,7 @@ final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMon
  * @param name character name.  its in the input, will always be there.
  * @param characterID character ID. will usually be present
  * @param complete complete response with all info present (although it may be stale)
- * @param fresh response will all info in defined caching time ranges
+ * @param receivedTimestamp oldest webservice timestamp that was involved in construction of this object
  * @param characterAge character age.  character info may not be there for large requests
  * @param corporation corporation name.  character info may not be there for large requests
  * @param alliance alliance name.  character info may not be there for large requests
@@ -58,7 +59,7 @@ final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMon
 final case class CharInfo(name: String,
                          characterID: Option[Long],
                          complete: Boolean,
-                         fresh: Boolean,
+                         receivedTimestamp: Long,
 
                          characterAge: Option[Double],
                          corporation: Option[String],
@@ -66,14 +67,16 @@ final case class CharInfo(name: String,
 
                          recentKills: Option[Int],
                          recentLosses: Option[Int])
+  extends WebserviceResult
 
 object CharInfo {
 
   def apply(name: String, oci: Option[CharacterInfo], ozk: Option[ZkStats]): CharInfo = {
     val complete = oci.isDefined && ozk.isDefined
+    val oldest = math.min(oci.fold(0L)(ci => ci.receivedTimestamp), ozk.fold(0L)(zk => zk.receivedTimestamp))
     new CharInfo(oci.fold(name)(_.characterName),
       oci.map(_.characterID), complete = complete,
-      oci.exists(_.isFresh) && ozk.exists(_.isFresh),
+      oldest,
       oci.map(_.characterAge), oci.map(_.corporation), oci.flatMap(_.alliance),
       ozk.map(_.lastMonths.shipsDestroyed), ozk.map(_.lastMonths.shipsLost))
   }
