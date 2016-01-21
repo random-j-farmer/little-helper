@@ -1,5 +1,3 @@
-(A) client: display of undefined when incomplete results
-(A) max refresh boundary (10% of total names MINUS all the unknown entities).  i.e. don't even try refresh if lots of unknowns
 (B) README.md and LICENSE.md +github
 (B) show system name if IGB
 (C) allow easy override of resource files (i.e. put some dir into classpath) - no re-deply of jar just for a config change
@@ -8,7 +6,9 @@
 D-Scan
 Shopping list
 
-
+x (A) client: give alliance and corp counts
+x (A) client: display of undefined when incomplete results
+x (A) max refresh boundary (10% of total names MINUS all the unknown entities).  i.e. don't even try refresh if lots of unknowns
 x (A) rework character id lookup for better handling of incomplete results (jita local!)
 x (A) Staleness indication in client
 x (A) Longer timeout on combining future than the group info/zkstat requests

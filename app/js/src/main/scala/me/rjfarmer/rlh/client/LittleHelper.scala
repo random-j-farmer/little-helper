@@ -149,13 +149,14 @@ object LittleHelper {
     pilotCount.innerHTML = s"${pilots.size} pilots, "
 
     val cutoff = math.max(2.0d, pilots.size/10.0d)
-    val byCorp: Seq[Seq[CharInfo]] = pilots.groupBy(AllianceOrCorp.apply).values.toSeq
+    val byCorp: Map[AllianceOrCorp, Seq[CharInfo]] = pilots.groupBy(AllianceOrCorp.apply)
+    val topCorps: Seq[Seq[CharInfo]] = byCorp.values.toSeq
       .filter(group => group.size >= cutoff)
       .sortWith((a,b) => a.size > b.size)
-    val other = pilots.size - byCorp.map(_.size).sum
+    val other = pilots.size - topCorps.map(_.size).sum
 
     corpList.innerHTML = ""
-    for (group <- byCorp; aoc = AllianceOrCorp(group.head)) {
+    for (group <- topCorps; aoc = AllianceOrCorp(group.head)) {
       corpList.appendChild(tr(
         td(a(href:=aoc.uri, target:="_blank", aoc.name)),
         td(group.size)).render)
@@ -168,13 +169,13 @@ object LittleHelper {
 
     pilotList.innerHTML = ""
     val nowMillis = System.currentTimeMillis()
-    for (p <- pilots; frKlass = freshnessKlass(nowMillis, p)) {
+    for (p <- pilots; frKlass = freshnessKlass(nowMillis, p); corp = AllianceOrCorp(p)) {
       val trow = tr(
         td( a(href:=zkillboardUrl(p), target:="_blank", p.name)),
-        td(AllianceOrCorp(p).name),
-        td(p.recentKills.getOrElse(0) + "/" + p.recentLosses.getOrElse()),
+        td(corp.name, " (", byCorp(corp).size, ")"),
+        td(p.recentKills.getOrElse(0) + "/" + p.recentLosses.getOrElse(0)),
         td(span("%4.2f".format(p.characterAge.getOrElse(-1.0d))),
-          span(`class`:=frKlass, title:=frKlass.replace('-', ' '), style:="font-size: 200%", raw("&#8226;")))
+          span(`class`:=frKlass, title:=frKlass.replace('-', ' '), style:="font-size: 150%", raw("&#8226;")))
       ).render
       pilotList.appendChild(trow)
     }

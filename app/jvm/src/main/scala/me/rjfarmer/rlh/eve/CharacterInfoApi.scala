@@ -44,13 +44,13 @@ trait CacheRefresher[T <: WebserviceResult] {
       ids.map(id => (id, cache.get(id)))
         .filter(pair => pair._2 != null)
     val uncachedIds = ids.filterNot(cached.contains)
-    val refreshNum = math.max(minRefreshStale, (ids.length * 0.1d).toInt)
+    val refreshNum = math.max(minRefreshStale, (ids.length * 0.1d).toInt - uncachedIds.length)
     val stalest = cached.values
       .toVector
       .filterNot(_.isFresh)
       .sortWith((ci1, ci2) => ci1.receivedTimestamp < ci2.receivedTimestamp)
       .map(characterID)
-      .take(math.max(minRefreshStale, (ids.size*0.1).toInt))
+      .take(refreshNum)
     val need = uncachedIds ++ stalest
     (cached, need)
   }
