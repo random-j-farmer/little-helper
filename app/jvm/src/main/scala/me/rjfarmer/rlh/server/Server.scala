@@ -71,10 +71,9 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   }
 
 
-  private def listIds(names: Vector[String]): Future[Vector[CharacterIDAndName]] = {
-    ask(characterID, CharacterIDRequest(names, Map(), Vector()))
+  private def listIds(names: Vector[String]): Future[CharacterIDResponse] = {
+    ask(characterID, CharacterIDRequest(names, Map(), None, None))
       .asInstanceOf[Future[CharacterIDResponse]]
-      .map(resp => resp.fullResult.get.filter(ian => ian.characterID != 0L))
   }
 
   private def characterInfos(ids: Vector[Long]): Future[Map[Long,CharacterInfo]] = {
@@ -94,15 +93,18 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     val idsFuture = listIds(names)
     val result = Promise[Vector[CharInfo]]()
     idsFuture.onComplete {
-      case Success(ids) =>
-        val pureIds = ids.map(_.characterID)
+      case Success(idResp) =>
+        val pureIds = idResp.fullResult.values.map(_.characterID).toVector
         val f1 = characterInfos(pureIds)
         val f2 = zkStats(pureIds)
         f1.zip(f2).onComplete {
           case Success(Pair(infoMap, zkMap)) =>
             bootSystem.log.debug("listCharacters: successful response for {} names", names.size)
-            result.success(ids.map(ian => CharInfo(ian.characterName, infoMap.get(ian.characterID), zkMap.get(ian.characterID)))
-              .sorted(ByDestroyed))
+            result.success(idResp.allNames.map { name =>
+              val id: Long = idResp.fullResult.get(name).map(ian => ian.characterID).getOrElse(0L)
+              // no results for key 0L, so if the id was not resolved, we return None
+              CharInfo(name, infoMap.get(id), zkMap.get(id))
+            }.sorted(ByDestroyed))
           case Failure(ex) =>
             bootSystem.log.error("listCharacters: received error: {}", ex)
             result.failure(ex)
