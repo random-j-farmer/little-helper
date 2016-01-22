@@ -16,9 +16,28 @@ val app = crossProject.settings(
     "com.lihaoyi" %%% "autowire" % "0.2.5"
   ),
   testFrameworks += new TestFramework("utest.runner.Framework"),
-  scalaVersion := "2.11.7")
-.enablePlugins(JavaAppPackaging)
-.jsSettings(
+  scalaVersion := "2.11.7",
+  pomExtra :=
+    <url>https://github.com/random.j.farmer/little-helper</url>
+      <licenses>
+        <license>
+          <name>PTS license</name>
+          <url>https://github.com/random.j.farmer/little-helper/LICENSE.md</url>
+        </license>
+      </licenses>
+      <scm>
+        <url>git://github.com/random.j.farmer/little-helper.git</url>
+        <connection>scm:git://github.com/random.j.farmer/little-helper.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>random.j.farmer</id>
+          <name>Random J Farmer</name>
+          <url>https://github.com/random.j.farmer</url>
+        </developer>
+      </developers>
+).enablePlugins(JavaAppPackaging
+).jsSettings(
   workbenchSettings: _*
 ).jsSettings(
   libraryDependencies ++= Seq(
