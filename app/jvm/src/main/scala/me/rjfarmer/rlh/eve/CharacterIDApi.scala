@@ -144,7 +144,7 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
       // this is the cache!  we expect no incoming cache information
       log.debug("request for {} ids", names.length)
       val (undefinedNames, allNames, defined) = partitionNames(names)
-      log.debug("character id request: {} cached/ {} not in cache",
+      log.info("character id request: {} cached/ {} not in cache",
         defined.size, undefinedNames.size)
 
       if (undefinedNames.isEmpty) {

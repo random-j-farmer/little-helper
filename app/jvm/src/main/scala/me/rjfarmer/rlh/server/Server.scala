@@ -89,7 +89,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   }
 
   def listCharacters(names: Vector[String]): Future[Vector[CharInfo]] = {
-
+    val ts = System.currentTimeMillis()
     val idsFuture = listIds(names)
     val result = Promise[Vector[CharInfo]]()
     idsFuture.onComplete {
@@ -99,7 +99,8 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
         val f2 = zkStats(pureIds)
         f1.zip(f2).onComplete {
           case Success(Pair(infoMap, zkMap)) =>
-            bootSystem.log.debug("listCharacters: successful response for {} names", names.size)
+            bootSystem.log.info("listCharacters: successful response for {} names in {}ms",
+              names.size, System.currentTimeMillis() - ts)
             result.success(idResp.allNames.map { name =>
               val id: Long = idResp.fullResult.get(name).map(ian => ian.characterID).getOrElse(0L)
               // no results for key 0L, so if the id was not resolved, we return None

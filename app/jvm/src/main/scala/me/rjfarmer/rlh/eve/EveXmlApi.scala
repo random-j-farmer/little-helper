@@ -42,7 +42,7 @@ trait EveXmlApi[T] {
     import scala.concurrent.ExecutionContext.Implicits.global
     val started = System.currentTimeMillis()
     val uri = httpGetUri(query)
-    log.debug("http get: {}", uri)
+    // log.debug("http get: {}", uri)
     val httpFuture = ask(hostConnector, HttpRequest(GET, httpGetUri(query)))
     val promise = Promise[T]()
     httpFuture onSuccess {

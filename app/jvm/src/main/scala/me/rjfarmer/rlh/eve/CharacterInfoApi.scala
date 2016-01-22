@@ -85,7 +85,7 @@ class CharacterInfoApi (val cache: Cache[java.lang.Long, CharacterInfo], eveChar
 
     case GroupedCharacterInfoRequest(ids, Some(replyTo)) =>
       val (cached, need) = cachedAndNeedToRefresh(ids)
-      log.debug("grouped character info request: {} total / {} cached / {} need to refresh",
+      log.info("grouped character info request: {} total / {} cached / {} need to refresh",
         ids.size, cached.size, need.size)
       if (need.isEmpty) {
         replyTo ! GroupedCharacterInfoResponse(cached)

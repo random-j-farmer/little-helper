@@ -51,7 +51,7 @@ class ZkStatsApi (val cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef
 
     case GroupedZkStatsRequest(ids, Some(replyTo)) =>
       val (cached, need) = cachedAndNeedToRefresh(ids)
-      log.debug("grouped zkstats request: {} total / {} cached / {} need to refresh",
+      log.info("grouped zkstats request: {} total / {} cached / {} need to refresh",
         ids.size, cached.size, need.size)
       if (need.isEmpty) {
         replyTo ! GroupedZkStatsResponse(cached)
@@ -157,7 +157,7 @@ class RestZkStatsApi extends Actor with ActorLogging {
   def complete(characterID: Long): Future[ZkStats] = {
     val started = System.currentTimeMillis()
     val uri = httpGetUri(characterID)
-    log.debug("http get: {}", uri)
+    // log.debug("http get: {}", uri)
     val httpFuture = ask(hostConnector, HttpRequest(GET, httpGetUri(characterID)))
     val promise = Promise[ZkStats]()
     httpFuture onSuccess {
