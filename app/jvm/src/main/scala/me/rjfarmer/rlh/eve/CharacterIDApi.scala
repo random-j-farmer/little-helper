@@ -19,7 +19,6 @@ import scala.xml.XML
  */
 trait CharacterIDBatcher {
 
-
   /**
    * Partition the names into unknown names and a map with cached results.
    *
@@ -52,26 +51,6 @@ trait CharacterIDBatcher {
    */
   def mapName(name: String): Option[CharacterIDAndName]
 
-
-  // extract ids and names
-  // note that characterID is set to "0" for invalid character names
-
-  /**
-   * Extract ids and names.
-   *
-   * Note that characterID is set to "0" for invalid character names by the Eve XML Api,
-   * these are filtered out.
-   *
-   * @param m map of string to result
-   * @param names map of normalized names to character id and names
-   * @return
-   */
-  def extractIdAndNames(m: Map[String, CharacterIDAndName], names: Vector[String]): Vector[CharacterIDAndName] = {
-    names.filter(m.contains)
-      .map(m)
-      .filter { ian => ian.characterID != 0}
-  }
-
 }
 
 
@@ -97,12 +76,15 @@ object CharacterIDApi {
    * @param result result ian sequence
    * @param unresolved any unresolved names if errors occurred. normalized form, i.e. play nice with the names in the result
    */
-  final case class CharacterIDResponse(request: CharacterIDRequest, result: Vector[CharacterIDAndName], unresolved: Set[String]) {
+  final case class CharacterIDResponse(request: CharacterIDRequest, result: Map[String, CharacterIDAndName], unresolved: Set[String]) {
 
     /** results and already known (cached) values, without 0 ids*/
     def fullResult: Map[String, CharacterIDAndName] = {
-      (request.cached ++ result.map(ian => ian.characterName -> ian)).filter(x => x._2.characterID != 0)
+      (request.cached ++ result).filterNot(pair => pair._2.characterID == 0)
     }
+
+    /** unknown names - ids are 0 */
+    def unknownNames: Vector[String] = (request.cached ++ result).values.filter(ian => ian.characterID == 0).map(_.characterName).toVector
 
     /** all names - full results and unresolved (= normalized) names */
     def allNames: Vector[String] = {
@@ -144,18 +126,24 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
       // this is the cache!  we expect no incoming cache information
       log.debug("request for {} ids", names.length)
       val (undefinedNames, allNames, defined) = partitionNames(names)
-      log.info("character id request: {} cached/ {} not in cache",
-        defined.size, undefinedNames.size)
+      val staleUnknown = defined.filter { p =>
+        val ian = p._2
+        ian.characterID == 0 && ! ian.isFresh
+      }
+      log.info("character id request: {} cached/ {} not in cache/ {} stale unknown",
+        defined.size, undefinedNames.size, staleUnknown.size)
 
-      if (undefinedNames.isEmpty) {
-        replyTo ! CharacterIDResponse(request, extractIdAndNames(defined, allNames), Set())
+      val need = undefinedNames ++ staleUnknown.keys
+
+      if (need.isEmpty) {
+        replyTo ! CharacterIDResponse(request, defined, Set())
       } else {
-        eveCharacterID ! CharacterIDRequest(undefinedNames, defined, Some(replyTo), Some(self))
+        eveCharacterID ! CharacterIDRequest(need, defined, Some(replyTo), Some(self))
       }
 
     case CharacterIDResponse(req, ians, _) =>
       log.debug("caching {} characters", ians.size)
-      ians.foreach { ian => cache.put(ian.characterName, ian) }
+      ians.foreach { pair => cache.put(pair._1, pair._2) }
 
     case msg =>
       log.warning("unknown message: {}", msg)
@@ -204,22 +192,24 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[Ch
     val grouped = req.names.map { name => "names" -> name } grouped 100
     val groupedFutures = grouped.map { pairs =>
       val future = complete(Uri.Query(pairs:_*))
-      future.onSuccess { case vec => req.cacheTo.foreach {cc => cc ! CharacterIDResponse(req, vec, Set()) } }
+      future.onSuccess { case vec =>
+        val m = Map[String, CharacterIDAndName]() ++ vec.map(ian => (ian.characterName, ian))
+        req.cacheTo.foreach {cc => cc ! CharacterIDResponse(req, m, Set()) } }
       future
     }
     Future.sequence(groupedFutures)
       .onComplete {
         case Success(groups) =>
-          val resp = CharacterIDResponse(req, groups.flatten.toVector, Set())
+          val resp = CharacterIDResponse(req, Map() ++ groups.flatten.map(ian => (ian.characterName, ian)), Set())
           req.replyTo.foreach { re => re ! resp }
         case Failure(ex) =>
           log.error("completedGrouped: received error: {}", ex)
-          var allWeGot: Vector[CharacterIDAndName] = Vector()
+          var allWeGot: Map[String, CharacterIDAndName] = Map()
           for (f <- groupedFutures; ians <- f) {
-            allWeGot ++= ians
+            allWeGot ++= ians.map(ian => (ian.characterName, ian))
           }
           val namesSet: Set[String] = Set() ++ req.names
-          val gotSet: Set[String] = Set() ++ allWeGot.map(_.characterName)
+          val gotSet: Set[String] = Set() ++ allWeGot.keys
           req.replyTo.foreach { re => re ! CharacterIDResponse(req, allWeGot, namesSet.diff(gotSet)) }
       }
   }

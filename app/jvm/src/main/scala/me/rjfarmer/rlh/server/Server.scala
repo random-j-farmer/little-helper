@@ -95,6 +95,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     idsFuture.onComplete {
       case Success(idResp) =>
         val pureIds = idResp.fullResult.values.map(_.characterID).toVector
+        bootSystem.log.warning("unknown character names: {}", idResp.unknownNames.mkString(", "))
         val f1 = characterInfos(pureIds)
         val f2 = zkStats(pureIds)
         f1.zip(f2).onComplete {
