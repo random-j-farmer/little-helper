@@ -67,6 +67,7 @@ object LittleHelper {
   var respTs = System.currentTimeMillis()
   val respTimeAgo = span().render
   val pilotCount = span().render
+  val solarSystem = span().render
 
   val pilotBox = textarea(cols:=20, rows:=10).render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
@@ -145,7 +146,9 @@ object LittleHelper {
     val now = System.currentTimeMillis
     val pilots = resp.charinfos
 
-    log.info("listCharacters: received " + pilots.size + " pilots in " + (now - started) + "ms")
+    log.info("listCharacters: received " + pilots.size + " pilots in " +
+      resp.solarSystem + " in " +
+      (now - started) + "ms")
 
     removeClass(submitButton, "pure-button-disabled")
 
@@ -154,6 +157,11 @@ object LittleHelper {
     respTs = System.currentTimeMillis()
     respTimeAgo.innerHTML = responseTimeAgo
     pilotCount.innerHTML = s"${pilots.size} pilots, "
+    solarSystem.innerHTML = ""
+    resp.solarSystem match {
+      case None =>
+      case Some(ssn) => solarSystem.appendChild(span(ssn, ", ").render)
+    }
 
     val cutoff = math.max(2.0d, pilots.size/10.0d)
     val byCorp: Map[AllianceOrCorp, Seq[CharInfo]] = pilots.groupBy(AllianceOrCorp.apply)
@@ -261,7 +269,7 @@ object LittleHelper {
             submitButton),
           div(cls:="pure-u-2-3",
             messageBox,
-            h1(pilotCount, respTimeAgo),
+            h1(pilotCount, solarSystem, respTimeAgo),
             h2("Pilots by Alliance/Corp"),
             table(cls:="pure-table pure-table-striped",
               thead(tr(th("Alliance/Corp"), th("# Pilots"))),

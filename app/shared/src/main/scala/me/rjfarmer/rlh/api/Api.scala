@@ -87,7 +87,10 @@ final case class ListCharactersRequest(version: String, names: Vector[String],
                                        // but by the server when reading request headers
                                        pilot: Option[String], solarSystem: Option[String])
 
-final case class ListCharactersResponse(message: Option[String], charinfos: Vector[CharInfo])
+final case class ListCharactersResponse(message: Option[String],
+                                        // may be present if IGB
+                                        solarSystem: Option[String],
+                                        charinfos: Vector[CharInfo])
 
 trait Api {
 

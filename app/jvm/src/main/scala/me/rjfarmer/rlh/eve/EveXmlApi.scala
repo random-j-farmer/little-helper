@@ -32,7 +32,11 @@ trait EveXmlApi[T] {
     .asInstanceOf[Http.HostConnectorInfo]
     .hostConnector
 
-  val defaultHeaders: List[HttpHeader] = List(RawHeader("accept-encoding", "gzip,deflate"))
+  val defaultHeaders: List[HttpHeader] =  if (Boot.bootConfig.getBoolean("little-helper.xml-api.use-compression")) {
+    List(RawHeader("accept-encoding", "gzip,deflate"))
+  } else {
+    List()
+  }
   def hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true,
     defaultHeaders = defaultHeaders)
 

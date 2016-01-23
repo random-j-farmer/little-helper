@@ -1,9 +1,9 @@
 (A) log ip address of request
-(A) show system name if IGB +github
 (D) error message when started muliple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
 
+x (A) show system name if IGB +github
 x (A) use compression
 x (A) Have Client detect Server changes (e.g. git tree), ask for reload +github
 x (A) refresh character ids == 0 after some time

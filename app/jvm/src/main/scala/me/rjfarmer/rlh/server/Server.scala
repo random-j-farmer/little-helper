@@ -65,14 +65,14 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
                 HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
               }
             } ~
-              getFromResourceDirectory("") ~
-              getFromResourceDirectory("META-INF/resources")
+            getFromResourceDirectory("") ~
+            getFromResourceDirectory("META-INF/resources")
           } ~
             post {
               path("ajax" / Segments) { s =>
-                optionalHeaderValueByName("HTTP_EVE_CHARNAME") { charname =>
-                  optionalHeaderValueByName("HTTP_EVE_SOLARSYSTEMNAME") { solarsystem =>
-                    extract(ctx => ctx.request.entity.asString) { e =>
+                optionalHeaderValueByName("EVE_CHARNAME") { charname =>
+                  optionalHeaderValueByName("EVE_SOLARSYSTEMNAME") { solarsystem =>
+                    extract(ctx => ctx.request.entity.asString ) { e =>
                       val server = new ServerWithIGBData(charname, solarsystem)
                       complete(Router.route[Api](server)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](e))))
                     }
@@ -115,6 +115,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     bootSystem.log.info("listCharacters: {} {}", req.version, BuildInfo.version)
     if (req.version != BuildInfo.version) {
       result.success(ListCharactersResponse(Some("Client version does not match server, please reload the page (F5)."),
+        req.solarSystem,
         Vector()))
     } else {
       idsFuture.onComplete {
@@ -132,7 +133,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
                 // no results for key 0L, so if the id was not resolved, we return None
                 CharInfo(name, infoMap.get(id), zkMap.get(id))
               }.sorted(ByDestroyed)
-              result.success(ListCharactersResponse(None, cis))
+              result.success(ListCharactersResponse(None, req.solarSystem, cis))
             case Failure(ex) =>
               bootSystem.log.error("listCharacters: received error: {}", ex)
               result.failure(ex)
