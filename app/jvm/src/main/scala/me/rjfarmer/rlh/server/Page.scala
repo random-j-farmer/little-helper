@@ -23,7 +23,7 @@ object Page {
     newest._2
   }
 
-  def scalaJsResource: String = newestResource("/app-opt.js", "/app-fastopt.js")
+  def scalaJsResource: String = newestResource("/little-helper-opt.js", "/little-helper-fastopt.js")
 
   val skeleton =
     html(

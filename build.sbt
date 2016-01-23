@@ -5,6 +5,9 @@ val akkaVersion = "2.3.14"
 val sprayVersion = "1.3.3"
 
 val app = crossProject.settings(
+  name := "little-helper",
+  organization := "me.rjfarmer",
+
   unmanagedSourceDirectories in Compile +=
     baseDirectory.value / "shared" / "main" / "scala",
   libraryDependencies ++= Seq(
