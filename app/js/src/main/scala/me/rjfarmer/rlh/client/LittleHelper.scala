@@ -3,7 +3,7 @@ package me.rjfarmer.rlh.client
 // for correct macro application
 
 import autowire._
-import me.rjfarmer.rlh.api.{WebserviceResult, Api, CharInfo}
+import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.logging.LoggerRLH
 import me.rjfarmer.rlh.shared.EveCharacterName
 import org.scalajs.dom
@@ -61,6 +61,8 @@ object LittleHelper {
 
   val log = LoggerRLH("client.LittleHelper")
 
+  val version = dom.document.getElementById("version").textContent
+  log.info("Client version: " + version)
 
   var respTs = System.currentTimeMillis()
   val respTimeAgo = span().render
@@ -69,6 +71,7 @@ object LittleHelper {
   val pilotBox = textarea(cols:=20, rows:=10).render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
 
+  val messageBox = div(hidden, `class`:="info").render
   val corpList = tbody().render
   val pilotList = tbody().render
 
@@ -138,11 +141,15 @@ object LittleHelper {
     System.currentTimeMillis()
   }
 
-  def submitSuccess(started: Long, pilots: Seq[CharInfo]): Unit = {
+  def submitSuccess(started: Long, resp: ListCharactersResponse): Unit = {
     val now = System.currentTimeMillis
+    val pilots = resp.charinfos
+
     log.info("listCharacters: received " + pilots.size + " pilots in " + (now - started) + "ms")
 
     removeClass(submitButton, "pure-button-disabled")
+
+    handleMessageBox(resp.message)
 
     respTs = System.currentTimeMillis()
     respTimeAgo.innerHTML = responseTimeAgo
@@ -181,6 +188,18 @@ object LittleHelper {
     }
   }
 
+  def handleMessageBox(msg: Option[String]): Unit = {
+    msg match {
+      case None =>
+        messageBox.setAttribute("hidden", "hidden")
+        messageBox.innerHTML = ""
+      case Some(txt) =>
+        messageBox.innerHTML = ""
+        messageBox.appendChild(span(txt).render)
+        messageBox.removeAttribute("hidden")
+    }
+  }
+
   def freshnessKlass(nowMillis: Long, wsr: WebserviceResult): String = {
     val relativeAge = (nowMillis - wsr.receivedTimestamp) / Api.apiRequestTimeoutMills.toDouble
     if (relativeAge < 0.5d) {
@@ -198,6 +217,8 @@ object LittleHelper {
     val now = System.currentTimeMillis
     log.error("Ajax Exception after " + (now - started) + "ms: " + ex)
     removeClass(submitButton, "pure-button-disabled")
+
+    handleMessageBox(Some("Error communicating with the server"))
   }
 
   def formSubmit(ev: dom.Event): Unit = {
@@ -214,11 +235,12 @@ object LittleHelper {
     val validNames = pilotNames.filter(EveCharacterName.isValidCharacterName).toVector
 
     log.debug("calling listCharacters with " + validNames.length + " pilots")
-    val future = Ajaxer[Api].listCharacters(validNames).call()
+    val req = ListCharactersRequest(version, validNames, None, None)
+    val future = Ajaxer[Api].listCharacters(req).call()
     future.onFailure { case ex: Throwable =>
       submitError(tsStarted, ex)
     }
-    future.foreach { pilots => submitSuccess(tsStarted, pilots) }
+    future.foreach { response => submitSuccess(tsStarted, response) }
   }
 
   def zkillboardUrl(p: CharInfo): String = {
@@ -238,6 +260,7 @@ object LittleHelper {
             pilotBox,
             submitButton),
           div(cls:="pure-u-2-3",
+            messageBox,
             h1(pilotCount, respTimeAgo),
             h2("Pilots by Alliance/Corp"),
             table(cls:="pure-table pure-table-striped",

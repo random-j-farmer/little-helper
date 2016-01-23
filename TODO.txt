@@ -1,10 +1,11 @@
 (A) log ip address of request
 (A) show system name if IGB +github
-(A) Have Client detect Server changes (e.g. git tree), ask for reload +github
 (D) error message when started muliple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
 
+x (A) use compression
+x (A) Have Client detect Server changes (e.g. git tree), ask for reload +github
 x (A) refresh character ids == 0 after some time
 x (C) allow easy override of resource files (i.e. put some dir into classpath) - no re-deply of jar just for a config change
 x (A) README.md and LICENSE.md +github

@@ -1,20 +1,21 @@
 package me.rjfarmer.rlh.eve
 
 import java.text.SimpleDateFormat
-import java.util.{TimeZone, Date}
+import java.util.{Date, TimeZone}
 
 import akka.actor.ActorRef
-import akka.event.{LoggingAdapter, Logging}
+import akka.event.LoggingAdapter
 import akka.io.IO
-import akka.routing.FromConfig
 import akka.pattern.ask
 import me.rjfarmer.rlh.server.Boot
 import me.rjfarmer.rlh.server.Boot._
 import spray.can.Http
+import spray.http.HttpHeaders.RawHeader
 import spray.http.HttpMethods._
-import spray.http.{HttpResponse, HttpRequest, Uri}
+import spray.http._
+import spray.httpx.encoding.{Gzip, Deflate}
 
-import scala.concurrent.{Promise, Future, Await}
+import scala.concurrent.{Await, Future, Promise}
 import scala.util.Try
 import scala.xml.Node
 
@@ -31,14 +32,17 @@ trait EveXmlApi[T] {
     .asInstanceOf[Http.HostConnectorInfo]
     .hostConnector
 
-  def hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true)
+  val defaultHeaders: List[HttpHeader] = List(RawHeader("accept-encoding", "gzip,deflate"))
+  def hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true,
+    defaultHeaders = defaultHeaders)
 
-  def successMessage(xml: String): T
+  def successMessage(query: Uri.Query, xml: String): T
 
   def httpGetUri(query: Uri.Query): Uri = Uri(path = Uri.Path(uriPath), query = query)
 
   def complete(query: Uri.Query): Future[T] = {
     import Boot._
+
     import scala.concurrent.ExecutionContext.Implicits.global
     val started = System.currentTimeMillis()
     val uri = httpGetUri(query)
@@ -49,7 +53,7 @@ trait EveXmlApi[T] {
       case resp: HttpResponse =>
         if (resp.status.isSuccess) {
           log.debug("http get: {} ===> {} in {}ms", uri, resp.status.intValue, System.currentTimeMillis - started)
-          promise.complete(Try(successMessage(resp.entity.data.asString)))
+          promise.complete(Try(successMessage(query, decodeResponseBody(resp))))
         } else {
           log.debug("http get error: {} {} after {}ms", resp.status.intValue, resp.entity.data.asString,
             System.currentTimeMillis - started)
@@ -57,6 +61,17 @@ trait EveXmlApi[T] {
         }
     }
     promise.future
+  }
+
+  def decodeResponseBody(resp: HttpResponse): String = {
+    resp.encoding match {
+      case HttpEncoding("gzip") =>
+        Gzip.decode(resp).entity.asString
+      case HttpEncoding("deflate") =>
+        Deflate.decode(resp).entity.asString
+      case _ =>
+        resp.entity.asString
+    }
   }
 
   def etxt(elem: Node, child: String): String = (elem \ child).text

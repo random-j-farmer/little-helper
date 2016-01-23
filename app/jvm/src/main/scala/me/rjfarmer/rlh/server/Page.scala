@@ -1,5 +1,7 @@
 package me.rjfarmer.rlh.server
 
+import java.util.Properties
+
 import scalatags.Text.all._
 import scalatags.Text.tags2
 
@@ -54,7 +56,7 @@ object Page {
             tbody(id:="logMessages")
           )
         ),
-
+        div(id:="version", hidden, BuildInfo.version),
         script(boot)
       )
     )

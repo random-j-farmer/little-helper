@@ -82,9 +82,16 @@ object CharInfo {
   }
 }
 
+final case class ListCharactersRequest(version: String, names: Vector[String],
+                                       // these two are not currently filled in by the client
+                                       // but by the server when reading request headers
+                                       pilot: Option[String], solarSystem: Option[String])
+
+final case class ListCharactersResponse(message: Option[String], charinfos: Vector[CharInfo])
+
 trait Api {
 
-  def listCharacters(names: Vector[String]): Future[Vector[CharInfo]]
+  def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse]
 
 }
 

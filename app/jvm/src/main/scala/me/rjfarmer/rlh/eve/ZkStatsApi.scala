@@ -3,17 +3,15 @@ package me.rjfarmer.rlh.eve
 import java.util.{Calendar, TimeZone}
 
 import akka.actor._
-import akka.io.IO
 import akka.pattern.ask
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve.ZkStatsApi.{GroupedZkStatsRequest, GroupedZkStatsResponse, ZkStatsRequest, ZkStatsResponse}
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.{Cache, CacheManager}
 import spray.can.Http
-import spray.http.HttpMethods._
-import spray.http.{HttpRequest, HttpResponse, Uri}
+import spray.http.Uri
 
-import scala.concurrent.{Await, Future, Promise}
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 
@@ -117,7 +115,7 @@ object RestZkStatsApi {
 }
 
 /** Rest ZKillboard Stats */
-class RestZkStatsApi extends Actor with ActorLogging {
+class RestZkStatsApi extends Actor with ActorLogging with EveXmlApi[ZkStats] {
 
   import scala.concurrent.ExecutionContext.Implicits.global
   implicit val timeout = Boot.bootTimeout
@@ -129,7 +127,7 @@ class RestZkStatsApi extends Actor with ActorLogging {
       self ! ZkStatsRequest(id, Some(sender()), cacheTo)
       CharacterInfo
     case request @ ZkStatsRequest(id, Some(replyTo), cacheTo) =>
-      val fzs = complete(id)
+      val fzs = complete(httpGetUriQuery(id))
       fzs.onComplete { tci =>
         val resp = ZkStatsResponse(request, tci)
         replyTo ! resp
@@ -143,36 +141,9 @@ class RestZkStatsApi extends Actor with ActorLogging {
 
   def uriPath: String = "/api/stats"
 
-  def hostConnector: ActorRef = {
-    implicit val actorSystem = context.system
-    Await.result(ask(IO(Http),hostConnectorSetup), timeout.duration)
-      .asInstanceOf[Http.HostConnectorInfo]
-      .hostConnector
-  }
+  override def hostConnectorSetup = Http.HostConnectorSetup("zkillboard.com", port=443, sslEncryption = true, defaultHeaders = defaultHeaders)
 
-  def hostConnectorSetup = Http.HostConnectorSetup("zkillboard.com", port=443, sslEncryption = true)
-
-  def httpGetUri(characterID: Long): Uri = Uri(path = Uri.Path(uriPath + "/characterID/" + characterID))
-
-  def complete(characterID: Long): Future[ZkStats] = {
-    val started = System.currentTimeMillis()
-    val uri = httpGetUri(characterID)
-    // log.debug("http get: {}", uri)
-    val httpFuture = ask(hostConnector, HttpRequest(GET, httpGetUri(characterID)))
-    val promise = Promise[ZkStats]()
-    httpFuture onSuccess {
-      case resp: HttpResponse =>
-        if (resp.status.isSuccess) {
-          log.debug("http get: {} ===> {} in {}ms", uri, resp.status.intValue, System.currentTimeMillis() - started)
-          promise.complete(Try(successMessage(characterID, resp.entity.data.asString)))
-        } else {
-          log.debug("http get error: {} {} after {}ms", resp.status.intValue, resp.entity.data.asString,
-            System.currentTimeMillis() - started)
-          promise.failure(new IllegalArgumentException("http result not ok: " + resp.status.intValue))
-        }
-    }
-    promise.future
-  }
+  def httpGetUriQuery(characterID: Long): Uri.Query = Uri.Query("characterID" -> characterID.toString)
 
   import org.json4s._
   import org.json4s.jackson.JsonMethods._
@@ -187,7 +158,8 @@ class RestZkStatsApi extends Actor with ActorLogging {
     }
   }
 
-  def successMessage(characterID: Long, json: String): ZkStats = {
+  def successMessage(query: Uri.Query, json: String): ZkStats = {
+    val characterID = query.get("characterID").get.toLong
 
     val tree = parse(json)
 

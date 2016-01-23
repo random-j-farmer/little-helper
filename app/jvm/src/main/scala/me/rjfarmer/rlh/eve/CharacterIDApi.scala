@@ -37,7 +37,7 @@ trait CharacterIDBatcher {
       .filterNot { _.isEmpty }
       .map { _.toLowerCase }
     val namesAndCached = allNames
-      .map((str) => Pair(str, mapName(str)))
+      .map((str) => str -> mapName(str))
 
     val defined = Map[String,CharacterIDAndName]() ++
       namesAndCached.filter(_._2.isDefined).map((p) => (p._1, p._2.get))
@@ -125,7 +125,7 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
     case request @ CharacterIDRequest(names, _, Some(replyTo), _) =>
       // this is the cache!  we expect no incoming cache information
       log.debug("request for {} ids", names.length)
-      val (undefinedNames, allNames, defined) = partitionNames(names)
+      val (undefinedNames, _, defined) = partitionNames(names)
       val staleUnknown = defined.filter { p =>
         val ian = p._2
         ian.characterID == 0 && ! ian.isFresh
@@ -217,7 +217,7 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[Ch
   val uriPath = "/eve/CharacterID.xml.aspx"
 
   // parse the result XML, name is LOWERCASE for caching
-  def successMessage(xml: String): Vector[CharacterIDAndName] = {
+  def successMessage(query: Uri.Query, xml: String): Vector[CharacterIDAndName] = {
     val elem = XML.loadString(xml)
     // log.debug("xml: {}", xml)
     val ts = System.currentTimeMillis()

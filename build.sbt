@@ -1,6 +1,4 @@
 import sbt.Keys._
-import com.lihaoyi.workbench.Plugin._
-import spray.revolver.AppProcess
 import spray.revolver.RevolverPlugin.Revolver
 
 val akkaVersion = "2.3.14"
@@ -36,16 +34,18 @@ val app = crossProject.settings(
           <url>https://github.com/random.j.farmer</url>
         </developer>
       </developers>
-).enablePlugins(JavaAppPackaging
-).jsSettings(
-  workbenchSettings: _*
+).enablePlugins(GitVersioning, BuildInfoPlugin, JavaAppPackaging
 ).jsSettings(
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.8.2"
-  ),
-  bootSnippet := "me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('rlhMain'));"
+  )
 ).jvmSettings(
   Revolver.settings: _*
+).jvmSettings(
+  buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
+  buildInfoPackage := "me.rjfarmer.rlh.server",
+  git.useGitDescribe := true,
+  git.baseVersion := "0.0.0"
 ).jvmSettings(
   libraryDependencies ++= Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaVersion,
@@ -70,3 +70,11 @@ val appJVM = app.jvm.settings(
   },
   (initialCommands in (Test, console)) := """ammonite.repl.Main.run("")"""
 )
+
+val VersionRegex = "v([0-9]+.[0-9]+.[0-9]+)-?(.*)?".r
+git.gitTagToVersionNumber := {
+  case VersionRegex(v,"") => Some(v)
+  case VersionRegex(v,"SNAPSHOT") => Some(s"$v-SNAPSHOT")
+  case VersionRegex(v,s) => Some(s"$v-$s-SNAPSHOT")
+  case _ => None
+}

@@ -14,6 +14,7 @@ import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
 import spray.http.{HttpEntity, MediaTypes}
+import spray.httpx.encoding.{Gzip, NoEncoding, Deflate}
 import spray.routing.SimpleRoutingApp
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -22,9 +23,18 @@ import scala.util.{Failure, Success}
 
 
 object Router extends autowire.Server[String, upickle.default.Reader, upickle.default.Writer] {
-  def read[Result: upickle.default.Reader](p: String): Result = upickle.default.read(p)
+
+  def read[Result: upickle.default.Reader](p: String): Result = upickle.default.read[Result](p)
 
   def write[Result: upickle.default.Writer](r: Result): String = upickle.default.write(r)
+
+}
+
+class ServerWithIGBData(characterName: Option[String], solarSystemName: Option[String]) extends Api {
+
+  override def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse] = {
+    Server.listCharacters(request.copy(pilot = characterName, solarSystem = solarSystemName))
+  }
 
 }
 
@@ -47,22 +57,31 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 
     // needs a multi-second timeout or it will not bind fast enough on openshift
     val response = startServer(bootHost, port = bootPort) {
-      get {
-        pathSingleSlash {
-          complete {
-            HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
-          }
-        } ~
-          getFromResourceDirectory("") ~
-          getFromResourceDirectory("META-INF/resources")
-      } ~
-        post {
-          path("ajax" / Segments) { s =>
-            extract(_.request.entity.asString) { e =>
-              complete(Router.route[Api](Server)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](e))))
+      (decodeRequest(Gzip) | decodeRequest(Deflate) | decodeRequest(NoEncoding)) {
+        compressResponse() {
+          get {
+            pathSingleSlash {
+              complete {
+                HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
+              }
+            } ~
+              getFromResourceDirectory("") ~
+              getFromResourceDirectory("META-INF/resources")
+          } ~
+            post {
+              path("ajax" / Segments) { s =>
+                optionalHeaderValueByName("HTTP_EVE_CHARNAME") { charname =>
+                  optionalHeaderValueByName("HTTP_EVE_SOLARSYSTEMNAME") { solarsystem =>
+                    extract(ctx => ctx.request.entity.asString) { e =>
+                      val server = new ServerWithIGBData(charname, solarsystem)
+                      complete(Router.route[Api](server)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](e))))
+                    }
+                  }
+                }
+              }
             }
-          }
         }
+      }
     }
 
     // does not work because we hang in opening ehc disk cache when started
@@ -88,31 +107,39 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
       .map(resp => resp.infoById)
   }
 
-  def listCharacters(names: Vector[String]): Future[Vector[CharInfo]] = {
+  def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
     val ts = System.currentTimeMillis()
-    val idsFuture = listIds(names)
-    val result = Promise[Vector[CharInfo]]()
-    idsFuture.onComplete {
-      case Success(idResp) =>
-        val pureIds = idResp.fullResult.values.map(_.characterID).toVector
-        bootSystem.log.warning("unknown character names: {}", idResp.unknownNames.mkString(", "))
-        val f1 = characterInfos(pureIds)
-        val f2 = zkStats(pureIds)
-        f1.zip(f2).onComplete {
-          case Success(Pair(infoMap, zkMap)) =>
-            bootSystem.log.info("listCharacters: successful response for {} names in {}ms",
-              names.size, System.currentTimeMillis() - ts)
-            result.success(idResp.allNames.map { name =>
-              val id: Long = idResp.fullResult.get(name).map(ian => ian.characterID).getOrElse(0L)
-              // no results for key 0L, so if the id was not resolved, we return None
-              CharInfo(name, infoMap.get(id), zkMap.get(id))
-            }.sorted(ByDestroyed))
-          case Failure(ex) =>
-            bootSystem.log.error("listCharacters: received error: {}", ex)
-            result.failure(ex)
-        }
-      case Failure(ex) =>
-        result.failure(ex)
+    val idsFuture = listIds(req.names)
+    val result = Promise[ListCharactersResponse]()
+
+    bootSystem.log.info("listCharacters: {} {}", req.version, BuildInfo.version)
+    if (req.version != BuildInfo.version) {
+      result.success(ListCharactersResponse(Some("Client version does not match server, please reload the page (F5)."),
+        Vector()))
+    } else {
+      idsFuture.onComplete {
+        case Success(idResp) =>
+          val pureIds = idResp.fullResult.values.map(_.characterID).toVector
+          bootSystem.log.warning("unknown character names: {}", idResp.unknownNames.mkString(", "))
+          val f1 = characterInfos(pureIds)
+          val f2 = zkStats(pureIds)
+          f1.zip(f2).onComplete {
+            case Success(Pair(infoMap, zkMap)) =>
+              bootSystem.log.info("listCharacters: successful response for {} names in {}ms",
+                req.names.size, System.currentTimeMillis() - ts)
+              val cis = idResp.allNames.map { name =>
+                val id: Long = idResp.fullResult.get(name).map(ian => ian.characterID).getOrElse(0L)
+                // no results for key 0L, so if the id was not resolved, we return None
+                CharInfo(name, infoMap.get(id), zkMap.get(id))
+              }.sorted(ByDestroyed)
+              result.success(ListCharactersResponse(None, cis))
+            case Failure(ex) =>
+              bootSystem.log.error("listCharacters: received error: {}", ex)
+              result.failure(ex)
+          }
+        case Failure(ex) =>
+          result.failure(ex)
+      }
     }
     result.future
   }

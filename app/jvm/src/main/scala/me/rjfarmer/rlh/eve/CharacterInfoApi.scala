@@ -138,7 +138,7 @@ object EveCharacterInfoApi {
   def props: Props = Props[EveCharacterInfoApi]()
 
   /** for testing the parsing part */
-  final case class CharacterInfoXml(xml: String)
+  final case class CharacterInfoXml(query: Uri.Query, xml: String)
 
 }
 
@@ -156,16 +156,16 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
       self ! CharacterInfoRequest(id, Some(sender()), cacheTo)
 
     case request@CharacterInfoRequest(id, Some(replyTo), cacheTo) =>
-      val fci: Future[CharacterInfo] = complete(Uri.Query(Pair("characterID", id.toString)))
+      val fci: Future[CharacterInfo] = complete(Uri.Query("characterID" -> id.toString))
       fci.onComplete { tci =>
         val resp = CharacterInfoResponse(request, tci)
         replyTo ! resp
         cacheTo.foreach(cc => cc ! resp)
       }
 
-    case CharacterInfoXml(xml) =>
+    case CharacterInfoXml(query: Uri.Query, xml) =>
       // for testing the xml parsing
-      sender() ! successMessage(xml)
+      sender() ! successMessage(query, xml)
 
     case msg =>
       log.warning("unknown message type: {}", msg)
@@ -174,7 +174,7 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
 
   val uriPath = "/eve/CharacterInfo.xml.aspx"
 
-  def successMessage(xml: String): CharacterInfo = {
+  def successMessage(query: Uri.Query, xml: String): CharacterInfo = {
     // log.debug("xml: {}", xml)
     val elem = (XML.loadString(xml) \\ "result")(0)
 
