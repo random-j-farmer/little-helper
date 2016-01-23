@@ -65,14 +65,14 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
                 HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
               }
             } ~
-              getFromResourceDirectory("") ~
-              getFromResourceDirectory("META-INF/resources")
+            getFromResourceDirectory("") ~
+            getFromResourceDirectory("META-INF/resources")
           } ~
             post {
               path("ajax" / Segments) { s =>
-                optionalHeaderValueByName("HTTP_EVE_CHARNAME") { charname =>
-                  optionalHeaderValueByName("HTTP_EVE_SOLARSYSTEMNAME") { solarsystem =>
-                    extract(ctx => ctx.request.entity.asString) { e =>
+                optionalHeaderValueByName("EVE_CHARNAME") { charname =>
+                  optionalHeaderValueByName("EVE_SOLARSYSTEMNAME") { solarsystem =>
+                    extract(ctx => ctx.request.entity.asString ) { e =>
                       val server = new ServerWithIGBData(charname, solarsystem)
                       complete(Router.route[Api](server)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](e))))
                     }
@@ -109,18 +109,20 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 
   def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
     val ts = System.currentTimeMillis()
-    val idsFuture = listIds(req.names)
     val result = Promise[ListCharactersResponse]()
 
-    bootSystem.log.info("listCharacters: {} {}", req.version, BuildInfo.version)
     if (req.version != BuildInfo.version) {
       result.success(ListCharactersResponse(Some("Client version does not match server, please reload the page (F5)."),
+        req.solarSystem,
         Vector()))
     } else {
+      val idsFuture = listIds(req.names)
       idsFuture.onComplete {
         case Success(idResp) =>
           val pureIds = idResp.fullResult.values.map(_.characterID).toVector
-          bootSystem.log.warning("unknown character names: {}", idResp.unknownNames.mkString(", "))
+          if (! idResp.unknownNames.isEmpty) {
+            bootSystem.log.warning("unknown character names: {}", idResp.unknownNames.mkString(", "))
+          }
           val f1 = characterInfos(pureIds)
           val f2 = zkStats(pureIds)
           f1.zip(f2).onComplete {
@@ -132,7 +134,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
                 // no results for key 0L, so if the id was not resolved, we return None
                 CharInfo(name, infoMap.get(id), zkMap.get(id))
               }.sorted(ByDestroyed)
-              result.success(ListCharactersResponse(None, cis))
+              result.success(ListCharactersResponse(None, req.solarSystem, cis))
             case Failure(ex) =>
               bootSystem.log.error("listCharacters: received error: {}", ex)
               result.failure(ex)
