@@ -1,7 +1,5 @@
 package me.rjfarmer.rlh.server
 
-import java.util.Properties
-
 import scalatags.Text.all._
 import scalatags.Text.tags2
 
@@ -11,7 +9,7 @@ object Page {
     """me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('rlhMain'));"""
 
   def resourceLastModified(name: String): Long = {
-    val url = getClass().getResource(name)
+    val url = getClass.getResource(name)
     if (url == null) -1L else url.openConnection().getLastModified
   }
 
@@ -19,7 +17,7 @@ object Page {
     val mods = names map resourceLastModified
     val zipped = mods zip names
     val newest = zipped.max
-    println(s"""newestResource: ${zipped mkString ", "} => ${newest}""")
+    println(s"""newestResource: ${zipped mkString ", "} => $newest""")
     newest._2
   }
 
