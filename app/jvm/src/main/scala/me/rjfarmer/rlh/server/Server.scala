@@ -13,9 +13,9 @@ import me.rjfarmer.rlh.eve._
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
-import spray.http.{HttpEntity, MediaTypes}
+import spray.http.{HttpHeader, HttpEntity, MediaTypes}
 import spray.httpx.encoding.{Gzip, NoEncoding, Deflate}
-import spray.routing.SimpleRoutingApp
+import spray.routing.{RequestContext, SimpleRoutingApp}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Future, Promise}
@@ -30,10 +30,11 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 
 }
 
-class ServerWithIGBData(characterName: Option[String], solarSystemName: Option[String]) extends Api {
+case class ServerWithRequestData(clientIP: String, requestData: String, solarSystem: Option[String], characterName: Option[String])
+  extends Api with WebserviceRequest {
 
   override def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse] = {
-    Server.listCharacters(request.copy(pilot = characterName, solarSystem = solarSystemName))
+    Server.listCharacters(request.copy(clientIP = clientIP, pilot = characterName, solarSystem = solarSystem))
   }
 
 }
@@ -68,18 +69,13 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
             getFromResourceDirectory("") ~
             getFromResourceDirectory("META-INF/resources")
           } ~
-            post {
-              path("ajax" / Segments) { s =>
-                optionalHeaderValueByName("EVE_CHARNAME") { charname =>
-                  optionalHeaderValueByName("EVE_SOLARSYSTEMNAME") { solarsystem =>
-                    extract(ctx => ctx.request.entity.asString ) { e =>
-                      val server = new ServerWithIGBData(charname, solarsystem)
-                      complete(Router.route[Api](server)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](e))))
-                    }
-                  }
-                }
+          post {
+            path("ajax" / Segments) { s =>
+              extract(extractRequestData) { srd =>
+                complete(Router.route[Api](srd)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](srd.requestData))))
               }
             }
+          }
         }
       }
     }
@@ -89,20 +85,37 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     shutdownIfNotBound(response)
   }
 
+  private def extractRequestData(ctx: RequestContext): ServerWithRequestData = {
 
-  private def listIds(names: Vector[String]): Future[CharacterIDResponse] = {
-    ask(characterID, CharacterIDRequest(names, Map(), None, None))
+    import spray.util._
+
+    def optionalValue(lowerCaseName: String): HttpHeader => Option[String] = {
+      case HttpHeader(`lowerCaseName`, value) ⇒ Some(value)
+      case _                                  ⇒ None
+    }
+    def f(headerName: String) = optionalValue(headerName.toLowerCase)
+
+    val headers = ctx.request.headers
+
+    val forwarded = headers.mapFind(f("X-Forwarded-For"))
+    val remoteAddress = headers.mapFind(f("Remote-Address"))
+    ServerWithRequestData(forwarded.getOrElse(remoteAddress.get), ctx.request.entity.asString,
+      headers.mapFind(f("EVE_SOLARSYSTEMNAME")), headers.mapFind(f("EVE_CHARNAME")))
+  }
+
+  private def listIds(wsr: WebserviceRequest, names: Vector[String]): Future[CharacterIDResponse] = {
+    ask(characterID, CharacterIDRequest(wsr, names, Map(), None, None))
       .asInstanceOf[Future[CharacterIDResponse]]
   }
 
-  private def characterInfos(ids: Vector[Long]): Future[Map[Long,CharacterInfo]] = {
-    ask(characterInfo, GroupedCharacterInfoRequest(ids, None))
+  private def characterInfos(wsr: WebserviceRequest, ids: Vector[Long]): Future[Map[Long,CharacterInfo]] = {
+    ask(characterInfo, GroupedCharacterInfoRequest(wsr, ids, None))
       .asInstanceOf[Future[GroupedCharacterInfoResponse]]
       .map(resp => resp.infoById)
   }
 
-  private def zkStats(ids: Vector[Long]): Future[Map[Long, ZkStats]] = {
-    ask(zkStats, GroupedZkStatsRequest(ids, None))
+  private def zkStats(wsr: WebserviceRequest, ids: Vector[Long]): Future[Map[Long, ZkStats]] = {
+    ask(zkStats, GroupedZkStatsRequest(wsr, ids, None))
       .asInstanceOf[Future[GroupedZkStatsResponse]]
       .map(resp => resp.infoById)
   }
@@ -116,19 +129,19 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
         req.solarSystem,
         Vector()))
     } else {
-      val idsFuture = listIds(req.names)
+      val idsFuture = listIds(req, req.names)
       idsFuture.onComplete {
         case Success(idResp) =>
           val pureIds = idResp.fullResult.values.map(_.characterID).toVector
           if (idResp.unknownNames.nonEmpty) {
-            bootSystem.log.warning("unknown character names: {}", idResp.unknownNames.mkString(", "))
+            bootSystem.log.warning("<{}> unknown character names: {}", req.clientIP, idResp.unknownNames.mkString(", "))
           }
-          val f1 = characterInfos(pureIds)
-          val f2 = zkStats(pureIds)
+          val f1 = characterInfos(req, pureIds)
+          val f2 = zkStats(req, pureIds)
           f1.zip(f2).onComplete {
             case Success(Pair(infoMap, zkMap)) =>
-              bootSystem.log.info("listCharacters: successful response for {} names in {}ms",
-                req.names.size, System.currentTimeMillis() - ts)
+              bootSystem.log.info("<{}> listCharacters: successful response for {} names in {}ms",
+                req.clientIP, req.names.size, System.currentTimeMillis() - ts)
               val cis = idResp.allNames.map { name =>
                 val id: Long = idResp.fullResult.get(name).map(ian => ian.characterID).getOrElse(0L)
                 // no results for key 0L, so if the id was not resolved, we return None
@@ -136,7 +149,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
               }.sorted(ByDestroyed)
               result.success(ListCharactersResponse(None, req.solarSystem, cis))
             case Failure(ex) =>
-              bootSystem.log.error("listCharacters: received error: {}", ex)
+              bootSystem.log.error("<{}> listCharacters: received error: {}", req.clientIP, ex)
               result.failure(ex)
           }
         case Failure(ex) =>

@@ -24,7 +24,7 @@ object ZkStatsApi {
     Props(new ZkStatsApi(cache, zkRestApi))
   }
 
-  final case class GroupedZkStatsRequest(ids: Vector[Long], replyTo: Option[ActorRef])
+  final case class GroupedZkStatsRequest(wsr: WebserviceRequest, ids: Vector[Long], replyTo: Option[ActorRef])
 
   final case class GroupedZkStatsResponse(infoById: Map[Long, ZkStats])
 
@@ -44,18 +44,18 @@ class ZkStatsApi (val cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef
 
   override def receive: Receive = {
 
-    case GroupedZkStatsRequest(ids, None) =>
+    case GroupedZkStatsRequest(wsr, ids, None) =>
       // for easy asking
-      self ! GroupedZkStatsRequest(ids, Some(sender()))
+      self ! GroupedZkStatsRequest(wsr, ids, Some(sender()))
 
-    case GroupedZkStatsRequest(ids, Some(replyTo)) =>
+    case GroupedZkStatsRequest(wsr, ids, Some(replyTo)) =>
       val (cached, need) = cachedAndNeedToRefresh(ids)
-      log.info("grouped zkstats request: {} total / {} cached / {} need to refresh",
-        ids.size, cached.size, need.size)
+      log.info("<{}> grouped zkstats request: {} total / {} cached / {} need to refresh",
+        wsr.clientIP, ids.size, cached.size, need.size)
       if (need.isEmpty) {
         replyTo ! GroupedZkStatsResponse(cached)
       } else {
-        sendGroupedResponse(replyTo, cached, need)
+        sendGroupedResponse(wsr, replyTo, cached, need)
       }
     case ZkStatsResponse(req, tzs) =>
       tzs match {
@@ -80,14 +80,15 @@ class ZkStatsApi (val cache: Cache[java.lang.Long, ZkStats], zkRestApi: ActorRef
       .map(resp => resp.stats.get)
   }
 
-  def sendGroupedResponse(replyTo: ActorRef, cached: Map[Long, ZkStats], need: Vector[Long]): Unit = {
+  def sendGroupedResponse(wsr: WebserviceRequest, replyTo: ActorRef, cached: Map[Long, ZkStats], need: Vector[Long]): Unit = {
     Future.sequence(need.map(id => zkStats(id, self)))
       .onComplete {
         case Success(cis) =>
           val result = cached ++ cis.map(zk => (zk.info.id, zk))
           replyTo ! GroupedZkStatsResponse(result)
         case Failure(ex) =>
-          log.error("sendGroupedResponse: using cached (stale?) response because we received an error: {}", ex)
+          log.error("<{}> sendGroupedResponse: using cached (stale?) response because we received an error: {}",
+            wsr.clientIP, ex)
           // accessing cache is safe - its a concurrent cache
           // some retrieves might have worked and are in the cache now
           val result = cached ++ need.map(id => (id, cache.get(id))).filter(pair => pair._2 != null)

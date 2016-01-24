@@ -2,7 +2,15 @@ package me.rjfarmer.rlh.api
 
 import scala.concurrent.Future
 
-trait WebserviceResult {
+trait WebserviceRequest {
+
+  def clientIP: String
+
+  def solarSystem: Option[String]
+
+}
+
+sealed trait WebserviceResult {
 
   def receivedTimestamp: Long
 
@@ -49,7 +57,7 @@ final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMon
  * @param name character name.  its in the input, will always be there.
  * @param characterID character ID. will usually be present
  * @param complete complete response with all info present (although it may be stale)
- * @param receivedTimestamp oldest webservice timestamp that was involved in construction of this object
+ * @param receivedTimestamp oldest timestamp of involved result objects
  * @param characterAge character age.  character info may not be there for large requests
  * @param corporation corporation name.  character info may not be there for large requests
  * @param alliance alliance name.  character info may not be there for large requests
@@ -85,7 +93,8 @@ object CharInfo {
 final case class ListCharactersRequest(version: String, names: Vector[String],
                                        // these two are not currently filled in by the client
                                        // but by the server when reading request headers
-                                       pilot: Option[String], solarSystem: Option[String])
+                                       clientIP: String, pilot: Option[String], solarSystem: Option[String])
+  extends WebserviceRequest
 
 final case class ListCharactersResponse(message: Option[String],
                                         // may be present if IGB

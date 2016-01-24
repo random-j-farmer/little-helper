@@ -1,7 +1,7 @@
 package me.rjfarmer.rlh.eve
 
 import akka.actor._
-import me.rjfarmer.rlh.api.CharacterIDAndName
+import me.rjfarmer.rlh.api.{WebserviceRequest, CharacterIDAndName}
 import me.rjfarmer.rlh.eve.CharacterIDApi.{CharacterIDRequest, CharacterIDResponse}
 import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
@@ -62,7 +62,8 @@ object CharacterIDApi {
     Props(new CharacterIDApi(cache, eveCharacterID))
   }
 
-  final case class CharacterIDRequest(names: Vector[String],
+  final case class CharacterIDRequest(webserviceRequest: WebserviceRequest,
+                                      names: Vector[String],
                                       cached: Map[String, CharacterIDAndName],
                                       replyTo: Option[ActorRef],
                                       cacheTo: Option[ActorRef])
@@ -118,27 +119,26 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
 
   override def receive: Receive = {
 
-    case CharacterIDRequest(names, cached, None, cacheTo) =>
+    case req @ CharacterIDRequest(_, _, _, None, _) =>
       // for calling via ask, empty replyTo will be filled in with sender()
-      self ! CharacterIDRequest(names, cached, Some(sender()), cacheTo)
+      self ! req.copy(replyTo = Some(sender()))
 
-    case request @ CharacterIDRequest(names, _, Some(replyTo), _) =>
+    case request @ CharacterIDRequest(wsr, names, _, Some(replyTo), _) =>
       // this is the cache!  we expect no incoming cache information
-      log.debug("request for {} ids", names.length)
       val (undefinedNames, _, defined) = partitionNames(names)
       val staleUnknown = defined.filter { p =>
         val ian = p._2
         ian.characterID == 0 && ! ian.isFresh
       }
-      log.info("character id request: {} cached/ {} not in cache/ {} stale unknown",
-        defined.size, undefinedNames.size, staleUnknown.size)
+      log.info("<{}> character id request: {} cached/ {} not in cache/ {} stale unknown",
+        request.webserviceRequest.clientIP, defined.size, undefinedNames.size, staleUnknown.size)
 
       val need = undefinedNames ++ staleUnknown.keys
 
       if (need.isEmpty) {
         replyTo ! CharacterIDResponse(request, defined, Set())
       } else {
-        eveCharacterID ! CharacterIDRequest(need, defined, Some(replyTo), Some(self))
+        eveCharacterID ! CharacterIDRequest(wsr, need, defined, Some(replyTo), Some(self))
       }
 
     case CharacterIDResponse(req, ians, _) =>
@@ -168,7 +168,7 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[Ch
 
   override def receive: Actor.Receive = {
 
-    case request @ CharacterIDRequest(names, _, _, _) =>
+    case request @ CharacterIDRequest(_, names, _, _, _) =>
       log.debug("request: looking up {} names", names.size)
       completeGrouped(request)
 

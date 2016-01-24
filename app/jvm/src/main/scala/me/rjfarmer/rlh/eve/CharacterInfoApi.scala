@@ -2,7 +2,7 @@ package me.rjfarmer.rlh.eve
 
 import akka.actor._
 import akka.pattern.ask
-import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory, WebserviceResult}
+import me.rjfarmer.rlh.api.{WebserviceRequest, CharacterInfo, EmploymentHistory, WebserviceResult}
 import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoRequest, CharacterInfoResponse, GroupedCharacterInfoRequest, GroupedCharacterInfoResponse}
 import me.rjfarmer.rlh.eve.EveCharacterInfoApi.CharacterInfoXml
 import me.rjfarmer.rlh.server.Boot
@@ -20,7 +20,7 @@ object CharacterInfoApi {
     Props(new CharacterInfoApi(cache, eveCharacterInfo))
   }
 
-  final case class GroupedCharacterInfoRequest(ids: Vector[Long], replyTo: Option[ActorRef])
+  final case class GroupedCharacterInfoRequest(wsr: WebserviceRequest, ids: Vector[Long], replyTo: Option[ActorRef])
 
   final case class GroupedCharacterInfoResponse(infoById: Map[Long, CharacterInfo])
 
@@ -79,18 +79,18 @@ class CharacterInfoApi (val cache: Cache[java.lang.Long, CharacterInfo], eveChar
   override def receive: Receive = {
 
 
-    case GroupedCharacterInfoRequest(ids, None) =>
+    case req @ GroupedCharacterInfoRequest(wsr, ids, None) =>
       // for easy asking
-      self ! GroupedCharacterInfoRequest(ids, Some(sender()))
+      self ! req.copy(replyTo = Some(sender()))
 
-    case GroupedCharacterInfoRequest(ids, Some(replyTo)) =>
+    case GroupedCharacterInfoRequest(wsr, ids, Some(replyTo)) =>
       val (cached, need) = cachedAndNeedToRefresh(ids)
-      log.info("grouped character info request: {} total / {} cached / {} need to refresh",
-        ids.size, cached.size, need.size)
+      log.info("<{}> grouped character info request: {} total / {} cached / {} need to refresh",
+        wsr.clientIP, ids.size, cached.size, need.size)
       if (need.isEmpty) {
         replyTo ! GroupedCharacterInfoResponse(cached)
       } else {
-        sendGroupedResponse(replyTo, cached, need)
+        sendGroupedResponse(wsr, replyTo, cached, need)
       }
 
     case CharacterInfoResponse(req, tci) =>
@@ -116,14 +116,15 @@ class CharacterInfoApi (val cache: Cache[java.lang.Long, CharacterInfo], eveChar
       .map(resp => resp.result.get)
   }
 
-  def sendGroupedResponse(replyTo: ActorRef, cached: Map[Long, CharacterInfo], need: Vector[Long]): Unit = {
+  def sendGroupedResponse(wsr: WebserviceRequest, replyTo: ActorRef, cached: Map[Long, CharacterInfo], need: Vector[Long]): Unit = {
     Future.sequence(need.map(id => characterInfo(id, self)))
       .onComplete {
         case Success(cis) =>
           val result = cached ++ cis.map(ci => (ci.characterID, ci))
           replyTo ! GroupedCharacterInfoResponse(result)
         case Failure(ex) =>
-          log.error("sendGroupedResponse: using cached (stale?) response because we received an error: {}", ex)
+          log.error("<{}> sendGroupedResponse: using cached (stale?) response because we received an error: {}",
+            wsr.clientIP, ex)
           // accessing cache is safe - its a concurrent cache
           // some retrieves might have worked and are in the cache now
           val result = cached ++ need.map(id => (id, cache.get(id))).filter(pair => pair._2 != null)

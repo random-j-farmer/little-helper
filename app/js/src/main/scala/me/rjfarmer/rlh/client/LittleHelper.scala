@@ -243,7 +243,7 @@ object LittleHelper {
     val validNames = pilotNames.filter(EveCharacterName.isValidCharacterName).toVector
 
     log.debug("calling listCharacters with " + validNames.length + " pilots")
-    val req = ListCharactersRequest(version, validNames, None, None)
+    val req = ListCharactersRequest(version, validNames, "", None, None)
     val future = Ajaxer[Api].listCharacters(req).call()
     future.onFailure { case ex: Throwable =>
       submitError(tsStarted, ex)
