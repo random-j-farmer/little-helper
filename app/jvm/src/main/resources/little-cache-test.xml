@@ -1,19 +1,13 @@
+<!-- configuration for tests - no persistence! -->
+
 <ehcache:config xmlns:ehcache="http://www.ehcache.org/v3">
 
-    <ehcache:persistence directory="little-cache.ehc" />
-
-    <!-- we do  not use ehc expiration.
-
-    it is done by the application so it can use stale information if a webservice
-    is not responding (zkillboard on busy weekends)
-    -->
     <ehcache:cache alias="characterIDCache">
         <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
         <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.CharacterIDAndName</ehcache:value-type>
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="5000" unit="entries"/>
-            <ehcache:disk size="25" unit="mb" persistent="true"/>
         </ehcache:resources>
 
     </ehcache:cache>
@@ -24,7 +18,6 @@
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="2000" unit="entries"/>
-            <ehcache:disk size="100" unit="mb" persistent="true"/>
         </ehcache:resources>
 
     </ehcache:cache>
@@ -35,7 +28,6 @@
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="2000" unit="entries"/>
-            <ehcache:disk size="100" unit="mb" persistent="true"/>
         </ehcache:resources>
 
     </ehcache:cache>

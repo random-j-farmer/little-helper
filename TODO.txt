@@ -4,6 +4,7 @@
 D-Scan
 Shopping list
 
+x (A) RestZkStats is broken, correct url is /api/stats/characterID/1234/ not /api/stats?characterID=1234
 x (A) show system name if IGB +github
 x (A) use compression
 x (A) Have Client detect Server changes (e.g. git tree), ask for reload +github

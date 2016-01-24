@@ -5,6 +5,7 @@ import java.util.{Calendar, TimeZone}
 import akka.actor._
 import akka.pattern.ask
 import me.rjfarmer.rlh.api._
+import me.rjfarmer.rlh.eve.RestZkStatsApi.ZkStatsJson
 import me.rjfarmer.rlh.eve.ZkStatsApi.{GroupedZkStatsRequest, GroupedZkStatsResponse, ZkStatsRequest, ZkStatsResponse}
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.{Cache, CacheManager}
@@ -112,6 +113,9 @@ object RestZkStatsApi {
 
   def props: Props = Props[RestZkStatsApi]()
 
+  // to test the json parsing
+  final case class ZkStatsJson(uri: Uri, json: String)
+
 }
 
 /** Rest ZKillboard Stats */
@@ -126,13 +130,17 @@ class RestZkStatsApi extends Actor with ActorLogging with EveXmlApi[ZkStats] {
       // for easy asking
       self ! ZkStatsRequest(id, Some(sender()), cacheTo)
       CharacterInfo
+
     case request @ ZkStatsRequest(id, Some(replyTo), cacheTo) =>
-      val fzs = complete(httpGetUriQuery(id))
+      val fzs = complete(httpGetUri(id))
       fzs.onComplete { tci =>
         val resp = ZkStatsResponse(request, tci)
         replyTo ! resp
         cacheTo.foreach(cc => cc ! resp)
       }
+
+    case ZkStatsJson(uri, json) =>
+      sender() ! parseResponseBody(uri, json)
 
     case msg =>
       log.warning("unknown message type: {}", msg)
@@ -143,7 +151,7 @@ class RestZkStatsApi extends Actor with ActorLogging with EveXmlApi[ZkStats] {
 
   override def hostConnectorSetup = Http.HostConnectorSetup("zkillboard.com", port=443, sslEncryption = true, defaultHeaders = defaultHeaders)
 
-  def httpGetUriQuery(characterID: Long): Uri.Query = Uri.Query("characterID" -> characterID.toString)
+  def httpGetUri(characterID: Long): Uri = Uri(path = Uri.Path(uriPath + "/characterID/" + characterID.toLong))
 
   import org.json4s._
   import org.json4s.jackson.JsonMethods._
@@ -158,8 +166,9 @@ class RestZkStatsApi extends Actor with ActorLogging with EveXmlApi[ZkStats] {
     }
   }
 
-  def successMessage(query: Uri.Query, json: String): ZkStats = {
-    val characterID = query.get("characterID").get.toLong
+  def parseResponseBody(uri: Uri, json: String): ZkStats = {
+
+    val characterID = uri.path.toString().split('/').last.toLong
 
     val tree = parse(json)
 

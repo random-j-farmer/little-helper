@@ -149,13 +149,25 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 }
 
 
+object BootLoader {
+
+  var testEnvironment: Boolean = false
+
+  def cacheManagerConfiguration = {
+    val fn = if (testEnvironment) "little-cache-test.xml" else "little-cache.xml"
+    new XmlConfiguration(getClass.getClassLoader.getResource(fn))
+  }
+
+}
+
 object Boot extends RequestTimeout {
 
   val bootConfig = ConfigFactory.load()
   val bootHost = bootConfig.getString("http.host")
   val bootPort = bootConfig.getInt("http.port")
   val minRefreshStale = bootConfig.getInt("little-helper.xml-api.refresh-stale")
-  val cacheManager = CacheManagerBuilder.newCacheManager(new XmlConfiguration(getClass.getClassLoader.getResource("little-cache.xml")))
+
+  val cacheManager = CacheManagerBuilder.newCacheManager(BootLoader.cacheManagerConfiguration)
 
   cacheManager.init()
 

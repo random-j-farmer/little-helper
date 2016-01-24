@@ -2,7 +2,7 @@ package me.rjfarmer.rlh.eve
 
 import akka.actor._
 import akka.pattern.ask
-import me.rjfarmer.rlh.api.{WebserviceResult, CharacterInfo, EmploymentHistory}
+import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory, WebserviceResult}
 import me.rjfarmer.rlh.eve.CharacterInfoApi.{CharacterInfoRequest, CharacterInfoResponse, GroupedCharacterInfoRequest, GroupedCharacterInfoResponse}
 import me.rjfarmer.rlh.eve.EveCharacterInfoApi.CharacterInfoXml
 import me.rjfarmer.rlh.server.Boot
@@ -138,7 +138,7 @@ object EveCharacterInfoApi {
   def props: Props = Props[EveCharacterInfoApi]()
 
   /** for testing the parsing part */
-  final case class CharacterInfoXml(query: Uri.Query, xml: String)
+  final case class CharacterInfoXml(uri: Uri, xml: String)
 
 }
 
@@ -156,16 +156,16 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
       self ! CharacterInfoRequest(id, Some(sender()), cacheTo)
 
     case request@CharacterInfoRequest(id, Some(replyTo), cacheTo) =>
-      val fci: Future[CharacterInfo] = complete(Uri.Query("characterID" -> id.toString))
+      val fci: Future[CharacterInfo] = complete(httpGetUri(Uri.Query("characterID" -> id.toString)))
       fci.onComplete { tci =>
         val resp = CharacterInfoResponse(request, tci)
         replyTo ! resp
         cacheTo.foreach(cc => cc ! resp)
       }
 
-    case CharacterInfoXml(query: Uri.Query, xml) =>
+    case CharacterInfoXml(uri: Uri, xml) =>
       // for testing the xml parsing
-      sender() ! successMessage(query, xml)
+      sender() ! parseResponseBody(uri, xml)
 
     case msg =>
       log.warning("unknown message type: {}", msg)
@@ -174,7 +174,7 @@ class EveCharacterInfoApi extends Actor with ActorLogging with EveXmlApi[Charact
 
   val uriPath = "/eve/CharacterInfo.xml.aspx"
 
-  def successMessage(query: Uri.Query, xml: String): CharacterInfo = {
+  def parseResponseBody(uri: Uri, xml: String): CharacterInfo = {
     // log.debug("xml: {}", xml)
     val elem = (XML.loadString(xml) \\ "result")(0)
 

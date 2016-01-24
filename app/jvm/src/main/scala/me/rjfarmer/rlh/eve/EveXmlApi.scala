@@ -28,6 +28,8 @@ trait EveXmlApi[T] {
 
   def log: LoggingAdapter
 
+  def parseResponseBody(uri: Uri, xml: String): T
+
   def hostConnector: ActorRef = Await.result(IO(Http) ? hostConnectorSetup, bootTimeout.duration)
     .asInstanceOf[Http.HostConnectorInfo]
     .hostConnector
@@ -40,24 +42,21 @@ trait EveXmlApi[T] {
   def hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true,
     defaultHeaders = defaultHeaders)
 
-  def successMessage(query: Uri.Query, xml: String): T
-
   def httpGetUri(query: Uri.Query): Uri = Uri(path = Uri.Path(uriPath), query = query)
 
-  def complete(query: Uri.Query): Future[T] = {
+  def complete(uri: Uri): Future[T] = {
     import Boot._
 
     import scala.concurrent.ExecutionContext.Implicits.global
     val started = System.currentTimeMillis()
-    val uri = httpGetUri(query)
     // log.debug("http get: {}", uri)
-    val httpFuture = ask(hostConnector, HttpRequest(GET, httpGetUri(query)))
+    val httpFuture = ask(hostConnector, HttpRequest(GET, uri))
     val promise = Promise[T]()
     httpFuture onSuccess {
       case resp: HttpResponse =>
         if (resp.status.isSuccess) {
           log.debug("http get: {} ===> {} in {}ms", uri, resp.status.intValue, System.currentTimeMillis - started)
-          promise.complete(Try(successMessage(query, decodeResponseBody(resp))))
+          promise.complete(Try(parseResponseBody(uri, decodeResponseBody(resp))))
         } else {
           log.debug("http get error: {} {} after {}ms", resp.status.intValue, resp.entity.data.asString,
             System.currentTimeMillis - started)

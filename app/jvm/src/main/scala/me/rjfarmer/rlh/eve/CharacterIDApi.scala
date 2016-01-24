@@ -191,7 +191,7 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[Ch
 
     val grouped = req.names.map { name => "names" -> name } grouped 100
     val groupedFutures = grouped.map { pairs =>
-      val future = complete(Uri.Query(pairs:_*))
+      val future = complete(httpGetUri(Uri.Query(pairs:_*)))
       future.onSuccess { case vec =>
         val m = Map[String, CharacterIDAndName]() ++ vec.map(ian => (ian.characterName, ian))
         req.cacheTo.foreach {cc => cc ! CharacterIDResponse(req, m, Set()) } }
@@ -217,7 +217,7 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[Ch
   val uriPath = "/eve/CharacterID.xml.aspx"
 
   // parse the result XML, name is LOWERCASE for caching
-  def successMessage(query: Uri.Query, xml: String): Vector[CharacterIDAndName] = {
+  def parseResponseBody(uri: Uri, xml: String): Vector[CharacterIDAndName] = {
     val elem = XML.loadString(xml)
     // log.debug("xml: {}", xml)
     val ts = System.currentTimeMillis()
