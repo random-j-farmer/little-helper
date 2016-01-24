@@ -1,4 +1,5 @@
-(A) log ip address of request
+(B) Foreground/Background Retriever (max. throughput vs throttled) - big requests are starving small ones
+(C) log ip address of request
 (D) error message when started multiple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
