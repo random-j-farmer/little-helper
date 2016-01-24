@@ -19,22 +19,22 @@ val app = crossProject.settings(
   testFrameworks += new TestFramework("utest.runner.Framework"),
   scalaVersion := "2.11.7",
   pomExtra :=
-    <url>https://github.com/random.j.farmer/little-helper</url>
+    <url>https://github.com/random-j-farmer/little-helper</url>
       <licenses>
         <license>
-          <name>PTS license</name>
-          <url>https://github.com/random.j.farmer/little-helper/LICENSE.md</url>
+          <name>PTS License</name>
+          <url>https://github.com/random-j-farmer/little-helper/LICENSE.md</url>
         </license>
       </licenses>
       <scm>
-        <url>git://github.com/random.j.farmer/little-helper.git</url>
-        <connection>scm:git://github.com/random.j.farmer/little-helper.git</connection>
+        <url>git://github.com/random-j-farmer/little-helper.git</url>
+        <connection>scm:git://github.com/random-j-farmer/little-helper.git</connection>
       </scm>
       <developers>
         <developer>
-          <id>random.j.farmer</id>
+          <id>random-j-farmer</id>
           <name>Random J Farmer</name>
-          <url>https://github.com/random.j.farmer</url>
+          <url>https://github.com/random-j-farmer</url>
         </developer>
       </developers>
 ).enablePlugins(GitVersioning, BuildInfoPlugin, JavaAppPackaging
