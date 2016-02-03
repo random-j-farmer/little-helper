@@ -1,6 +1,6 @@
 package me.rjfarmer.rlh.retriever
 
-import akka.actor.{Terminated, Actor, ActorLogging, ActorRef}
+import akka.actor._
 import akka.io.IO
 import me.rjfarmer.rlh.api.WebserviceResult
 import org.ehcache.Cache
@@ -9,6 +9,7 @@ import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
 import spray.http.{StatusCode, HttpResponse, HttpRequest, Uri}
 import spray.http.HttpMethods.GET
 
+import scala.concurrent.duration._
 import scala.util.Try
 
 
@@ -29,6 +30,20 @@ trait Retrievable[K] {
 
 }
 
+/**
+ * A groupp of retrievables.
+ *
+ * @tparam K key of retrievables
+ */
+trait RetriGroup[K] {
+
+  def items: Vector[(K, Uri)]
+
+  def replyTo: ActorRef
+
+  def retrievable(k: K, uri: Uri, replyTo: Option[ActorRef]): Retrievable[K]
+
+}
 
 /**
  * Scala wrapped API for EHC Cache
@@ -68,6 +83,12 @@ trait BodyParser[V] {
 
 object Retriever {
 
+  def props[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
+                                      queue: RetrieveQueue[K],
+                                      parser: BodyParser[V],
+                                      hostConnectorSetup: HostConnectorSetup): Props =
+    Props(new Retriever[K, V](cache, queue, parser, hostConnectorSetup))
+
 }
 
 class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
@@ -82,6 +103,17 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
   private[this] var activeRequestStarted: Long = 0L
 
   override def receive: Receive = {
+
+    case group: RetriGroup[K] =>
+      val (cached, uncached, stale) = cachedAndNeedToRefresh(group.items)
+      val collector = context.actorOf(Collector.props(cache, cached, uncached.size, group.replyTo, 15.seconds))
+      uncached.foreach { keyAndUri =>
+        val reply = Some(collector)
+        self ! group.retrievable(keyAndUri._1, keyAndUri._2, reply)
+      }
+      stale.foreach { keyAndUri =>
+        self ! group.retrievable(keyAndUri._1, keyAndUri._2, None)
+      }
 
     case item : Retrievable[K] =>
       answerCachedOrElse(item, queueRetrieve)
@@ -143,22 +175,25 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
 
   def queueRetrieve(item: Retrievable[K]): Unit = {
     log.debug("queueRetrieve: {} {}", item)
-
     queue.enqueue(retrievePriority(item))(item)
     retrieveOrAskForHostConnector()
   }
 
   def retrieveOrAskForHostConnector(): Unit = {
-    log.debug("retrieveOrAskForHostConnector")
-    hostConnector match {
-      case None =>
-        askForHostConnector()
-      case Some(hc) =>
-        if (hc == context.system.deadLetters) {
+    if (activeRequest.isEmpty) {
+      log.debug("retrieveOrAskForHostConnector")
+      hostConnector match {
+        case None =>
           askForHostConnector()
-        } else {
-          retrieveWithHostConnector()
-        }
+        case Some(hc) =>
+          if (hc == context.system.deadLetters) {
+            askForHostConnector()
+          } else {
+            retrieveWithHostConnector()
+          }
+      }
+    } else {
+      log.debug("retrieveOrAskForHostConnector: retrieve already active")
     }
   }
 
@@ -169,11 +204,16 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
 
   def retrieveWithHostConnector(): Unit = {
     log.debug("haveHcWillRetrieve")
-    queue.dequeueOption match {
+    activeRequest match {
       case None =>
-        log.debug("queue is empty ...")
-      case Some(item) =>
-        answerCachedOrElse(item, sendToHostConnector)
+        queue.dequeueOption match {
+          case None =>
+            log.debug("queue is empty ...")
+          case Some(item) =>
+            answerCachedOrElse(item, sendToHostConnector)
+        }
+      case Some(_) =>
+        log.debug("request already active, not doing anything")
     }
   }
 
@@ -182,6 +222,15 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
     hostConnector foreach { hc => hc ! HttpRequest(GET, item.httpGetUri) }
     activeRequest = Some(item)
     activeRequestStarted = System.currentTimeMillis()
+  }
+
+  def cachedAndNeedToRefresh(ids: Vector[(K, Uri)]): (Map[K, V], Vector[(K, Uri)], Vector[(K, Uri)]) = {
+    val cached: Map[K, V] = Map() ++
+      ids.map(pair => (pair._1, cache.get(pair._1)))
+        .collect { case (k, Some(v)) => (k, v) }
+    val uncached = ids.filterNot(pair => cached.contains(pair._1))
+    val stale = ids.filter(pair => cached.contains(pair._1) && ! cached(pair._1).isFresh)
+    (cached, uncached, stale)
   }
 
 }
