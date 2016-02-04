@@ -8,6 +8,16 @@ recent kill stats.
 A public instance is running at https://randoms-littlehelper.rhcloud.com/
 
 
+How to compile/test
+-------------------
+
+In sbt:
+
+    ~reStart               # to start the server
+    ~appJVM/test           # to run the tests
+    clean                  # clean
+    universal:packageBin   # produces a zip file
+
 
 IGB Notes
 ---------

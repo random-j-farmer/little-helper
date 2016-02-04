@@ -1,10 +1,10 @@
-(A) Grouper Actor
-(B) Foreground/Background Retriever (max. throughput vs throttled) - big requests are starving small ones
-(C) log ip address of request
 (D) error message when started multiple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
 
+x (A) Grouper Actor
+x (B) Foreground/Background Retriever (max. throughput vs throttled) - big requests are starving small ones
+x (C) log ip address of request
 x (A) RestZkStats is broken, correct url is /api/stats/characterID/1234/ not /api/stats?characterID=1234
 x (A) show system name if IGB +github
 x (A) use compression
