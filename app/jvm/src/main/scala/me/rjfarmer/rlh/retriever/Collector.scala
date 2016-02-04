@@ -1,6 +1,7 @@
 package me.rjfarmer.rlh.retriever
 
 import akka.actor._
+import me.rjfarmer.rlh.api.WebserviceResult
 import scala.concurrent.duration._
 
 import scala.util.{Failure, Success, Try}
@@ -8,7 +9,7 @@ import scala.util.{Failure, Success, Try}
 
 object Collector {
 
-  def props[K, V](cache: RetrieveCache[K,V], cached: Map[K,V], numItems: Int, replyTo: ActorRef, timeout: FiniteDuration): Props = {
+  def props[K, V <: WebserviceResult](cache: RetrieveCache[K,V], cached: Map[K,V], numItems: Int, replyTo: ActorRef, timeout: FiniteDuration): Props = {
     Props(new Collector(cache, cached, numItems, replyTo, timeout))
   }
 
@@ -16,13 +17,13 @@ object Collector {
 
   case class Result[K, V](item: Retrievable[K],
                           result: Try[V]) {
-    def pair: (K,Try[V]) = (item.key, result)
+    def pair: (K,V) = (item.key, result.get)
   }
 
 }
 
 /** Collect a number of results or return incomplete result after timeout */
-class Collector[K,V] (cache: RetrieveCache[K,V], cached: Map[K,V], numResults: Int, replyTo: ActorRef, timeout: FiniteDuration)
+class Collector[K,V <: WebserviceResult] (cache: RetrieveCache[K,V], cached: Map[K,V], numResults: Int, replyTo: ActorRef, timeout: FiniteDuration)
   extends Actor with ActorLogging {
 
   type TResult = Collector.Result[K,V]
@@ -32,7 +33,10 @@ class Collector[K,V] (cache: RetrieveCache[K,V], cached: Map[K,V], numResults: I
   var replied = false
 
   override def preStart(): Unit = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+
     super.preStart()
+
     context.system.scheduler.scheduleOnce(timeout, self, Collector.Timeout)
   }
 
@@ -41,7 +45,7 @@ class Collector[K,V] (cache: RetrieveCache[K,V], cached: Map[K,V], numResults: I
 
     case result: TResult =>
       if (! replied) {
-        log.debug("received: {}", result)
+        // log.debug("received: {}", result)
         result.result match {
           case Success(v) =>
             received += result.pair
@@ -49,28 +53,28 @@ class Collector[K,V] (cache: RetrieveCache[K,V], cached: Map[K,V], numResults: I
             numErrors += 1
         }
         if (received.size + numErrors == numResults) {
-          finish()
+          finish(false)
         }
       }
 
     case Collector.Timeout =>
-      log.debug("timeout expired")
-      finish()
+      // XXX actor is only destroyed after timeout expires ...
+      finish(true)
 
     case msg =>
       log.warning("unknown message: {}", msg)
 
   }
 
-  def finish(): Unit = {
-    // reget from cache - we are only sent the uncached elements
-    // stale cached ones may have been refreshed
-    val fromCache = cached.map(pair => (pair._1, cache.get(pair._1)))
-        .collect { case (k, Some(v)) => (k, v) }
-    val result = cached ++ fromCache ++ received
-    replyTo ! result
-    replied = true
-    self ! PoisonPill
+  def finish(poison: Boolean): Unit = {
+    if (! replied) {
+      val result = cached ++ received
+      replyTo ! result
+      replied = true
+    }
+    if (poison) {
+      self ! PoisonPill
+    }
   }
 
 

@@ -2,12 +2,15 @@ package me.rjfarmer.rlh.retriever
 
 import akka.actor._
 import akka.io.IO
-import me.rjfarmer.rlh.api.WebserviceResult
+import me.rjfarmer.rlh.api.{WebserviceRequest, WebserviceResult}
+import me.rjfarmer.rlh.server.Boot
 import org.ehcache.Cache
 import spray.can.Http
 import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
-import spray.http.{StatusCode, HttpResponse, HttpRequest, Uri}
+import spray.http.HttpHeaders.RawHeader
 import spray.http.HttpMethods.GET
+import spray.http._
+import spray.httpx.encoding.{Deflate, Gzip}
 
 import scala.concurrent.duration._
 import scala.util.Try
@@ -26,22 +29,28 @@ trait Retrievable[K] {
 
   def httpGetUri: Uri
 
-  def replyTo: Option[ActorRef]
+  def priority: Int
+
+  def replyTo: ActorRef
 
 }
 
 /**
  * A groupp of retrievables.
  *
+ * replyTo is an option for asking convenience (i.e. send in None, it will be answered to the sender)
+ *
  * @tparam K key of retrievables
  */
 trait RetriGroup[K] {
 
-  def items: Vector[(K, Uri)]
+  def items: Vector[K]
 
-  def replyTo: ActorRef
+  def wsr: WebserviceRequest
 
-  def retrievable(k: K, uri: Uri, replyTo: Option[ActorRef]): Retrievable[K]
+  def replyTo: Option[ActorRef]
+
+  def retrievable(k: K, priority: Int, replyTo: ActorRef): Retrievable[K]
 
 }
 
@@ -65,7 +74,7 @@ trait RetrieveCache[K,V <: WebserviceResult] {
 }
 
 /** ehc cache with long keys */
-class EhcRetrieveLongCache[V <: WebserviceResult] (cache: Cache[java.lang.Long, V])extends RetrieveCache[Long, V] {
+class EhcRetrieveLongCache[V <: WebserviceResult] (cache: Cache[java.lang.Long, V]) extends RetrieveCache[Long, V] {
 
   def get(k: Long): Option[V] = Option(cache.get(k))
 
@@ -74,9 +83,9 @@ class EhcRetrieveLongCache[V <: WebserviceResult] (cache: Cache[java.lang.Long, 
 }
 
 
-trait BodyParser[V] {
+trait BodyParser[K, V] {
 
-  def parseBody(body: String): V
+  def parseBody(key: K, body: String): V
 
 }
 
@@ -85,15 +94,26 @@ object Retriever {
 
   def props[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
                                       queue: RetrieveQueue[K],
-                                      parser: BodyParser[V],
+                                      parser: BodyParser[K, V],
+                                      timeout: FiniteDuration,
                                       hostConnectorSetup: HostConnectorSetup): Props =
-    Props(new Retriever[K, V](cache, queue, parser, hostConnectorSetup))
+    Props(new Retriever[K, V](cache, queue, parser, timeout, hostConnectorSetup))
+
+
+  val defaultHeaders: List[HttpHeader] =  if (Boot.bootConfig.getBoolean("little-helper.xml-api.use-compression")) {
+    List(RawHeader("accept-encoding", "gzip,deflate"))
+  } else {
+    List()
+  }
+
+  val minRefreshStale: Int = Boot.minRefreshStale
 
 }
 
 class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
                       queue: RetrieveQueue[K],
-                      parser: BodyParser[V],
+                      parser: BodyParser[K, V],
+                      timeout: FiniteDuration,
                       hostConnectorSetup: HostConnectorSetup) extends Actor with ActorLogging {
 
   import me.rjfarmer.rlh.server.Boot.bootSystem
@@ -105,21 +125,33 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
   override def receive: Receive = {
 
     case group: RetriGroup[K] =>
-      val (cached, uncached, stale) = cachedAndNeedToRefresh(group.items)
-      val collector = context.actorOf(Collector.props(cache, cached, uncached.size, group.replyTo, 15.seconds))
-      uncached.foreach { keyAndUri =>
-        val reply = Some(collector)
-        self ! group.retrievable(keyAndUri._1, keyAndUri._2, reply)
+      val (cached, uncached, stale, need) = cachedAndNeedToRefresh(group.items)
+      log.info("<{}> grouped zkstats request: {} total / {} cached / {} need to refresh",
+        group.wsr.clientIP, group.items.size, cached.size, need - uncached.size)
+
+      val replyTo = group.replyTo match {
+        case None => sender()
+        case Some(x) => x
       }
-      stale.foreach { keyAndUri =>
-        self ! group.retrievable(keyAndUri._1, keyAndUri._2, None)
+
+      if (need == 0) {
+        replyTo ! cached
+      } else {
+        val collector = context.actorOf(Collector.props(cache, cached, need, replyTo, timeout))
+        uncached.foreach { key =>
+          self ! group.retrievable(key, 1, collector)
+        }
+        stale.foreach { key =>
+          self ! group.retrievable(key, 2, collector)
+        }
       }
 
     case item : Retrievable[K] =>
+      // log.debug("Retrievable: {}", item)
       answerCachedOrElse(item, queueRetrieve)
 
     case HostConnectorInfo(hc, _) =>
-      log.debug("hostConnector {}", hc)
+      // log.debug("hostConnector {}", hc)
       hostConnector = Some(hc)
       context.watch(hc)
       retrieveWithHostConnector()
@@ -128,10 +160,13 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
       log.debug("hostConnector terminated")
       hostConnector = None
 
-    case HttpResponse(status, entity, _, _) =>
+    case resp: HttpResponse =>
+      // log.debug("HttpResponse: {}", resp.status)
       val item = activeRequest.get
-      val result = Try(parseAndCache(status, entity.asString))
-      item.replyTo foreach { to => to ! result}
+      val result = Try(parseAndCache(resp))
+      if (item.replyTo != context.system.deadLetters) {
+        item.replyTo ! Collector.Result(item, result)
+      }
       activeRequest = None
       activeRequestStarted = 0L
       retrieveOrAskForHostConnector()
@@ -140,23 +175,34 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
       log.warning("Unknown message: {}", msg)
   }
 
-  def retrievePriority(item: Retrievable[K]): Int = {
-    item.replyTo match {
-      case None => 3
-      case Some(_) => 2
-    }
-  }
-
-  def parseAndCache(status: StatusCode, body: String): V = {
+  def parseAndCache(resp: HttpResponse): V = {
+    val status = resp.status
     val item = activeRequest.get
     if (status.isSuccess) {
-      val result = parser.parseBody(body)
-      cache.put(item.key, result)
-      log.debug("http get: {} ===> {} in {}ms", item.httpGetUri, status.intValue, System.currentTimeMillis - activeRequestStarted)
-      result
+      try {
+        val result = parser.parseBody(item.key, decodeResponseBody(resp))
+        cache.put(item.key, result)
+        log.debug("http get: {} ===> {} in {}ms", item.httpGetUri, status.intValue, System.currentTimeMillis - activeRequestStarted)
+        result
+      } catch {
+        case e: Exception =>
+          log.error("error parsing response body: {}", e)
+          throw e
+      }
     } else {
       log.debug("http get error: {} {} after {}ms", item.httpGetUri, status.intValue, System.currentTimeMillis() - activeRequestStarted)
       throw new IllegalStateException("http result not ok: " + status.intValue)
+    }
+  }
+
+  def decodeResponseBody(resp: HttpResponse): String = {
+    resp.encoding match {
+      case HttpEncoding("gzip") =>
+        Gzip.decode(resp).entity.asString
+      case HttpEncoding("deflate") =>
+        Deflate.decode(resp).entity.asString
+      case _ =>
+        resp.entity.asString
     }
   }
 
@@ -166,7 +212,7 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
         func(item)
       case Some(result) =>
         if (result.isFresh) {
-          item.replyTo.foreach { to => to ! result }
+          item.replyTo ! result
         } else {
           func(item)
         }
@@ -174,14 +220,13 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
   }
 
   def queueRetrieve(item: Retrievable[K]): Unit = {
-    log.debug("queueRetrieve: {} {}", item)
-    queue.enqueue(retrievePriority(item))(item)
+    // log.debug("queueRetrieve: {} {}", item)
+    queue.enqueue(item.priority)(item)
     retrieveOrAskForHostConnector()
   }
 
   def retrieveOrAskForHostConnector(): Unit = {
     if (activeRequest.isEmpty) {
-      log.debug("retrieveOrAskForHostConnector")
       hostConnector match {
         case None =>
           askForHostConnector()
@@ -192,45 +237,46 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
             retrieveWithHostConnector()
           }
       }
-    } else {
-      log.debug("retrieveOrAskForHostConnector: retrieve already active")
     }
   }
 
   def askForHostConnector(): Unit = {
-    log.debug("askForHostConnector")
     IO(Http) ! hostConnectorSetup
   }
 
   def retrieveWithHostConnector(): Unit = {
-    log.debug("haveHcWillRetrieve")
     activeRequest match {
       case None =>
         queue.dequeueOption match {
           case None =>
-            log.debug("queue is empty ...")
           case Some(item) =>
             answerCachedOrElse(item, sendToHostConnector)
         }
       case Some(_) =>
-        log.debug("request already active, not doing anything")
+        // log.debug("request already active, not doing anything")
     }
   }
 
   def sendToHostConnector(item: Retrievable[K]): Unit = {
-    log.debug("send to hostConnector: {}:", item)
     hostConnector foreach { hc => hc ! HttpRequest(GET, item.httpGetUri) }
     activeRequest = Some(item)
     activeRequestStarted = System.currentTimeMillis()
   }
 
-  def cachedAndNeedToRefresh(ids: Vector[(K, Uri)]): (Map[K, V], Vector[(K, Uri)], Vector[(K, Uri)]) = {
+  def cachedAndNeedToRefresh(ids: Vector[K]): (Map[K, V], Vector[K], Vector[K], Int) = {
     val cached: Map[K, V] = Map() ++
-      ids.map(pair => (pair._1, cache.get(pair._1)))
+      ids.map{ id => (id, cache.get(id))}
         .collect { case (k, Some(v)) => (k, v) }
-    val uncached = ids.filterNot(pair => cached.contains(pair._1))
-    val stale = ids.filter(pair => cached.contains(pair._1) && ! cached(pair._1).isFresh)
-    (cached, uncached, stale)
+    val uncached = ids.filterNot(id => cached.contains(id))
+    val refreshNum = math.max(Retriever.minRefreshStale, (ids.length * 0.1d).toInt - uncached.length)
+    val stale = cached
+      .filterNot(_._2.isFresh)
+      .toVector
+      .sortWith((p1, p2) => p1._2.receivedTimestamp < p2._2.receivedTimestamp)
+      .map(_._1)
+    val need = uncached.size + refreshNum
+
+    (cached, uncached, stale, need)
   }
 
 }

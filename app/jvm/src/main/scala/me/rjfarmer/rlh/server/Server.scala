@@ -44,6 +44,8 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   import Boot.{bootTimeout => _, _}
   // use longer timeouts here
   implicit val bootTimeout = Boot.requestTimeout(bootConfig, "little-helper.xml-api.ajax-timeout-long")
+  // this is the shorter timeout, it is the one that should be triggered
+  val retrieveTimeout = Boot.bootTimeout
 
   val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
@@ -51,6 +53,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   val characterInfo = bootSystem.actorOf(FromConfig.props(CharacterInfoApi.props(cacheManager, eveCharacterInfo)), "characterInfoPool")
   val eveZkStats = bootSystem.actorOf(FromConfig.props(RestZkStatsApi.props), "restZkStatsPool")
   val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(cacheManager, eveZkStats)), "zkStatsPool")
+  val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager, retrieveTimeout.duration)), "zkStatsRetrievers")
 
   def main(args: Array[String]): Unit = {
 
@@ -137,7 +140,9 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
             bootSystem.log.warning("<{}> unknown character names: {}", req.clientIP, idResp.unknownNames.mkString(", "))
           }
           val f1 = characterInfos(req, pureIds)
-          val f2 = zkStats(req, pureIds)
+          // XXX: delete me
+          // val f2 = zkStats(req, pureIds)
+          val f2 = ZkStatsRetriever.zkStats(zkStatsRetriever, req, pureIds, bootTimeout)
           f1.zip(f2).onComplete {
             case Success(Pair(infoMap, zkMap)) =>
               bootSystem.log.info("<{}> listCharacters: successful response for {} names in {}ms",
@@ -178,6 +183,8 @@ object Boot extends RequestTimeout {
   val bootConfig = ConfigFactory.load()
   val bootHost = bootConfig.getString("http.host")
   val bootPort = bootConfig.getInt("http.port")
+
+  // XXX delete me
   val minRefreshStale = bootConfig.getInt("little-helper.xml-api.refresh-stale")
 
   val cacheManager = CacheManagerBuilder.newCacheManager(BootLoader.cacheManagerConfiguration)
@@ -186,6 +193,7 @@ object Boot extends RequestTimeout {
 
   implicit val bootSystem = ActorSystem("little-helper", bootConfig)
   implicit val bootTimeout = requestTimeout(bootConfig, "little-helper.xml-api.ajax-timeout")
+
 
 
   object CacheManagerShutdownHook extends Thread {
