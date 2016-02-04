@@ -7,14 +7,12 @@ import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve.CharacterIDApi._
-import me.rjfarmer.rlh.eve.CharacterInfoApi.{GroupedCharacterInfoRequest, GroupedCharacterInfoResponse}
-import me.rjfarmer.rlh.eve.ZkStatsApi.{GroupedZkStatsRequest, GroupedZkStatsResponse}
 import me.rjfarmer.rlh.eve._
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
-import spray.http.{HttpHeader, HttpEntity, MediaTypes}
-import spray.httpx.encoding.{Gzip, NoEncoding, Deflate}
+import spray.http.{HttpEntity, HttpHeader, MediaTypes}
+import spray.httpx.encoding.{Deflate, Gzip, NoEncoding}
 import spray.routing.{RequestContext, SimpleRoutingApp}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,10 +47,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 
   val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
-  val eveCharacterInfo = bootSystem.actorOf(FromConfig.props(EveCharacterInfoApi.props), "eveCharacterInfoPool")
-  val characterInfo = bootSystem.actorOf(FromConfig.props(CharacterInfoApi.props(cacheManager, eveCharacterInfo)), "characterInfoPool")
-  val eveZkStats = bootSystem.actorOf(FromConfig.props(RestZkStatsApi.props), "restZkStatsPool")
-  val zkStats = bootSystem.actorOf(FromConfig.props(ZkStatsApi.props(cacheManager, eveZkStats)), "zkStatsPool")
+  val characterInfoRetriever = bootSystem.actorOf(FromConfig.props(CharacterInfoRetriever.props(cacheManager, retrieveTimeout.duration)), "characterInfoRetrievers")
   val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager, retrieveTimeout.duration)), "zkStatsRetrievers")
 
   def main(args: Array[String]): Unit = {
@@ -111,18 +106,6 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
       .asInstanceOf[Future[CharacterIDResponse]]
   }
 
-  private def characterInfos(wsr: WebserviceRequest, ids: Vector[Long]): Future[Map[Long,CharacterInfo]] = {
-    ask(characterInfo, GroupedCharacterInfoRequest(wsr, ids, None))
-      .asInstanceOf[Future[GroupedCharacterInfoResponse]]
-      .map(resp => resp.infoById)
-  }
-
-  private def zkStats(wsr: WebserviceRequest, ids: Vector[Long]): Future[Map[Long, ZkStats]] = {
-    ask(zkStats, GroupedZkStatsRequest(wsr, ids, None))
-      .asInstanceOf[Future[GroupedZkStatsResponse]]
-      .map(resp => resp.infoById)
-  }
-
   def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
     val ts = System.currentTimeMillis()
     val result = Promise[ListCharactersResponse]()
@@ -139,9 +122,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
           if (idResp.unknownNames.nonEmpty) {
             bootSystem.log.warning("<{}> unknown character names: {}", req.clientIP, idResp.unknownNames.mkString(", "))
           }
-          val f1 = characterInfos(req, pureIds)
-          // XXX: delete me
-          // val f2 = zkStats(req, pureIds)
+          val f1 = CharacterInfoRetriever.characterInfo(characterInfoRetriever, req, pureIds, bootTimeout)
           val f2 = ZkStatsRetriever.zkStats(zkStatsRetriever, req, pureIds, bootTimeout)
           f1.zip(f2).onComplete {
             case Success(Pair(infoMap, zkMap)) =>

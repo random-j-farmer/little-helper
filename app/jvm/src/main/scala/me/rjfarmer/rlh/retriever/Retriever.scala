@@ -126,8 +126,7 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
 
     case group: RetriGroup[K] =>
       val (cached, uncached, stale, need) = cachedAndNeedToRefresh(group.items)
-      log.info("<{}> grouped zkstats request: {} total / {} cached / {} need to refresh",
-        group.wsr.clientIP, group.items.size, cached.size, need - uncached.size)
+      log.info(s"<${group.wsr.clientIP}> grouped request: ${group.items.size} total / ${cached.size} cached (${cached.size - stale.size} fresh) / $need need to refresh")
 
       val replyTo = group.replyTo match {
         case None => sender()
@@ -274,7 +273,7 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
       .toVector
       .sortWith((p1, p2) => p1._2.receivedTimestamp < p2._2.receivedTimestamp)
       .map(_._1)
-    val need = uncached.size + refreshNum
+    val need = uncached.size + Math.min(refreshNum, stale.size)
 
     (cached, uncached, stale, need)
   }
