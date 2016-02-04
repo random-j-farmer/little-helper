@@ -20,7 +20,7 @@ import scala.util.Try
 import scala.xml.Node
 
 
-trait EveXmlApi[T] {
+trait EveXmlApi[T] extends EveXmlParser {
 
   type Type = T
 
@@ -34,12 +34,13 @@ trait EveXmlApi[T] {
     .asInstanceOf[Http.HostConnectorInfo]
     .hostConnector
 
-  val defaultHeaders: List[HttpHeader] =  if (Boot.bootConfig.getBoolean("little-helper.xml-api.use-compression")) {
+  val defaultHeaders: List[HttpHeader] = if (Boot.bootConfig.getBoolean("little-helper.xml-api.use-compression")) {
     List(RawHeader("accept-encoding", "gzip,deflate"))
   } else {
     List()
   }
-  def hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true,
+
+  def hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port = 443, sslEncryption = true,
     defaultHeaders = defaultHeaders)
 
   def httpGetUri(query: Uri.Query): Uri = Uri(path = Uri.Path(uriPath), query = query)
@@ -77,25 +78,5 @@ trait EveXmlApi[T] {
     }
   }
 
-  def etxt(elem: Node, child: String): String = (elem \ child).text
-
-  def opttxt(elem: Node, child: String): Option[String] = {
-    val el = elem \ child
-    if (el.isEmpty) None else Some(el.text)
-  }
-
-  /**
-   * Parses the date/time string as UTC date time.
-   *
-   * Example input: 2008-04-15 08:17:23
-   * @param dt string input
-   * @return
-   */
-  def parseDatetime(dt: String): Date = {
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
-    sdf.parse(dt)
-  }
-
-
 }
+

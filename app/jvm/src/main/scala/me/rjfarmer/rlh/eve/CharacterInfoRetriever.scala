@@ -6,7 +6,7 @@ import java.util.{TimeZone, Date}
 import akka.actor.{ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
-import me.rjfarmer.rlh.api.{EmploymentHistory, CharacterInfo, WebserviceRequest}
+import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory, WebserviceRequest}
 import me.rjfarmer.rlh.retriever._
 import org.ehcache.CacheManager
 import spray.can.Http
@@ -54,7 +54,31 @@ final case class CharacterInfoRetriGroup (wsr: WebserviceRequest, items: Vector[
 
 }
 
-object CharacterInfoBodyParser extends BodyParser[Long, CharacterInfo] {
+trait EveXmlParser {
+
+  def etxt(elem: Node, child: String): String = (elem \ child).text
+
+  def opttxt(elem: Node, child: String): Option[String] = {
+    val el = elem \ child
+    if (el.isEmpty) None else Some(el.text)
+  }
+
+  /**
+   * Parses the date/time string as UTC date time.
+   *
+   * Example input: 2008-04-15 08:17:23
+   * @param dt string input
+   * @return
+   */
+  def parseDatetime(dt: String): Date = {
+    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
+    sdf.parse(dt)
+  }
+
+}
+
+object CharacterInfoBodyParser extends BodyParser[Long, CharacterInfo] with EveXmlParser {
 
   override def parseBody(key: Long, xml: String): CharacterInfo = {
     // log.debug("xml: {}", xml)
@@ -77,26 +101,5 @@ object CharacterInfoBodyParser extends BodyParser[Long, CharacterInfo] {
       etxt(elem, "securityStatus").toDouble, age, eh,
       System.currentTimeMillis())
   }
-
-  def etxt(elem: Node, child: String): String = (elem \ child).text
-
-  def opttxt(elem: Node, child: String): Option[String] = {
-    val el = elem \ child
-    if (el.isEmpty) None else Some(el.text)
-  }
-
-  /**
-   * Parses the date/time string as UTC date time.
-   *
-   * Example input: 2008-04-15 08:17:23
-   * @param dt string input
-   * @return
-   */
-  def parseDatetime(dt: String): Date = {
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    sdf.setTimeZone(TimeZone.getTimeZone("UTC"))
-    sdf.parse(dt)
-  }
-
 
 }
