@@ -220,7 +220,7 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
 
   def queueRetrieve(item: Retrievable[K]): Unit = {
     // log.debug("queueRetrieve: {} {}", item)
-    queue.enqueue(item.priority)(item)
+    queue.enqueue(item)
     retrieveOrAskForHostConnector()
   }
 

@@ -24,7 +24,8 @@ class RetrieveQueue[K] {
 
   private[this] val holder: AtomicReference[VQType] = new AtomicReference(Vector(Queue(), Queue(), Queue()))
 
-  def enqueue(prio: Int)(item: RType): Unit = updateAndGet { queues =>
+  def enqueue(item: RType): Unit = updateAndGet { queues =>
+    val prio = item.priority
     queues.updated(prio, queues(prio).enqueue(item))
   }
 

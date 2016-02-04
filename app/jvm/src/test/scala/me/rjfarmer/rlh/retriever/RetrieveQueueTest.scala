@@ -5,7 +5,7 @@ import spray.http.Uri
 import utest._
 
 
-final case class TestRetrievable (key: String)
+final case class TestRetrievable (key: String, priority: Int)
   extends Retrievable[String] {
 
   override def httpGetUri: Uri = Uri(path = Uri.Path("/xxx"), query = Uri.Query("key" -> key))
@@ -18,9 +18,9 @@ object RetrieveQueueTest extends TestSuite {
   val tests = TestSuite {
     'fgEnqueueDequeue {
       val q = RetrieveQueue[String]()
-      q.enqueue(0)(TestRetrievable("random j farmer"))
-      q.enqueue(1)(TestRetrievable("random j farmer"))
-      q.enqueue(0)(TestRetrievable("some other dude"))
+      q.enqueue(TestRetrievable("random j farmer", 0))
+      q.enqueue(TestRetrievable("random j farmer", 1))
+      q.enqueue(TestRetrievable("some other dude", 0))
 
       assert("random j farmer" == q.dequeueOption.get.key)
       assert("some other dude" == q.dequeueOption.get.key)
