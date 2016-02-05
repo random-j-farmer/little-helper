@@ -8,6 +8,7 @@ import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve.CharacterIDApi._
 import me.rjfarmer.rlh.eve._
+import me.rjfarmer.rlh.retriever.PriorityConfig
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
@@ -42,8 +43,10 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   import Boot._
 
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager)), "characterIDPool")
-  val characterInfoRetriever = bootSystem.actorOf(FromConfig.props(CharacterInfoRetriever.props(cacheManager, restTimeout.duration)), "characterInfoRetrievers")
-  val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager, restTimeout.duration)), "zkStatsRetrievers")
+  val characterInfoRetriever = bootSystem.actorOf(FromConfig.props(CharacterInfoRetriever.props(cacheManager,
+    restTimeout.duration)), "characterInfoRetrievers")
+  val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager,
+    restTimeout.duration)), "zkStatsRetrievers")
 
   def main(args: Array[String]): Unit = {
 
@@ -97,7 +100,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   }
 
   private def listIds(wsr: WebserviceRequest, names: Vector[String]): Future[CharacterIDResponse] = {
-    ask(characterID, CharacterIDRequest(wsr, names, Map(), None))
+    ask(characterID, CharacterIDRequest(wsr, names, Map(), None))(Boot.ajaxFutureTimeout)
       .asInstanceOf[Future[CharacterIDResponse]]
   }
 
@@ -121,13 +124,15 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
           val f2 = ZkStatsRetriever.zkStats(zkStatsRetriever, req, pureIds, ajaxFutureTimeout)
           f1.zip(f2).onComplete {
             case Success(Pair(infoMap, zkMap)) =>
-              bootSystem.log.info("<{}> listCharacters: successful response for {} names in {}ms",
-                req.clientIP, req.names.size, System.currentTimeMillis() - ts)
               val cis = idResp.allNames.map { name =>
                 val id: Long = idResp.fullResult.get(name).map(ian => ian.characterID).getOrElse(0L)
                 // no results for key 0L, so if the id was not resolved, we return None
                 CharInfo(name, infoMap.get(id), zkMap.get(id))
               }.sorted(ByDestroyed)
+              bootSystem.log.info("<{}> listCharacters: successful response for {} names ({} stale) in {}ms",
+                req.clientIP, req.names.size,
+                cis.filterNot(_.isFresh).length,
+                System.currentTimeMillis() - ts)
               result.success(ListCharactersResponse(None, req.solarSystem, cis))
             case Failure(ex) =>
               bootSystem.log.error("<{}> listCharacters: received error: {}", req.clientIP, ex)
@@ -160,10 +165,15 @@ object Boot extends RequestTimeout {
   val bootHost = bootConfig.getString("http.host")
   val bootPort = bootConfig.getInt("http.port")
 
-  // XXX delete me
-  val minRefreshStale = bootConfig.getInt("little-helper.xml-api.refresh-stale")
-
   val cacheManager = CacheManagerBuilder.newCacheManager(BootLoader.cacheManagerConfiguration)
+
+  import collection.JavaConversions._
+
+  val priorityConfig = PriorityConfig(
+    bootConfig.getIntList("little-helper.xml-api.priorities-by-size").toVector.map(_.toInt),
+    bootConfig.getIntList("little-helper.xml-api.promote-stales").toVector.map(_.toInt),
+    bootConfig.getInt("little-helper.xml-api.stale-priority-offset")
+  )
 
   cacheManager.init()
 

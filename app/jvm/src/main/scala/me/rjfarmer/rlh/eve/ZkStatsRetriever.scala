@@ -7,6 +7,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.retriever._
+import me.rjfarmer.rlh.server.Boot
 import org.ehcache.CacheManager
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -20,12 +21,13 @@ object ZkStatsRetriever {
 
   private val hostConnectorSetup = Http.HostConnectorSetup("zkillboard.com", port=443, sslEncryption = true, defaultHeaders = Retriever.defaultHeaders)
 
-  private val retrieveQueue = RetrieveQueue[Long]()
+  import Boot.priorityConfig
+  private val retrieveQueue = RetrieveQueue[Long](priorityConfig)
 
   def props(cacheManager: CacheManager, retrieveTimeout: FiniteDuration): Props = {
     val ehCache = cacheManager.getCache("zkStatsCache", classOf[java.lang.Long], classOf[ZkStats])
-    Retriever.props[Long, ZkStats](new EhcRetrieveLongCache[ZkStats](ehCache), retrieveQueue, ZkStatsBodyParser,
-      retrieveTimeout, hostConnectorSetup)
+    Retriever.props[Long, ZkStats](new EhcRetrieveLongCache[ZkStats](ehCache), retrieveQueue,
+      priorityConfig, ZkStatsBodyParser, retrieveTimeout, hostConnectorSetup)
   }
 
   def zkStats(zkStatsRetriever: ActorRef, wsr: WebserviceRequest, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, ZkStats]] = {

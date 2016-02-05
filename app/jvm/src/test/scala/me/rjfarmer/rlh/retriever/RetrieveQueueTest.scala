@@ -17,7 +17,7 @@ object RetrieveQueueTest extends TestSuite {
 
   val tests = TestSuite {
     'fgEnqueueDequeue {
-      val q = RetrieveQueue[String]()
+      val q = RetrieveQueue[String](2)
       q.enqueue(TestRetrievable("random j farmer", 0))
       q.enqueue(TestRetrievable("random j farmer", 1))
       q.enqueue(TestRetrievable("some other dude", 0))

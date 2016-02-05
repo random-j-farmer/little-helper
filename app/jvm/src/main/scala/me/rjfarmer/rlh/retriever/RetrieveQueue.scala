@@ -16,16 +16,16 @@ import scala.collection.immutable.Queue
  *
  * @tparam K key type
  */
-class RetrieveQueue[K] {
+class RetrieveQueue[K] (numPriorities: Int) {
 
   type RType = Retrievable[K]
   type QType = Queue[Retrievable[K]]
   type VQType = Vector[QType]
 
-  private[this] val holder: AtomicReference[VQType] = new AtomicReference(Vector(Queue(), Queue(), Queue()))
+  private[this] val holder: AtomicReference[VQType] = new AtomicReference(Vector.fill(numPriorities + 1)(Queue()))
 
   def enqueue(item: RType): Unit = updateAndGet { queues =>
-    val prio = item.priority
+    val prio = Math.min(item.priority, queues.length - 1)
     queues.updated(prio, queues(prio).enqueue(item))
   }
 
@@ -67,8 +67,32 @@ class RetrieveQueue[K] {
 
 }
 
+final case class PriorityConfig(prioritiesBySize: Vector[Int],
+                                promoteStales: Vector[Int],
+                                stalePriorityOffset: Int) {
+
+  def priority(numUncached: Int): Int = {
+    @tailrec def iter(i: Int): Int = {
+      if (i < prioritiesBySize.length) {
+        if (numUncached <= prioritiesBySize(i)) i else iter(i + 1)
+      } else {
+        i
+      }
+    }
+    iter(0)
+  }
+
+  def promote(numUncached: Int): Int = {
+    promoteStales(Math.min(promoteStales.length - 1, priority(numUncached)))
+  }
+
+}
+
+
 object RetrieveQueue {
 
-  def apply[T](): RetrieveQueue[T] = new RetrieveQueue[T]()
+  def apply[T](numPriorities: Int): RetrieveQueue[T] = new RetrieveQueue[T](numPriorities)
+
+  def apply[T](prioConf: PriorityConfig): RetrieveQueue[T] = apply[T](prioConf.prioritiesBySize.length + 1)
 
 }

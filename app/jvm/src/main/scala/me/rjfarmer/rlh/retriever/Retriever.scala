@@ -83,12 +83,19 @@ class EhcRetrieveLongCache[V <: WebserviceResult] (cache: Cache[java.lang.Long, 
 }
 
 
+/**
+ * Parses response bodies for retriever.
+ *
+ * @tparam K key type
+ * @tparam V value type
+ */
 trait BodyParser[K, V] {
 
   def parseBody(key: K, body: String): V
 
 }
 
+/** Helper trait for response body decoding */
 trait ResponseBodyDecoder {
 
   def decodeResponseBody(resp: HttpResponse): String = {
@@ -109,10 +116,11 @@ object Retriever {
 
   def props[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
                                       queue: RetrieveQueue[K],
+                                      prioConf: PriorityConfig,
                                       parser: BodyParser[K, V],
                                       timeout: FiniteDuration,
                                       hostConnectorSetup: HostConnectorSetup): Props =
-    Props(new Retriever[K, V](cache, queue, parser, timeout, hostConnectorSetup))
+    Props(new Retriever[K, V](cache, queue, prioConf, parser, timeout, hostConnectorSetup))
 
 
   val defaultHeaders: List[HttpHeader] =  if (Boot.bootConfig.getBoolean("little-helper.xml-api.use-compression")) {
@@ -121,15 +129,39 @@ object Retriever {
     List()
   }
 
-  val minRefreshStale: Int = Boot.minRefreshStale
-
 }
 
-class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
-                      queue: RetrieveQueue[K],
-                      parser: BodyParser[K, V],
-                      timeout: FiniteDuration,
-                      hostConnectorSetup: HostConnectorSetup)
+/**
+ * Retriever retrieves stuff by http get.
+ *
+ * It uses an internal priority queue to queue requests, only one request
+ * is active per retriever.
+ *
+ * This lets us complete background requests with low priority while
+ * still completing important requests fast.
+ *
+ * You probably want to pool them.  Ideally
+ * the pool has the same size as the number of connections per host.
+ * This will let CharacterID requests be processed immediately
+ * (because they do not use retriever, so they are not queued).
+ * Which is important, because CharacterIDRequests are the most
+ * important ones.
+ *
+ * @param cache concurrent cache used by all pooled retrievers (and collectors)
+ * @param queue concurrent priority queue shared by pooled retrievers
+ * @param prioConf priority configuration  for use with queue
+ * @param parser parser for incoming response bodies
+ * @param timeout timeout for completion, incomplete response if we go over
+ * @param hostConnectorSetup host connector setup
+ * @tparam K key type, ususually Long (characterID)
+ * @tparam V value type, e.g. CharacterInfo or ZkStats
+ */
+class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
+                                          queue: RetrieveQueue[K],
+                                          prioConf: PriorityConfig,
+                                          parser: BodyParser[K, V],
+                                          timeout: FiniteDuration,
+                                          hostConnectorSetup: HostConnectorSetup)
   extends Actor with ActorLogging with ResponseBodyDecoder {
 
   import me.rjfarmer.rlh.server.Boot.bootSystem
@@ -141,25 +173,7 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
   override def receive: Receive = {
 
     case group: RetriGroup[K] =>
-      val (cached, uncached, stale, need) = cachedAndNeedToRefresh(group.items)
-      log.info(s"<${group.wsr.clientIP}> grouped request: ${group.items.size} total / ${cached.size} cached (${cached.size - stale.size} fresh) / $need need to refresh")
-
-      val replyTo = group.replyTo match {
-        case None => sender()
-        case Some(x) => x
-      }
-
-      if (need == 0) {
-        replyTo ! cached
-      } else {
-        val collector = context.actorOf(Collector.props(cache, cached, need, replyTo, timeout))
-        uncached.foreach { key =>
-          self ! group.retrievable(key, 1, collector)
-        }
-        stale.foreach { key =>
-          self ! group.retrievable(key, 2, collector)
-        }
-      }
+      handleRetriGroup(group)
 
     case item : Retrievable[K] =>
       // log.debug("Retrievable: {}", item)
@@ -197,7 +211,8 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
       try {
         val result = parser.parseBody(item.key, decodeResponseBody(resp))
         cache.put(item.key, result)
-        log.debug("http get: {} ===> {} in {}ms", item.httpGetUri, status.intValue, System.currentTimeMillis - activeRequestStarted)
+        log.debug("http get p{}: {} ===> {} in {}ms", item.priority, item.httpGetUri, status.intValue,
+          System.currentTimeMillis - activeRequestStarted)
         result
       } catch {
         case e: Exception =>
@@ -205,7 +220,8 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
           throw e
       }
     } else {
-      log.debug("http get error: {} {} after {}ms", item.httpGetUri, status.intValue, System.currentTimeMillis() - activeRequestStarted)
+      log.debug("http get error: {} {} after {}ms", item.httpGetUri, status.intValue,
+        System.currentTimeMillis() - activeRequestStarted)
       throw new IllegalStateException("http result not ok: " + status.intValue)
     }
   }
@@ -267,20 +283,46 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
     activeRequestStarted = System.currentTimeMillis()
   }
 
-  def cachedAndNeedToRefresh(ids: Vector[K]): (Map[K, V], Vector[K], Vector[K], Int) = {
+  def handleRetriGroup(group: RetriGroup[K]): Unit = {
     val cached: Map[K, V] = Map() ++
-      ids.map{ id => (id, cache.get(id))}
+      group.items.map{ id => (id, cache.get(id))}
         .collect { case (k, Some(v)) => (k, v) }
-    val uncached = ids.filterNot(id => cached.contains(id))
-    val refreshNum = math.max(Retriever.minRefreshStale, (ids.length * 0.1d).toInt - uncached.length)
+    val uncached = group.items.filterNot(id => cached.contains(id))
+
     val stale = cached
       .filterNot(_._2.isFresh)
       .toVector
       .sortWith((p1, p2) => p1._2.receivedTimestamp < p2._2.receivedTimestamp)
       .map(_._1)
-    val need = uncached.size + Math.min(refreshNum, stale.size)
 
-    (cached, uncached, stale, need)
+    val highPrio = prioConf.priority(uncached.length)
+    val numPromoted = Math.min(prioConf.promote(uncached.length), stale.length)
+    val highPrioItems = uncached ++ stale.take(numPromoted)
+
+    val stalePrioItems = stale.drop(numPromoted)
+    val stalePrio = Math.max(highPrio, prioConf.priority(stalePrioItems.length)) + prioConf.stalePriorityOffset
+
+    log.info(s"<${group.wsr.clientIP}> grouped request: ${group.items.size} total / ${cached.size} cached (${stale.size} stale) " +
+      s"/ p$highPrio:${uncached.length + numPromoted} p$stalePrio:${stalePrioItems.length}")
+
+    val replyTo = group.replyTo match {
+      case None => sender()
+      case Some(x) => x
+    }
+
+    val totalItems = highPrioItems.length + stalePrioItems.length
+    if (totalItems == 0) {
+      replyTo ! cached
+    } else {
+      val collector = context.actorOf(Collector.props(cache, cached, highPrioItems.length, replyTo, timeout))
+      highPrioItems.foreach { key =>
+        self ! group.retrievable(key, highPrio, collector)
+      }
+      stalePrioItems.foreach { key =>
+        self ! group.retrievable(key, stalePrio, collector)
+      }
+    }
+
   }
 
 }

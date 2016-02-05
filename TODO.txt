@@ -1,8 +1,8 @@
-(A) prioritize retrigroups by number of items, promote some stales, prioritize other stales
 (D) error message when started multiple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
 
+x (A) prioritize retrigroups by number of items, promote some stales, prioritize other stales
 x (A) better names for config timeouts
 x (B) simplify character id lookup
 x (A) Grouper Actor

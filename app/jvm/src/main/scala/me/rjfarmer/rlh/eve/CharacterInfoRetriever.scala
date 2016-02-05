@@ -8,6 +8,7 @@ import akka.pattern.ask
 import akka.util.Timeout
 import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory, WebserviceRequest}
 import me.rjfarmer.rlh.retriever._
+import me.rjfarmer.rlh.server.Boot
 import org.ehcache.CacheManager
 import spray.can.Http
 import spray.http.Uri
@@ -21,12 +22,13 @@ object CharacterInfoRetriever {
   val hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true,
     defaultHeaders = Retriever.defaultHeaders)
 
-  private val retrieveQueue = RetrieveQueue[Long]()
+  import Boot.priorityConfig
+  private val retrieveQueue = RetrieveQueue[Long](priorityConfig)
 
   def props(cacheManager: CacheManager, retrieveTimeout: FiniteDuration): Props = {
     val ehCache = cacheManager.getCache("characterInfoCache", classOf[java.lang.Long], classOf[CharacterInfo])
     Retriever.props[Long, CharacterInfo](new EhcRetrieveLongCache[CharacterInfo](ehCache), retrieveQueue,
-      CharacterInfoBodyParser, retrieveTimeout, hostConnectorSetup)
+      priorityConfig, CharacterInfoBodyParser, retrieveTimeout, hostConnectorSetup)
   }
 
   def characterInfo(characterInfoRetriever: ActorRef, wsr: WebserviceRequest, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, CharacterInfo]] = {
