@@ -1,7 +1,10 @@
+(A) prioritize retrigroups by number of items, promote some stales, prioritize other stales
 (D) error message when started multiple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
 
+x (A) better names for config timeouts
+x (B) simplify character id lookup
 x (A) Grouper Actor
 x (B) Foreground/Background Retriever (max. throughput vs throttled) - big requests are starving small ones
 x (C) log ip address of request

@@ -1,26 +1,21 @@
 package me.rjfarmer.rlh.eve
 
-import java.text.SimpleDateFormat
-import java.util.{Date, TimeZone}
-
 import akka.actor.ActorRef
 import akka.event.LoggingAdapter
 import akka.io.IO
 import akka.pattern.ask
+import me.rjfarmer.rlh.retriever.ResponseBodyDecoder
 import me.rjfarmer.rlh.server.Boot
 import me.rjfarmer.rlh.server.Boot._
 import spray.can.Http
-import spray.http.HttpHeaders.RawHeader
 import spray.http.HttpMethods._
 import spray.http._
-import spray.httpx.encoding.{Gzip, Deflate}
 
 import scala.concurrent.{Await, Future, Promise}
 import scala.util.Try
-import scala.xml.Node
 
 
-trait EveXmlApi[T] extends EveXmlParser {
+trait EveXmlApi[T] extends EveXmlParser with ResponseBodyDecoder {
 
   type Type = T
 
@@ -30,18 +25,11 @@ trait EveXmlApi[T] extends EveXmlParser {
 
   def parseResponseBody(uri: Uri, xml: String): T
 
-  def hostConnector: ActorRef = Await.result(IO(Http) ? hostConnectorSetup, bootTimeout.duration)
+  def hostConnector: ActorRef = Await.result(IO(Http) ? hostConnectorSetup, ajaxFutureTimeout.duration)
     .asInstanceOf[Http.HostConnectorInfo]
     .hostConnector
 
-  val defaultHeaders: List[HttpHeader] = if (Boot.bootConfig.getBoolean("little-helper.xml-api.use-compression")) {
-    List(RawHeader("accept-encoding", "gzip,deflate"))
-  } else {
-    List()
-  }
-
-  def hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port = 443, sslEncryption = true,
-    defaultHeaders = defaultHeaders)
+  def hostConnectorSetup = CharacterInfoRetriever.hostConnectorSetup
 
   def httpGetUri(query: Uri.Query): Uri = Uri(path = Uri.Path(uriPath), query = query)
 
@@ -65,17 +53,6 @@ trait EveXmlApi[T] extends EveXmlParser {
         }
     }
     promise.future
-  }
-
-  def decodeResponseBody(resp: HttpResponse): String = {
-    resp.encoding match {
-      case HttpEncoding("gzip") =>
-        Gzip.decode(resp).entity.asString
-      case HttpEncoding("deflate") =>
-        Deflate.decode(resp).entity.asString
-      case _ =>
-        resp.entity.asString
-    }
   }
 
 }

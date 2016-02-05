@@ -89,6 +89,21 @@ trait BodyParser[K, V] {
 
 }
 
+trait ResponseBodyDecoder {
+
+  def decodeResponseBody(resp: HttpResponse): String = {
+    resp.encoding match {
+      case HttpEncoding("gzip") =>
+        Gzip.decode(resp).entity.asString
+      case HttpEncoding("deflate") =>
+        Deflate.decode(resp).entity.asString
+      case _ =>
+        resp.entity.asString
+    }
+  }
+
+}
+
 
 object Retriever {
 
@@ -114,7 +129,8 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
                       queue: RetrieveQueue[K],
                       parser: BodyParser[K, V],
                       timeout: FiniteDuration,
-                      hostConnectorSetup: HostConnectorSetup) extends Actor with ActorLogging {
+                      hostConnectorSetup: HostConnectorSetup)
+  extends Actor with ActorLogging with ResponseBodyDecoder {
 
   import me.rjfarmer.rlh.server.Boot.bootSystem
 
@@ -191,17 +207,6 @@ class Retriever[K,V <: WebserviceResult] (cache: RetrieveCache[K, V],
     } else {
       log.debug("http get error: {} {} after {}ms", item.httpGetUri, status.intValue, System.currentTimeMillis() - activeRequestStarted)
       throw new IllegalStateException("http result not ok: " + status.intValue)
-    }
-  }
-
-  def decodeResponseBody(resp: HttpResponse): String = {
-    resp.encoding match {
-      case HttpEncoding("gzip") =>
-        Gzip.decode(resp).entity.asString
-      case HttpEncoding("deflate") =>
-        Deflate.decode(resp).entity.asString
-      case _ =>
-        resp.entity.asString
     }
   }
 

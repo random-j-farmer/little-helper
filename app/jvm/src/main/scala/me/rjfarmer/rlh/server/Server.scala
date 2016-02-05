@@ -39,16 +39,11 @@ case class ServerWithRequestData(clientIP: String, requestData: String, solarSys
 
 object Server extends SimpleRoutingApp with Api with RequestTimeout with ShutdownIfNotBound {
 
-  import Boot.{bootTimeout => _, _}
-  // use longer timeouts here
-  implicit val bootTimeout = Boot.requestTimeout(bootConfig, "little-helper.xml-api.ajax-timeout-long")
-  // this is the shorter timeout, it is the one that should be triggered
-  val retrieveTimeout = Boot.bootTimeout
+  import Boot._
 
-  val eveCharacterID = bootSystem.actorOf(FromConfig.props(EveCharacterIDApi.props), "eveCharacterIDPool")
-  val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager, eveCharacterID)), "characterIDPool")
-  val characterInfoRetriever = bootSystem.actorOf(FromConfig.props(CharacterInfoRetriever.props(cacheManager, retrieveTimeout.duration)), "characterInfoRetrievers")
-  val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager, retrieveTimeout.duration)), "zkStatsRetrievers")
+  val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager)), "characterIDPool")
+  val characterInfoRetriever = bootSystem.actorOf(FromConfig.props(CharacterInfoRetriever.props(cacheManager, restTimeout.duration)), "characterInfoRetrievers")
+  val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager, restTimeout.duration)), "zkStatsRetrievers")
 
   def main(args: Array[String]): Unit = {
 
@@ -102,7 +97,7 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   }
 
   private def listIds(wsr: WebserviceRequest, names: Vector[String]): Future[CharacterIDResponse] = {
-    ask(characterID, CharacterIDRequest(wsr, names, Map(), None, None))
+    ask(characterID, CharacterIDRequest(wsr, names, Map(), None))
       .asInstanceOf[Future[CharacterIDResponse]]
   }
 
@@ -122,8 +117,8 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
           if (idResp.unknownNames.nonEmpty) {
             bootSystem.log.warning("<{}> unknown character names: {}", req.clientIP, idResp.unknownNames.mkString(", "))
           }
-          val f1 = CharacterInfoRetriever.characterInfo(characterInfoRetriever, req, pureIds, bootTimeout)
-          val f2 = ZkStatsRetriever.zkStats(zkStatsRetriever, req, pureIds, bootTimeout)
+          val f1 = CharacterInfoRetriever.characterInfo(characterInfoRetriever, req, pureIds, ajaxFutureTimeout)
+          val f2 = ZkStatsRetriever.zkStats(zkStatsRetriever, req, pureIds, ajaxFutureTimeout)
           f1.zip(f2).onComplete {
             case Success(Pair(infoMap, zkMap)) =>
               bootSystem.log.info("<{}> listCharacters: successful response for {} names in {}ms",
@@ -173,9 +168,8 @@ object Boot extends RequestTimeout {
   cacheManager.init()
 
   implicit val bootSystem = ActorSystem("little-helper", bootConfig)
-  implicit val bootTimeout = requestTimeout(bootConfig, "little-helper.xml-api.ajax-timeout")
-
-
+  implicit val ajaxFutureTimeout = requestTimeout(bootConfig, "little-helper.xml-api.ajax-future-timeout")
+  val restTimeout = requestTimeout(bootConfig, "little-helper.xml-api.rest-timeout")
 
   object CacheManagerShutdownHook extends Thread {
 

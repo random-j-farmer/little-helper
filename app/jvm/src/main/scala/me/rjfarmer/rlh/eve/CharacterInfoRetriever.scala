@@ -18,7 +18,7 @@ import scala.xml.{Node, XML}
 
 object CharacterInfoRetriever {
 
-  private val hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true,
+  val hostConnectorSetup = Http.HostConnectorSetup("api.eveonline.com", port=443, sslEncryption = true,
     defaultHeaders = Retriever.defaultHeaders)
 
   private val retrieveQueue = RetrieveQueue[Long]()

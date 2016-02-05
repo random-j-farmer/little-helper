@@ -56,17 +56,15 @@ trait CharacterIDBatcher {
 
 object CharacterIDApi {
 
-
-  def props(cacheManager: CacheManager, eveCharacterID: ActorRef): Props = {
+  def props(cacheManager: CacheManager): Props = {
     val cache = cacheManager.getCache("characterIDCache", classOf[String], classOf[CharacterIDAndName])
-    Props(new CharacterIDApi(cache, eveCharacterID))
+    Props(new CharacterIDApi(cache))
   }
 
   final case class CharacterIDRequest(webserviceRequest: WebserviceRequest,
                                       names: Vector[String],
                                       cached: Map[String, CharacterIDAndName],
-                                      replyTo: Option[ActorRef],
-                                      cacheTo: Option[ActorRef])
+                                      replyTo: Option[ActorRef])
 
   /**
    * Character ID Response.
@@ -107,10 +105,10 @@ object CharacterIDApi {
  * The in-memory cache is shared between all instances of this actor.
  *
  */
-class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
-                       eveCharacterID: ActorRef)
-  extends Actor with ActorLogging with CharacterIDBatcher {
+class CharacterIDApi (cache: Cache[String, CharacterIDAndName])
+  extends Actor with ActorLogging with CharacterIDBatcher with EveXmlApi[Vector[CharacterIDAndName]] {
 
+  import scala.concurrent.ExecutionContext.Implicits.global
 
   /**
    * Maps a (normalized) name to an optional cached value
@@ -119,11 +117,11 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
 
   override def receive: Receive = {
 
-    case req @ CharacterIDRequest(_, _, _, None, _) =>
+    case req @ CharacterIDRequest(_, _, _, None) =>
       // for calling via ask, empty replyTo will be filled in with sender()
       self ! req.copy(replyTo = Some(sender()))
 
-    case request @ CharacterIDRequest(wsr, names, _, Some(replyTo), _) =>
+    case request @ CharacterIDRequest(wsr, names, _, Some(replyTo)) =>
       // this is the cache!  we expect no incoming cache information
       val (undefinedNames, _, defined) = partitionNames(names)
       val staleUnknown = defined.filter { p =>
@@ -138,39 +136,12 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName],
       if (need.isEmpty) {
         replyTo ! CharacterIDResponse(request, defined, Set())
       } else {
-        eveCharacterID ! CharacterIDRequest(wsr, need, defined, Some(replyTo), Some(self))
+        completeGrouped(CharacterIDRequest(wsr, need, defined, Some(replyTo)))
       }
 
     case CharacterIDResponse(req, ians, _) =>
       log.debug("caching {} characters", ians.size)
       ians.foreach { pair => cache.put(pair._1, pair._2) }
-
-    case msg =>
-      log.warning("unknown message: {}", msg)
-  }
-
-}
-
-
-object EveCharacterIDApi {
-
-  def props: Props = Props[EveCharacterIDApi]()
-
-}
-
-/**
- * Eve XML Api /eve/CharacterID.xml.aspx
- *
- */
-class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[CharacterIDAndName]] {
-
-  import scala.concurrent.ExecutionContext.Implicits.global
-
-  override def receive: Actor.Receive = {
-
-    case request @ CharacterIDRequest(_, names, _, _, _) =>
-      log.debug("request: looking up {} names", names.size)
-      completeGrouped(request)
 
     case msg =>
       log.warning("unknown message: {}", msg)
@@ -194,7 +165,8 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[Ch
       val future = complete(httpGetUri(Uri.Query(pairs:_*)))
       future.onSuccess { case vec =>
         val m = Map[String, CharacterIDAndName]() ++ vec.map(ian => (ian.characterName, ian))
-        req.cacheTo.foreach {cc => cc ! CharacterIDResponse(req, m, Set()) } }
+        vec.foreach { ian => cache.put(ian.characterName, ian) }
+      }
       future
     }
     Future.sequence(groupedFutures)
@@ -225,8 +197,8 @@ class EveCharacterIDApi extends Actor with ActorLogging with EveXmlApi[Vector[Ch
       row <- elem \\ "row"
       id = row \@ "characterID"
     } yield {
-      CharacterIDAndName(id.toLong, (row \@ "name").toLowerCase, ts)
-    }).toVector
+        CharacterIDAndName(id.toLong, (row \@ "name").toLowerCase, ts)
+      }).toVector
   }
 
 }
