@@ -1,3 +1,10 @@
+(A) promote more stales up to uncached priority limit + promote stales for priority?
+(A) configurable duration for a cached result to be considered fresh with general client config code
+(A) local history and client code cleanup +local_history
+(B) shareable links for local scans +local_history
+(B) diffs between scans in same system +local_history
+(B) crest login and api to determine current system for browser other than IGB +local_history
+(C) one chunk of disk space shared between all caches
 (D) error message when started multiple times (currently it just hangs in ehc cache)
 D-Scan
 Shopping list
