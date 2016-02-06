@@ -55,6 +55,8 @@ class ListCharactersView {
     val pilots = resp.charinfos
 
     pilotCount.innerHTML = s"${resp.charinfos.size} pilots, "
+    respTs = System.currentTimeMillis()
+    refreshResponseTimeAgo
 
     resp.solarSystem match {
       case None =>
