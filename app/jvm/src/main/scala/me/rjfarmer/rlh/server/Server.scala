@@ -9,6 +9,7 @@ import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve.CharacterIDApi._
 import me.rjfarmer.rlh.eve._
 import me.rjfarmer.rlh.retriever.PriorityConfig
+import me.rjfarmer.rlh.shared.{SharedConfig, ClientConfig}
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
@@ -29,11 +30,11 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 
 }
 
-case class ServerWithRequestData(clientIP: String, requestData: String, solarSystem: Option[String], characterName: Option[String])
+case class ServerWithRequestData(clientIP: String, requestData: String, solarSystem: Option[String], pilot: Option[String])
   extends Api with WebserviceRequest {
 
   override def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse] = {
-    Server.listCharacters(request.copy(clientIP = clientIP, pilot = characterName, solarSystem = solarSystem))
+    Server.listCharacters(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
   }
 
 }
@@ -170,16 +171,18 @@ object Boot extends RequestTimeout {
   import collection.JavaConversions._
 
   val priorityConfig = PriorityConfig(
-    bootConfig.getIntList("little-helper.xml-api.priorities-by-size").toVector.map(_.toInt),
-    bootConfig.getIntList("little-helper.xml-api.promote-stales").toVector.map(_.toInt),
-    bootConfig.getInt("little-helper.xml-api.stale-priority-offset")
+    bootConfig.getIntList("little-helper.priorities-by-size").toVector.map(_.toInt),
+    bootConfig.getIntList("little-helper.promote-stales").toVector.map(_.toInt),
+    bootConfig.getInt("little-helper.stale-priority-offset")
   )
 
   cacheManager.init()
 
   implicit val bootSystem = ActorSystem("little-helper", bootConfig)
-  implicit val ajaxFutureTimeout = requestTimeout(bootConfig, "little-helper.xml-api.ajax-future-timeout")
-  val restTimeout = requestTimeout(bootConfig, "little-helper.xml-api.rest-timeout")
+  implicit val ajaxFutureTimeout = requestTimeout(bootConfig, "little-helper.ajax-future-timeout")
+  val restTimeout = requestTimeout(bootConfig, "little-helper.rest-timeout")
+  val staleIfOlderThan = requestTimeout(bootConfig, "little-helper.stale-if-older-than")
+  SharedConfig.client = ClientConfig(BuildInfo.version, staleIfOlderThan.duration.toMillis)
 
   object CacheManagerShutdownHook extends Thread {
 

@@ -1,10 +1,15 @@
 package me.rjfarmer.rlh.api
 
 import scala.concurrent.Future
+import me.rjfarmer.rlh.shared.SharedConfig
 
+
+/** all web service requests provide these, but they are filled in on the server in the IGB case */
 trait WebserviceRequest {
 
   def clientIP: String
+
+  def pilot: Option[String]
 
   def solarSystem: Option[String]
 
@@ -15,7 +20,7 @@ sealed trait WebserviceResult {
   def receivedTimestamp: Long
 
   def isFresh: Boolean = {
-    receivedTimestamp + Api.apiRequestTimeoutMills > System.currentTimeMillis()
+    receivedTimestamp + SharedConfig.client.staleOlderThanMillis > System.currentTimeMillis()
   }
 
 }
@@ -106,14 +111,6 @@ trait Api {
   def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse]
 
 }
-
-
-object Api {
-
-  val apiRequestTimeoutMills = 6L * 3600L * 1000L
-
-}
-
 
 
 

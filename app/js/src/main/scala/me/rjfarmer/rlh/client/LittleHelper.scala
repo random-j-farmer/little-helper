@@ -5,7 +5,7 @@ package me.rjfarmer.rlh.client
 import autowire._
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.logging.LoggerRLH
-import me.rjfarmer.rlh.shared.EveCharacterName
+import me.rjfarmer.rlh.shared.{SharedConfig, ClientConfig, EveCharacterName}
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html
@@ -56,27 +56,23 @@ object AllianceOrCorp {
 }
 
 
-@JSExport
-object LittleHelper {
+class LittleHelper() {
 
   val log = LoggerRLH("client.LittleHelper")
-
-  val version = dom.document.getElementById("version").textContent
-  log.info("Client version: " + version)
 
   var respTs = System.currentTimeMillis()
   val respTimeAgo = span().render
   val pilotCount = span().render
   val solarSystem = span().render
 
-  val pilotBox = textarea(cols:=20, rows:=10).render
+  val pilotBox = textarea(cols := 20, rows := 10).render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
 
-  val messageBox = div(hidden, `class`:="info").render
+  val messageBox = div(hidden, `class` := "info").render
   val corpList = tbody().render
   val pilotList = tbody().render
 
-  val submitButton = button(cls:="pure-button pure-button-primary", `type`:="submit", "Submit").render
+  val submitButton = button(cls := "pure-button pure-button-primary", `type` := "submit", "Submit").render
 
   def clearLogButtonClick(ev: dom.Event): Unit = {
     dom.document.getElementById("logMessages").innerHTML = ""
@@ -90,7 +86,7 @@ object LittleHelper {
       val myA = ev.target.asInstanceOf[html.Anchor]
       val myLI = myA.parentNode.asInstanceOf[html.LI]
       val myUL = myLI.parentNode.asInstanceOf[html.UList]
-      val linkTarget =  myA.href.replaceFirst(""".*\#""", "")
+      val linkTarget = myA.href.replaceFirst( """.*\#""", "")
       // log.info("linkTarget: " + linkTarget)
 
       val children = myUL.children
@@ -163,17 +159,17 @@ object LittleHelper {
       case Some(ssn) => solarSystem.appendChild(span(ssn, ", ").render)
     }
 
-    val cutoff = math.max(2.0d, pilots.size/10.0d)
+    val cutoff = math.max(2.0d, pilots.size / 10.0d)
     val byCorp: Map[AllianceOrCorp, Seq[CharInfo]] = pilots.groupBy(AllianceOrCorp.apply)
     val topCorps: Seq[Seq[CharInfo]] = byCorp.values.toSeq
       .filter(group => group.size >= cutoff)
-      .sortWith((a,b) => a.size > b.size)
+      .sortWith((a, b) => a.size > b.size)
     val other = pilots.size - topCorps.map(_.size).sum
 
     corpList.innerHTML = ""
     for (group <- topCorps; aoc = AllianceOrCorp(group.head)) {
       corpList.appendChild(tr(
-        td(a(href:=aoc.uri, target:="_blank", aoc.name)),
+        td(a(href := aoc.uri, target := "_blank", aoc.name)),
         td(group.size)).render)
     }
     if (other > 0) {
@@ -186,11 +182,11 @@ object LittleHelper {
     val nowMillis = System.currentTimeMillis()
     for (p <- pilots; frKlass = freshnessKlass(nowMillis, p); corp = AllianceOrCorp(p)) {
       val trow = tr(
-        td( a(href:=zkillboardUrl(p), target:="_blank", p.name)),
+        td(a(href := zkillboardUrl(p), target := "_blank", p.name)),
         td(corp.name, " (", byCorp(corp).size, ")"),
         td(p.recentKills.getOrElse(0) + "/" + p.recentLosses.getOrElse(0)),
         td(span("%4.2f".format(p.characterAge.getOrElse(-1.0d))),
-          span(`class`:=frKlass, title:=frKlass.replace('-', ' '), style:="font-size: 150%", raw("&#8226;")))
+          span(`class` := frKlass, title := frKlass.replace('-', ' '), style := "font-size: 150%", raw("&#8226;")))
       ).render
       pilotList.appendChild(trow)
     }
@@ -209,7 +205,7 @@ object LittleHelper {
   }
 
   def freshnessKlass(nowMillis: Long, wsr: WebserviceResult): String = {
-    val relativeAge = (nowMillis - wsr.receivedTimestamp) / Api.apiRequestTimeoutMills.toDouble
+    val relativeAge = (nowMillis - wsr.receivedTimestamp) / SharedConfig.client.staleOlderThanMillis.toDouble
     if (relativeAge < 0.5d) {
       "fresh"
     } else if (relativeAge < 1.0d) {
@@ -234,7 +230,7 @@ object LittleHelper {
 
     val tsStarted = submitStarted
 
-    val pilotNames = pilotBox.value.split("""\n""").map(_.trim)
+    val pilotNames = pilotBox.value.split( """\n""").map(_.trim)
     val illegalNames = pilotNames.filterNot(EveCharacterName.isValidCharacterName)
     if (illegalNames.nonEmpty) {
       log.info("illegal pilot names: " + illegalNames.mkString(", "))
@@ -243,7 +239,7 @@ object LittleHelper {
     val validNames = pilotNames.filter(EveCharacterName.isValidCharacterName).toVector
 
     log.debug("calling listCharacters with " + validNames.length + " pilots")
-    val req = ListCharactersRequest(version, validNames, "", None, None)
+    val req = ListCharactersRequest(SharedConfig.client.clientSoftwareVersion, validNames, "", None, None)
     val future = Ajaxer[Api].listCharacters(req).call()
     future.onFailure { case ex: Throwable =>
       submitError(tsStarted, ex)
@@ -255,33 +251,46 @@ object LittleHelper {
     p.characterID.fold("#")(id => s"""https://zkillboard.com/character/$id/""")
   }
 
-  @JSExport
   def main(container: html.Div) = {
-    log.info("LittleHelper.main called")
+    log.info("LittleHelper.main: " + SharedConfig.client)
     dom.document.getElementById("clearLogButton").asInstanceOf[html.Button].onclick = clearLogButtonClick _
     dom.document.getElementById("rlhMenu").asInstanceOf[html.Span].onclick = menuClick _
 
     container.appendChild(
-        div(cls:="pure-g",
-          form(cls:="pure-u-1-3 pure-form pure-form-stacked",
-            onsubmit := formSubmit _,
-            pilotBox,
-            submitButton),
-          div(cls:="pure-u-2-3",
-            messageBox,
-            h1(pilotCount, solarSystem, respTimeAgo),
-            h2("Pilots by Alliance/Corp"),
-            table(cls:="pure-table pure-table-striped",
-              thead(tr(th("Alliance/Corp"), th("# Pilots"))),
-              corpList),
-            h2("Pilots"),
-            table(cls:="pure-table pure-table-striped",
-              thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
-              pilotList))
+      div(cls:="pure-g",
+        form(cls:="pure-u-1-3 pure-form pure-form-stacked",
+          onsubmit := formSubmit _,
+          pilotBox,
+          submitButton),
+        div(cls:="pure-u-2-3",
+          messageBox,
+          h1(pilotCount, solarSystem, respTimeAgo),
+          h2("Pilots by Alliance/Corp"),
+          table(cls:="pure-table pure-table-striped",
+            thead(tr(th("Alliance/Corp"), th("# Pilots"))),
+            corpList),
+          h2("Pilots"),
+          table(cls:="pure-table pure-table-striped",
+            thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
+            pilotList))
       ).render
     )
 
     dom.window.setInterval(refreshResponseTimeAgo _, 10000d)
+  }
+
+
+}
+
+@JSExport
+object LittleHelper {
+
+  @JSExport
+  def main(container: html.Div, configJson: js.Any) = {
+    val clientConfig = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
+    SharedConfig.client = clientConfig
+    val lh = new LittleHelper()
+    lh.main(container)
   }
 
 }

@@ -123,7 +123,7 @@ object Retriever {
     Props(new Retriever[K, V](cache, queue, prioConf, parser, timeout, hostConnectorSetup))
 
 
-  val defaultHeaders: List[HttpHeader] =  if (Boot.bootConfig.getBoolean("little-helper.xml-api.use-compression")) {
+  val defaultHeaders: List[HttpHeader] =  if (Boot.bootConfig.getBoolean("little-helper.use-compression")) {
     List(RawHeader("accept-encoding", "gzip,deflate"))
   } else {
     List()

@@ -1,4 +1,3 @@
-(A) configurable duration for a cached result to be considered fresh with general client config code
 (A) local history and client code cleanup +local_history
 (B) shareable links for local scans +local_history
 (B) diffs between scans in same system +local_history
@@ -8,6 +7,7 @@
 D-Scan
 Shopping list
 
+x (A) configurable duration for a cached result to be considered fresh with general client config code
 x (A) promote more stales up to uncached priority limit + promote stales for priority?
 x (A) prioritize retrigroups by number of items, promote some stales, prioritize other stales
 x (A) better names for config timeouts

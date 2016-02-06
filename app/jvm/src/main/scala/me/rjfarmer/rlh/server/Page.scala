@@ -1,12 +1,16 @@
 package me.rjfarmer.rlh.server
 
+import me.rjfarmer.rlh.shared.{SharedConfig, ClientConfig}
+
 import scalatags.Text.all._
 import scalatags.Text.tags2
 
 object Page {
 
-  val boot =
-    """me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('rlhMain'));"""
+  def boot(clientConfig: ClientConfig) = {
+    val json = upickle.default.write(clientConfig)
+    raw(s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('rlhMain'), $json);""")
+  }
 
   def resourceLastModified(name: String): Long = {
     val url = getClass.getResource(name)
@@ -54,8 +58,7 @@ object Page {
             tbody(id:="logMessages")
           )
         ),
-        div(id:="version", hidden, BuildInfo.version),
-        script(boot)
+        script(boot(SharedConfig.client))
       )
     )
 
