@@ -1,4 +1,3 @@
-(A) promote more stales up to uncached priority limit + promote stales for priority?
 (A) configurable duration for a cached result to be considered fresh with general client config code
 (A) local history and client code cleanup +local_history
 (B) shareable links for local scans +local_history
@@ -9,6 +8,7 @@
 D-Scan
 Shopping list
 
+x (A) promote more stales up to uncached priority limit + promote stales for priority?
 x (A) prioritize retrigroups by number of items, promote some stales, prioritize other stales
 x (A) better names for config timeouts
 x (B) simplify character id lookup

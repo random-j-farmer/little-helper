@@ -10,7 +10,7 @@ final case class TestRetrievable (key: String, priority: Int)
 
   override def httpGetUri: Uri = Uri(path = Uri.Path("/xxx"), query = Uri.Query("key" -> key))
 
-  override def replyTo: ActorRef = ???
+  override def replyTo: ActorRef = null
 }
 
 object RetrieveQueueTest extends TestSuite {

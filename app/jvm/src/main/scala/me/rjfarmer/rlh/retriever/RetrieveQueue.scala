@@ -14,6 +14,10 @@ import scala.collection.immutable.Queue
  *
  * The priorities are reversed: 0 is highest priority, queues.length - 1 lowest
  *
+ * There are two more priorities than configured via appliction.conf/PriorityConfig.
+ * The first one is for uncached requests that are larger than the largest priority-by-size.
+ * The second one is the catch-all priority for very large stale-refresh requests.
+ *
  * @tparam K key type
  */
 class RetrieveQueue[K] (numPriorities: Int) {
@@ -22,7 +26,7 @@ class RetrieveQueue[K] (numPriorities: Int) {
   type QType = Queue[Retrievable[K]]
   type VQType = Vector[QType]
 
-  private[this] val holder: AtomicReference[VQType] = new AtomicReference(Vector.fill(numPriorities + 1)(Queue()))
+  private[this] val holder: AtomicReference[VQType] = new AtomicReference(Vector.fill(numPriorities + 2)(Queue()))
 
   def enqueue(item: RType): Unit = updateAndGet { queues =>
     val prio = Math.min(item.priority, queues.length - 1)
@@ -83,7 +87,15 @@ final case class PriorityConfig(prioritiesBySize: Vector[Int],
   }
 
   def promote(numUncached: Int): Int = {
-    promoteStales(Math.min(promoteStales.length - 1, priority(numUncached)))
+    val highPrio = priority(numUncached)
+    val numPromote = promoteStales(Math.min(promoteStales.length - 1, priority(numUncached)))
+    if (highPrio < prioritiesBySize.length) {
+      val highPrioLimit = prioritiesBySize(highPrio)
+      numPromote + highPrioLimit - numUncached
+    } else {
+      // no limit for this priority (i.e. it's the one after the last configured limit)
+      numPromote
+    }
   }
 
 }
