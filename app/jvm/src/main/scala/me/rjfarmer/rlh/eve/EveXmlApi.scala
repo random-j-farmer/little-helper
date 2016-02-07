@@ -6,7 +6,6 @@ import akka.io.IO
 import akka.pattern.ask
 import me.rjfarmer.rlh.retriever.ResponseBodyDecoder
 import me.rjfarmer.rlh.server.Boot
-import me.rjfarmer.rlh.server.Boot._
 import spray.can.Http
 import spray.http.HttpMethods._
 import spray.http._
@@ -17,6 +16,8 @@ import scala.util.Try
 
 trait EveXmlApi[T] extends EveXmlParser with ResponseBodyDecoder {
 
+  import Boot._
+
   type Type = T
 
   def uriPath: String
@@ -25,7 +26,7 @@ trait EveXmlApi[T] extends EveXmlParser with ResponseBodyDecoder {
 
   def parseResponseBody(uri: Uri, xml: String): T
 
-  def hostConnector: ActorRef = Await.result(IO(Http) ? hostConnectorSetup, ajaxFutureTimeout.duration)
+  def hostConnector: ActorRef = Await.result(IO(Http) ? hostConnectorSetup, Boot.ajaxFutureTimeout.duration)
     .asInstanceOf[Http.HostConnectorInfo]
     .hostConnector
 
@@ -34,12 +35,10 @@ trait EveXmlApi[T] extends EveXmlParser with ResponseBodyDecoder {
   def httpGetUri(query: Uri.Query): Uri = Uri(path = Uri.Path(uriPath), query = query)
 
   def complete(uri: Uri): Future[T] = {
-    import Boot._
-
     import scala.concurrent.ExecutionContext.Implicits.global
     val started = System.currentTimeMillis()
-    // log.debug("http get: {}", uri)
-    val httpFuture = ask(hostConnector, HttpRequest(GET, uri))
+    // use the rest timeout here - this is where we want to fail so the incomplete answer logic works
+    val httpFuture = ask(hostConnector, HttpRequest(GET, uri))(Boot.restTimeout.duration)
     val promise = Promise[T]()
     httpFuture onSuccess {
       case resp: HttpResponse =>

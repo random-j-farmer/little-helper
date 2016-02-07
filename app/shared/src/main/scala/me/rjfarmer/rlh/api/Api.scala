@@ -84,12 +84,11 @@ final case class CharInfo(name: String,
 
 object CharInfo {
 
-  def apply(name: String, oci: Option[CharacterInfo], ozk: Option[ZkStats]): CharInfo = {
+  def apply(name: String, id: Option[Long], oci: Option[CharacterInfo], ozk: Option[ZkStats]): CharInfo = {
     val complete = oci.isDefined && ozk.isDefined
     val oldest = math.min(oci.fold(0L)(ci => ci.receivedTimestamp), ozk.fold(0L)(zk => zk.receivedTimestamp))
     new CharInfo(oci.fold(name)(_.characterName),
-      oci.map(_.characterID), complete = complete,
-      oldest,
+      id, complete = complete, oldest,
       oci.map(_.characterAge), oci.map(_.corporation), oci.flatMap(_.alliance),
       ozk.map(_.lastMonths.shipsDestroyed), ozk.map(_.lastMonths.shipsLost))
   }

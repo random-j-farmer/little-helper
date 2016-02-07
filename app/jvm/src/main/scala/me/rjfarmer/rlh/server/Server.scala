@@ -126,9 +126,10 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
           f1.zip(f2).onComplete {
             case Success(Pair(infoMap, zkMap)) =>
               val cis = idResp.allNames.map { name =>
-                val id: Long = idResp.fullResult.get(name).map(ian => ian.characterID).getOrElse(0L)
+                val idOpt = idResp.fullResult.get(name).map(ian => ian.characterID)
+                val id: Long = idOpt.getOrElse(0L)
                 // no results for key 0L, so if the id was not resolved, we return None
-                CharInfo(name, infoMap.get(id), zkMap.get(id))
+                CharInfo(name, idOpt, infoMap.get(id), zkMap.get(id))
               }.sorted(ByDestroyed)
               bootSystem.log.info("<{}> listCharacters: successful response for {} names ({} stale) in {}ms",
                 req.clientIP, req.names.size,
@@ -200,7 +201,10 @@ object ByDestroyed extends Ordering[CharInfo] {
   override def compare(x: CharInfo, y: CharInfo): Int = {
     val yi = y.recentKills.getOrElse(0)
     val xi = x.recentKills.getOrElse(0)
-    yi.compareTo(xi)
+    val ya = y.characterAge.getOrElse(-1.0d)
+    val xa = x.characterAge.getOrElse(-1.0d)
+    val compKilled = yi.compareTo(xi)
+    if (compKilled != 0) compKilled else ya.compareTo(xa)
   }
 }
 

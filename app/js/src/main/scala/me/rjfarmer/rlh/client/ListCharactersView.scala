@@ -2,7 +2,9 @@ package me.rjfarmer.rlh.client
 
 import me.rjfarmer.rlh.api.{ListCharactersResponse, WebserviceResult, CharInfo}
 import me.rjfarmer.rlh.shared.SharedConfig
+import org.scalajs.dom.raw.HTMLElement
 
+import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 
@@ -46,8 +48,13 @@ class ListCharactersView {
     }
   }
 
-  def zkillboardUrl(p: CharInfo): String = {
-    p.characterID.fold("#")(id => s"""https://zkillboard.com/character/$id/""")
+  def zkillboardLink(p: CharInfo): TypedTag[HTMLElement] = {
+    p.characterID match {
+      case None =>
+        span(p.name)
+      case Some(characterId) =>
+        a(href := s"""https://zkillboard.com/character/$characterId/""", target := "_blank", p.name)
+    }
   }
 
   def update(resp: ListCharactersResponse) = {
@@ -86,7 +93,7 @@ class ListCharactersView {
     val nowMillis = System.currentTimeMillis()
     for (p <- pilots; frKlass = freshnessKlass(nowMillis, p); corp = AllianceOrCorp(p)) {
       val trow = tr(
-        td(a(href := zkillboardUrl(p), target := "_blank", p.name)),
+        td(zkillboardLink(p)),
         td(corp.name, " (", byCorp(corp).size, ")"),
         td(p.recentKills.getOrElse(0) + "/" + p.recentLosses.getOrElse(0)),
         td(span("%4.2f".format(p.characterAge.getOrElse(-1.0d))),

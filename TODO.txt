@@ -7,6 +7,8 @@
 D-Scan
 Shopping list
 
+x (A) jita or other really big locals: character ids are resolved, but the outer future timeout trigger too early and they are not used
+x (A) sort pilots by recent kills and character age
 x (A) configurable duration for a cached result to be considered fresh with general client config code
 x (A) promote more stales up to uncached priority limit + promote stales for priority?
 x (A) prioritize retrigroups by number of items, promote some stales, prioritize other stales
