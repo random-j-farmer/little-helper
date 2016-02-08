@@ -1,4 +1,4 @@
-package me.rjfarmer.rlh.logging
+package me.rjfarmer.rlh.client.logging
 
 import java.util.Date
 
@@ -12,12 +12,14 @@ import org.scalajs.dom
  * For shared code, we'll just forward to slf4j
  *
  */
-class LoggerRLH (val name: String, val level: Int) {
+class LoggerRLH(val name: String, val level: Int) {
 
   def logMessage(logLevel: Int, msg: String, args: Any*): Unit = {
     import scalatags.JsDom.all._
     if (logLevel <= level) {
-      val logmsg = (Vector(msg) ++ (args map { _.toString })).mkString(" ")
+      val logmsg = (Vector(msg) ++ (args map {
+        _.toString
+      })).mkString(" ")
       val millis = new Date().getTime - LoggerRLHConfig.startMillis
       val child = tr(td(millis.toString),
         td(LoggerRLH.levelName(level)),
@@ -27,19 +29,19 @@ class LoggerRLH (val name: String, val level: Int) {
     }
   }
 
-  def critical(msg: String, args: Any*): Unit = logMessage(LoggerRLH.CRITICAL, msg, args:_*)
+  def critical(msg: String, args: Any*): Unit = logMessage(LoggerRLH.CRITICAL, msg, args: _*)
 
-  def severe(msg: String, args: Any*): Unit = logMessage(LoggerRLH.SEVERE, msg, args:_*)
+  def severe(msg: String, args: Any*): Unit = logMessage(LoggerRLH.SEVERE, msg, args: _*)
 
-  def error(msg: String, args: Any*): Unit = logMessage(LoggerRLH.ERROR, msg, args:_*)
+  def error(msg: String, args: Any*): Unit = logMessage(LoggerRLH.ERROR, msg, args: _*)
 
-  def warn(msg: String, args: Any*): Unit = logMessage(LoggerRLH.WARN, msg, args:_*)
+  def warn(msg: String, args: Any*): Unit = logMessage(LoggerRLH.WARN, msg, args: _*)
 
-  def info(msg: String, args: Any*): Unit = logMessage(LoggerRLH.INFO, msg, args:_*)
+  def info(msg: String, args: Any*): Unit = logMessage(LoggerRLH.INFO, msg, args: _*)
 
-  def debug(msg: String, args: Any*): Unit = logMessage(LoggerRLH.DEBUG, msg, args:_*)
+  def debug(msg: String, args: Any*): Unit = logMessage(LoggerRLH.DEBUG, msg, args: _*)
 
-  def trace(msg: String, args: Any*): Unit = logMessage(LoggerRLH.TRACE, msg, args:_*)
+  def trace(msg: String, args: Any*): Unit = logMessage(LoggerRLH.TRACE, msg, args: _*)
 
 }
 
@@ -57,13 +59,13 @@ object LoggerRLH {
 
   def levelName(level: Int) = level match {
     case CRITICAL => "CRITICAL"
-    case SEVERE =>   "SEVERE"
-    case ERROR =>    "ERROR "
-    case WARN =>     "WARN  "
-    case INFO =>     "info  "
-    case DEBUG =>    "debug "
-    case TRACE =>    "trace "
-    case _ =>        "unknown"
+    case SEVERE => "SEVERE"
+    case ERROR => "ERROR "
+    case WARN => "WARN  "
+    case INFO => "info  "
+    case DEBUG => "debug "
+    case TRACE => "trace "
+    case _ => "unknown"
   }
 
 }

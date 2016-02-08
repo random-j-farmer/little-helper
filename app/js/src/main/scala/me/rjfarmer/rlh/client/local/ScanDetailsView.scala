@@ -1,6 +1,6 @@
-package me.rjfarmer.rlh.client
+package me.rjfarmer.rlh.client.local
 
-import me.rjfarmer.rlh.api.{ListCharactersResponse, WebserviceResult, CharInfo}
+import me.rjfarmer.rlh.api.{CharInfo, ListCharactersResponse, WebserviceResult}
 import me.rjfarmer.rlh.shared.SharedConfig
 import org.scalajs.dom.raw.HTMLElement
 
@@ -8,7 +8,7 @@ import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 
-class ListCharactersView {
+object ScanDetailsView {
 
   var respTs = System.currentTimeMillis()
   val respTimeAgo = span(responseTimeAgo).render

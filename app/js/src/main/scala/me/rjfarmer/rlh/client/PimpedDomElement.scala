@@ -2,6 +2,13 @@ package me.rjfarmer.rlh.client
 
 import org.scalajs.dom
 
+/**
+ * Pimped DOM Element
+ *
+ * adds addClass/removeClass
+ *
+ * @param elem
+ */
 class PimpedDomElement(val elem: dom.Element) {
 
   def addClass(klass: String): Unit = {
