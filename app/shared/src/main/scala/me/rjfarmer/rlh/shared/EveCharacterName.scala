@@ -8,7 +8,8 @@ object EveCharacterName {
    * See http://community.eveonline.com/support/policies/eve-user-policy/
    *
    * Alas, the name part length stuff seems bogus.
-   * So we only check for max three parts, legal characters and total length.
+   * Max number of name parts (3) is also bogus.
+   * So we only check for legal characters and total length.
    *
    * @param name potential character name
    * @return true if valid name, false otherwise
@@ -18,18 +19,8 @@ object EveCharacterName {
 
     (name.length >= 3 && name.length <= 37) &&
       isValidFirstOrLast(name.head) &&
-      isValidFirstOrLast(name.last) && {
-      name.split(' ') match {
-        case Array(names) =>
-          isValidNamePart(names)
-        case names @ Array(_, _) =>
-          names.forall(isValidNamePart)
-        case names @ Array(_, _, _) =>
-          names.forall(isValidNamePart)
-        case _ =>
-          false
-      }
-    }
+      isValidFirstOrLast(name.last) &&
+      name.split(' ').forall(isValidNamePart)
   }
 
   private val validCharacters = """^[a-zA-Z0-9-'.]*$""".r

@@ -1,6 +1,6 @@
-(A) Existing name not recognised: Moons over my Hammy
 (A) same format for all info messages: total/not cached/cached(stale)
-(C) local history and client code cleanup +local_history
+(B) client code cleanup: tab panel trait
+(C) local history +local_history
 (C) shareable links for local scans +local_history
 (C) diffs between scans in same system +local_history
 (C) crest login and api to determine current system for browser other than IGB +local_history
@@ -9,6 +9,7 @@
 D-Scan
 Shopping list
 
+x (A) Existing name not recognised: Moons over my Hammy
 x (A) jita or other really big locals: character ids are resolved, but the outer future timeout trigger too early and they are not used
 x (A) sort pilots by recent kills and character age
 x (A) configurable duration for a cached result to be considered fresh with general client config code
