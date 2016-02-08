@@ -33,9 +33,15 @@ trait CharacterIDBatcher {
   : (Vector[String], Vector[String], Map[String, CharacterIDAndName]) = {
     // LOWER CASE!
     val allNames = names
-      .map { _.trim }
-      .filterNot { _.isEmpty }
-      .map { _.toLowerCase }
+      .map {
+        _.trim
+      }
+      .filterNot {
+        _.isEmpty
+      }
+      .map {
+        _.toLowerCase
+      }
     val namesAndCached = allNames
       .map((str) => str -> mapName(str))
 
@@ -77,7 +83,7 @@ object CharacterIDApi {
    */
   final case class CharacterIDResponse(request: CharacterIDRequest, result: Map[String, CharacterIDAndName], unresolved: Set[String]) {
 
-    /** results and already known (cached) values, without 0 ids*/
+    /** results and already known (cached) values, without 0 ids */
     def fullResult: Map[String, CharacterIDAndName] = {
       (request.cached ++ result).filterNot(pair => pair._2.characterID == 0)
     }
@@ -95,7 +101,6 @@ object CharacterIDApi {
 }
 
 
-
 /**
  * Main Character ID Lookup.
  *
@@ -105,7 +110,7 @@ object CharacterIDApi {
  * The in-memory cache is shared between all instances of this actor.
  *
  */
-class CharacterIDApi (cache: Cache[String, CharacterIDAndName])
+class CharacterIDApi(cache: Cache[String, CharacterIDAndName])
   extends Actor with ActorLogging with CharacterIDBatcher with EveXmlApi[Vector[CharacterIDAndName]] {
 
   import scala.concurrent.ExecutionContext.Implicits.global
@@ -117,19 +122,19 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName])
 
   override def receive: Receive = {
 
-    case req @ CharacterIDRequest(_, _, _, None) =>
+    case req@CharacterIDRequest(_, _, _, None) =>
       // for calling via ask, empty replyTo will be filled in with sender()
       self ! req.copy(replyTo = Some(sender()))
 
-    case request @ CharacterIDRequest(wsr, names, _, Some(replyTo)) =>
+    case request@CharacterIDRequest(wsr, names, _, Some(replyTo)) =>
       // this is the cache!  we expect no incoming cache information
       val (undefinedNames, _, defined) = partitionNames(names)
       val staleUnknown = defined.filter { p =>
         val ian = p._2
-        ian.characterID == 0 && ! ian.isFresh
+        ian.characterID == 0 && !ian.isFresh
       }
-      log.info("<{}> character id request: {} cached/ {} not in cache/ {} stale unknown",
-        request.webserviceRequest.clientIP, defined.size, undefinedNames.size, staleUnknown.size)
+      log.info(s"<${request.webserviceRequest.clientIP}> character id request: ${names.size} total/ " +
+        s"${undefinedNames.size} unknown/ ${defined.size} cached (${staleUnknown.size} stale unknown)")
 
       val need = undefinedNames ++ staleUnknown.keys
 
@@ -162,7 +167,7 @@ class CharacterIDApi (cache: Cache[String, CharacterIDAndName])
 
     val grouped = req.names.map { name => "names" -> name } grouped 100
     val groupedFutures = grouped.map { pairs =>
-      val future = complete(httpGetUri(Uri.Query(pairs:_*)))
+      val future = complete(httpGetUri(Uri.Query(pairs: _*)))
       future.onSuccess { case vec =>
         val m = Map[String, CharacterIDAndName]() ++ vec.map(ian => (ian.characterName, ian))
         vec.foreach { ian => cache.put(ian.characterName, ian) }

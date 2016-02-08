@@ -65,7 +65,7 @@ trait RetriGroup[K] {
  * @tparam K key type
  * @tparam V value type
  */
-trait RetrieveCache[K,V <: WebserviceResult] {
+trait RetrieveCache[K, V <: WebserviceResult] {
 
   def get(k: K): Option[V]
 
@@ -74,7 +74,7 @@ trait RetrieveCache[K,V <: WebserviceResult] {
 }
 
 /** ehc cache with long keys */
-class EhcRetrieveLongCache[V <: WebserviceResult] (cache: Cache[java.lang.Long, V]) extends RetrieveCache[Long, V] {
+class EhcRetrieveLongCache[V <: WebserviceResult](cache: Cache[java.lang.Long, V]) extends RetrieveCache[Long, V] {
 
   def get(k: Long): Option[V] = Option(cache.get(k))
 
@@ -123,7 +123,7 @@ object Retriever {
     Props(new Retriever[K, V](cache, queue, prioConf, parser, timeout, hostConnectorSetup))
 
 
-  val defaultHeaders: List[HttpHeader] =  if (Boot.bootConfig.getBoolean("little-helper.use-compression")) {
+  val defaultHeaders: List[HttpHeader] = if (Boot.bootConfig.getBoolean("little-helper.use-compression")) {
     List(RawHeader("accept-encoding", "gzip,deflate"))
   } else {
     List()
@@ -175,7 +175,7 @@ class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
     case group: RetriGroup[K] =>
       handleRetriGroup(group)
 
-    case item : Retrievable[K] =>
+    case item: Retrievable[K] =>
       // log.debug("Retrievable: {}", item)
       answerCachedOrElse(item, queueRetrieve)
 
@@ -273,7 +273,7 @@ class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
             answerCachedOrElse(item, sendToHostConnector)
         }
       case Some(_) =>
-        // log.debug("request already active, not doing anything")
+      // log.debug("request already active, not doing anything")
     }
   }
 
@@ -285,7 +285,7 @@ class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
 
   def handleRetriGroup(group: RetriGroup[K]): Unit = {
     val cached: Map[K, V] = Map() ++
-      group.items.map{ id => (id, cache.get(id))}
+      group.items.map { id => (id, cache.get(id)) }
         .collect { case (k, Some(v)) => (k, v) }
     val uncached = group.items.filterNot(id => cached.contains(id))
 
@@ -302,7 +302,8 @@ class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
     val stalePrioItems = stale.drop(numPromoted)
     val stalePrio = Math.max(highPrio, prioConf.priority(stalePrioItems.length)) + prioConf.stalePriorityOffset
 
-    log.info(s"<${group.wsr.clientIP}> grouped request: ${group.items.size} total / ${cached.size} cached (${stale.size} stale) " +
+    log.info(s"<${group.wsr.clientIP}> grouped request: ${group.items.size} total / " +
+      s"${uncached.size} unknown/ ${cached.size} cached (${stale.size} stale) " +
       s"/ p$highPrio:${uncached.length + numPromoted} p$stalePrio:${stalePrioItems.length}")
 
     val replyTo = group.replyTo match {
