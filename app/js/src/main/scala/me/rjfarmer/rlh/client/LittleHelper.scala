@@ -62,7 +62,7 @@ class LittleHelper {
       // log.info("adding pure-menu-selected", myLI)
       myLI.setAttribute("class", "pure-menu-item pure-menu-selected")
 
-      for (theId <- Seq("rlhMain", "rlhLogging")) {
+      for (theId <- Seq("localTab", "loggingTab")) {
         dom.document.getElementById(theId).setAttribute("hidden", "hidden")
       }
       dom.document.getElementById(linkTarget).removeAttribute("hidden")
@@ -133,13 +133,18 @@ class LittleHelper {
     future.foreach { response => submitSuccess(tsStarted, response) }
   }
 
-  def main(container: html.Div) = {
-    log.info("LittleHelper.main: " + SharedConfig.client)
-    dom.document.getElementById("clearLogButton").asInstanceOf[html.Button].onclick = clearLogButtonClick _
-    dom.document.getElementById("rlhMenu").asInstanceOf[html.Span].onclick = menuClick _
+  def main(_body: html.Body) = {
 
-    container.appendChild(
-      div(cls:="pure-g",
+    val rlhMain = div(id := "rlhMain",
+      div(id := "rlhMenu", cls := "pure-menu pure-menu-horizontal", onclick := menuClick _,
+        style := "display: inline; position: absolute; top: 0px; right: 0px; width: 5cm; text-align: right;",
+        ul(cls := "pure-menu-list",
+          li(cls := "pure-menu-item pure-menu-selected", a(href := "#localTab", cls := "pure-menu-link", "Local")),
+          li(cls := "pure-menu-item", a(href := "#loggingTab", cls := "pure-menu-link", "Logging"))
+        )
+      ),
+      div(id := "localTab",
+        cls:="pure-g",
         form(cls:="pure-u-1-3 pure-form pure-form-stacked",
           onsubmit := formSubmit _,
           pilotBox,
@@ -154,11 +159,28 @@ class LittleHelper {
           h2("Pilots"),
           table(cls:="pure-table pure-table-striped",
             thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
-            listCharactersView.pilotList))
-      ).render
-    )
+            listCharactersView.pilotList)
+        )
+      ),
+      div(id := "loggingTab", hidden,
+        h2("Log Messages"),
+        button(id := "clearLogButton", cls := "pure-button pure-button-primary",
+          `type` := "button", "Clear Log", onclick := clearLogButtonClick _),
+        br(),
+        table(cls := "pure-table pure-table-striped", width := "100%",
+          col(width := "10%"), col(width := "10%"), col(width := "80%"),
+          thead(
+            th("ms"), th("Level"), th("Message")),
+          tbody(id := "logMessages")
+        )
+      )
+    ).render
+
+    _body.appendChild(rlhMain)
 
     dom.window.setInterval(listCharactersView.refreshResponseTimeAgo _, 10000d)
+
+    log.info("LittleHelper.main: " + SharedConfig.client)
   }
 
 
@@ -168,11 +190,11 @@ class LittleHelper {
 object LittleHelper {
 
   @JSExport
-  def main(container: html.Div, configJson: js.Any) = {
+  def main(_body: html.Body, configJson: js.Any) = {
     val clientConfig = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
     SharedConfig.client = clientConfig
     val lh = new LittleHelper()
-    lh.main(container)
+    lh.main(_body)
   }
 
 }
