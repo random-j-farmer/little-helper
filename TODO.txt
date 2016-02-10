@@ -1,5 +1,4 @@
 (A) messages for incomplete or stale responses
-(B) client code cleanup: tab panel trait
 (C) local history +local_history
 (C) shareable links for local scans +local_history
 (C) diffs between scans in same system +local_history
@@ -9,6 +8,7 @@
 D-Scan
 Shopping list
 
+x (B) client code cleanup: tab panel trait
 x (A) same format for all info messages: total/unknown/cached(stale)
 x (A) Existing name not recognised: Moons over my Hammy
 x (A) jita or other really big locals: character ids are resolved, but the outer future timeout trigger too early and they are not used

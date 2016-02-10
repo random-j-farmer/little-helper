@@ -14,44 +14,13 @@ class LittleHelper {
 
   val log = LoggerRLH("client.LittleHelper")
 
-  def menuClick(ev: dom.Event): Unit = {
-    try {
-      ev.stopPropagation()
-      val myA = ev.target.asInstanceOf[html.Anchor]
-      val myLI = myA.parentNode.asInstanceOf[html.LI]
-      val myUL = myLI.parentNode.asInstanceOf[html.UList]
-      val linkTarget = myA.href.replaceFirst( """.*\#""", "")
-      // log.info("linkTarget: " + linkTarget)
-
-      val children = myUL.children
-      for (i <- 0 until children.length) {
-        // log.info("removing pure-menu-selected:", children.item(i))
-        children.item(i).setAttribute("class", "pure-menu-item")
-      }
-      // log.info("adding pure-menu-selected", myLI)
-      myLI.setAttribute("class", "pure-menu-item pure-menu-selected")
-
-      for (theId <- Seq("localTab", "loggingTab")) {
-        dom.document.getElementById(theId).setAttribute("hidden", "hidden")
-      }
-      dom.document.getElementById(linkTarget).removeAttribute("hidden")
-    } catch {
-      case ex: Exception => log.error("Exception:", ex)
-    }
-  }
+  val tabPanel = TabPanel(Vector(LocalTab, LoggingTab))
 
   def main(_body: html.Body) = {
 
     val rlhMain = div(id := "rlhMain",
-      div(id := "rlhMenu", cls := "pure-menu pure-menu-horizontal", onclick := menuClick _,
-        style := "display: inline; position: absolute; top: 0px; right: 0px; width: 5cm; text-align: right;",
-        ul(cls := "pure-menu-list",
-          li(cls := "pure-menu-item pure-menu-selected", a(href := "#localTab", cls := "pure-menu-link", "Local")),
-          li(cls := "pure-menu-item", a(href := "#loggingTab", cls := "pure-menu-link", "Logging"))
-        )
-      ),
-      LocalTab.localTabView,
-      LoggingTab.loggingTabView
+      tabPanel.linksView,
+      tabPanel.panelView
     ).render
 
     _body.appendChild(rlhMain)
@@ -60,7 +29,6 @@ class LittleHelper {
 
     log.info("LittleHelper.main: " + SharedConfig.client)
   }
-
 
 }
 

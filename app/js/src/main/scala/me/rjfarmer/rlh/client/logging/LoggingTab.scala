@@ -1,13 +1,16 @@
 package me.rjfarmer.rlh.client.logging
 
+import me.rjfarmer.rlh.client.TabbedPanel
 import org.scalajs.dom
 
 import scalatags.JsDom.all._
 
 
-object LoggingTab {
+object LoggingTab extends TabbedPanel {
 
-  val loggingTabView = div(id := "loggingTab", hidden,
+  override val panelName = "Logging"
+
+  override val panelView = div(id := "loggingTab", hidden,
     h2("Log Messages"),
     button(id := "clearLogButton", cls := "pure-button pure-button-primary",
       `type` := "button", "Clear Log", onclick := clearLogButtonClick _),

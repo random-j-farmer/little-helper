@@ -5,19 +5,16 @@ package me.rjfarmer.rlh.client.local
 import autowire._
 import me.rjfarmer.rlh.api.{Api, ListCharactersRequest, ListCharactersResponse}
 import me.rjfarmer.rlh.client.logging.LoggerRLH
-import me.rjfarmer.rlh.client.{Ajaxer, PimpedDomElement}
+import me.rjfarmer.rlh.client.{Ajaxer, PimpedDomElement, TabbedPanel}
 import me.rjfarmer.rlh.shared.{EveCharacterName, SharedConfig}
 import org.scalajs.dom
+import org.scalajs.dom.html.Div
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scalatags.JsDom.all._
 
 
-object LocalTab {
-
-  import PimpedDomElement._
-
-  private val log = LoggerRLH("client.local.LocalTab")
+object LocalTab extends TabbedPanel {
 
   private val pilotBox = textarea(cols := 20, rows := 10).render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
@@ -26,7 +23,9 @@ object LocalTab {
 
   private val submitButton = button(cls := "pure-button pure-button-primary", `type` := "submit", "Submit").render
 
-  val localTabView = div(id := "localTab",
+  override val panelName: String = "Local"
+
+  override val panelView: Div = div(id := "localTab",
     cls := "pure-g",
     form(cls := "pure-u-1-3 pure-form pure-form-stacked",
       onsubmit := formSubmit _,
@@ -44,7 +43,11 @@ object LocalTab {
         thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
         ScanDetailsView.pilotList)
     )
-  )
+  ).render
+
+  import PimpedDomElement._
+
+  private val log = LoggerRLH("client.local.LocalTab")
 
   def submitStarted: Long = {
     submitButton.addClass("pure-button-disabled")
