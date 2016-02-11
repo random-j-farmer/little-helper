@@ -116,11 +116,11 @@ object LocalTab extends TabbedPanel {
   def messages(resp: ListCharactersResponse): Seq[Message] = {
     val (complete, incomplete) = resp.charinfos.partition(_.complete)
     val completeButStale = complete.filterNot(_.isFresh)
-    val msgSuffix = "in the background and will be ready for your next request."
+    val msgSuffix = " in the background and will be ready for your next request."
     val incompleteMsg: Option[Message] = if (incomplete.isEmpty) None
-      else Some(Message.warning(s"${incomplete.size} incomplete results.  The missing results will be retrieved and cached"))
+      else Some(Message.warning(s"${incomplete.size} incomplete results.  The missing results will be retrieved and cached" + msgSuffix))
     val staleMsg: Option[Message] = if (completeButStale.isEmpty) None
-      else Some(Message.info(s"${completeButStale.size} stale responses.  The stale results will be refreshed"))
+      else Some(Message.info(s"${completeButStale.size} stale responses.  The stale results will be refreshed" + msgSuffix))
     Seq() ++ resp.message.map(Message.error) ++ incompleteMsg ++ staleMsg
   }
 

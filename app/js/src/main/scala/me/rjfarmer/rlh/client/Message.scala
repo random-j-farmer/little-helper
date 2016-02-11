@@ -20,9 +20,9 @@ object Message {
 
   def info(msg: String): Message = Message(msg, Info)
 
-  def warning(msg: String): Message = Message(msg, Info)
+  def warning(msg: String): Message = Message(msg, Warning)
 
-  def error(msg: String): Message = Message(msg, Info)
+  def error(msg: String): Message = Message(msg, Error)
 
 }
 
