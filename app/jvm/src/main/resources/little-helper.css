@@ -3,9 +3,23 @@
 .stale { color: orange; }
 .out-of-date { color: red; }
 
-.info {
-    background: #1f8dd6 none repeat scroll 0 0;
+.message-info,
+.message-warning,
+.message-error {
     border-radius: 3px;
     color: #fff;
-    padding: 0.3em 1em;
+    padding: 2em;
+}
+
+
+.message-info {
+    background: rgb(66, 184, 221); /* light blue */
+}
+
+.message-warning {
+    background: rgb(223, 117, 20); /* orange */
+}
+
+.message-error {
+    background: rgb(202, 60, 60); /* error */
 }

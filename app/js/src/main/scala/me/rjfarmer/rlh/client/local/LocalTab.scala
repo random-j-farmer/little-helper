@@ -5,7 +5,7 @@ package me.rjfarmer.rlh.client.local
 import autowire._
 import me.rjfarmer.rlh.api.{Api, ListCharactersRequest, ListCharactersResponse}
 import me.rjfarmer.rlh.client.logging.LoggerRLH
-import me.rjfarmer.rlh.client.{Ajaxer, PimpedDomElement, TabbedPanel}
+import me.rjfarmer.rlh.client.{Message, Ajaxer, PimpedDomElement, TabbedPanel}
 import me.rjfarmer.rlh.shared.{EveCharacterName, SharedConfig}
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
@@ -19,7 +19,7 @@ object LocalTab extends TabbedPanel {
   private val pilotBox = textarea(cols := 20, rows := 10).render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
 
-  private val messageBox = div(hidden, `class` := "info").render
+  private val messageBox = div(hidden).render
 
   private val submitButton = button(cls := "pure-button pure-button-primary", `type` := "submit", "Submit").render
 
@@ -64,19 +64,21 @@ object LocalTab extends TabbedPanel {
 
     submitButton.removeClass("pure-button-disabled")
 
-    handleMessageBox(resp.message)
+    handleMessageBox(messages(resp))
 
     ScanDetailsView.update(resp)
   }
 
-  def handleMessageBox(msg: Option[String]): Unit = {
-    msg match {
-      case None =>
+  def handleMessageBox(messages: Seq[Message]): Unit = {
+    messages match {
+      case Seq() =>
         messageBox.setAttribute("hidden", "hidden")
         messageBox.innerHTML = ""
-      case Some(txt) =>
+      case _ =>
         messageBox.innerHTML = ""
-        messageBox.appendChild(span(txt).render)
+        messages.foreach { msg =>
+          messageBox.appendChild(div(`class` := msg.msgType.messageClass, msg.msg).render)
+        }
         messageBox.removeAttribute("hidden")
     }
   }
@@ -86,7 +88,7 @@ object LocalTab extends TabbedPanel {
     log.error("Ajax Exception after " + (now - started) + "ms: " + ex)
     submitButton.removeClass("pure-button-disabled")
 
-    handleMessageBox(Some("Error communicating with the server"))
+    handleMessageBox(Seq(Message.error("Error communicating with the server")))
   }
 
   def formSubmit(ev: dom.Event): Unit = {
@@ -109,6 +111,17 @@ object LocalTab extends TabbedPanel {
       submitError(tsStarted, ex)
     }
     future.foreach { response => submitSuccess(tsStarted, response) }
+  }
+
+  def messages(resp: ListCharactersResponse): Seq[Message] = {
+    val (complete, incomplete) = resp.charinfos.partition(_.complete)
+    val completeButStale = complete.filterNot(_.isFresh)
+    val msgSuffix = "in the background and will be ready for your next request."
+    val incompleteMsg: Option[Message] = if (incomplete.isEmpty) None
+      else Some(Message.warning(s"${incomplete.size} incomplete results.  The missing results will be retrieved and cached"))
+    val staleMsg: Option[Message] = if (completeButStale.isEmpty) None
+      else Some(Message.info(s"${completeButStale.size} stale responses.  The stale results will be refreshed"))
+    Seq() ++ resp.message.map(Message.error) ++ incompleteMsg ++ staleMsg
   }
 
 
