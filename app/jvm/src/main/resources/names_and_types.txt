@@ -1,0 +1,2805 @@
+Region|Region|2|Celestial
+Constellation|Constellation|2|Celestial
+Solar System|Solar System|2|Celestial
+Sun G5 (Yellow)|Sun|2|Celestial
+Sun K7 (Orange)|Sun|2|Celestial
+Sun K5 (Red Giant)|Sun|2|Celestial
+Sun B0 (Blue)|Sun|2|Celestial
+Sun F0 (White)|Sun|2|Celestial
+Sun O1 (Blue Bright)|Sun|2|Celestial
+Sun G5 (Pink)|Sun|2|Celestial
+Sun K5 (Orange Bright)|Sun|2|Celestial
+Sun G3 (Pink Small)|Sun|2|Celestial
+Sun M0 (Orange radiant)|Sun|2|Celestial
+Sun A0 (Blue Small)|Sun|2|Celestial
+Sun K3 (Yellow Small)|Sun|2|Celestial
+Sun B5 (White Dwarf)|Sun|2|Celestial
+Sun A0IV (Turbulent Blue Subgiant)|Sun|2|Celestial
+Planet (Temperate)|Planet|2|Celestial
+Planet (Ice)|Planet|2|Celestial
+Planet (Gas)|Planet|2|Celestial
+Planet (Oceanic)|Planet|2|Celestial
+Planet (Lava)|Planet|2|Celestial
+Planet (Barren)|Planet|2|Celestial
+Planet (Storm)|Planet|2|Celestial
+Planet (Plasma)|Planet|2|Celestial
+Planet (Shattered)|Planet|2|Celestial
+Moon|Moon|2|Celestial
+Asteroid Belt|Asteroid Belt|2|Celestial
+Ice Field|Asteroid Belt|2|Celestial
+Stargate (Caldari System)|Stargate|2|Celestial
+Stargate (Amarr Constellation)|Stargate|2|Celestial
+Stargate (Caldari Border)|Stargate|2|Celestial
+Stargate (Gallente Constellation)|Stargate|2|Celestial
+Stargate (Gallente System)|Stargate|2|Celestial
+Stargate (Gallente Border)|Stargate|2|Celestial
+Stargate (Minmatar Constellation)|Stargate|2|Celestial
+Smuggler route stargate|Stargate|2|Celestial
+Stargate (Amarr System)|Stargate|2|Celestial
+Stargate (Amarr Border)|Stargate|2|Celestial
+Stargate (Amarr Region)|Stargate|2|Celestial
+Stargate (Caldari Constellation)|Stargate|2|Celestial
+Stargate (Caldari Unused)|Stargate|2|Celestial
+Stargate (Caldari Region)|Stargate|2|Celestial
+Stargate (Gallente Unused 2)|Stargate|2|Celestial
+Stargate (Gallente Unused 1)|Stargate|2|Celestial
+Stargate (Gallente Region)|Stargate|2|Celestial
+Stargate (Minmatar System)|Stargate|2|Celestial
+Stargate (Minmatar Border)|Stargate|2|Celestial
+Stargate (Minmatar Region)|Stargate|2|Celestial
+Cargo Container|Cargo Container|2|Celestial
+Planetary Launch Container|Cargo Container|2|Celestial
+Medium Standard Container|Cargo Container|2|Celestial
+Large Standard Container|Cargo Container|2|Celestial
+Small Standard Container|Cargo Container|2|Celestial
+Ring|Ring|2|Celestial
+Corpse|Biomass|2|Celestial
+Corpse Female|Biomass|2|Celestial
+Sanshas Supercarrier Wreck|Wreck|2|Celestial
+Wreck|Wreck|2|Celestial
+Amarr Battlecruiser Wreck|Wreck|2|Celestial
+Amarr Battleship Wreck|Wreck|2|Celestial
+Amarr Carrier Wreck|Wreck|2|Celestial
+Amarr Cruiser Wreck|Wreck|2|Celestial
+Amarr Destroyer Wreck|Wreck|2|Celestial
+Amarr Dreadnought Wreck|Wreck|2|Celestial
+Amarr Elite Battlecruiser Wreck|Wreck|2|Celestial
+Amarr Elite Battleship Wreck|Wreck|2|Celestial
+Amarr Elite Cruiser Wreck|Wreck|2|Celestial
+Amarr Elite Destroyer Wreck|Wreck|2|Celestial
+Amarr Elite Frigate Wreck|Wreck|2|Celestial
+Amarr Elite Industrial Wreck|Wreck|2|Celestial
+Amarr Elite Mining Barge Wreck|Wreck|2|Celestial
+Amarr Freighter Wreck|Wreck|2|Celestial
+Amarr Frigate Wreck|Wreck|2|Celestial
+Amarr Industrial Wreck|Wreck|2|Celestial
+Amarr Mining Barge Wreck|Wreck|2|Celestial
+Amarr Supercarrier Wreck|Wreck|2|Celestial
+Amarr Rookie ship Wreck|Wreck|2|Celestial
+Amarr Shuttle Wreck|Wreck|2|Celestial
+Amarr Titan Wreck|Wreck|2|Celestial
+Caldari Battlecruiser Wreck|Wreck|2|Celestial
+Caldari Battleship Wreck|Wreck|2|Celestial
+Caldari Carrier Wreck|Wreck|2|Celestial
+Caldari Cruiser Wreck|Wreck|2|Celestial
+Caldari Destroyer Wreck|Wreck|2|Celestial
+Caldari Dreadnought Wreck|Wreck|2|Celestial
+Caldari Elite Battlecruiser Wreck|Wreck|2|Celestial
+Caldari Elite Battleship Wreck|Wreck|2|Celestial
+Caldari Elite Cruiser Wreck|Wreck|2|Celestial
+Caldari Elite Destroyer Wreck|Wreck|2|Celestial
+Caldari Elite Frigate Wreck|Wreck|2|Celestial
+Caldari Elite Industrial Wreck|Wreck|2|Celestial
+Caldari Elite Mining Barge Wreck|Wreck|2|Celestial
+Caldari Freighter Wreck|Wreck|2|Celestial
+Caldari Frigate Wreck|Wreck|2|Celestial
+Caldari Industrial Wreck|Wreck|2|Celestial
+Caldari Mining Barge Wreck|Wreck|2|Celestial
+Caldari Supercarrier Wreck|Wreck|2|Celestial
+Caldari Rookie ship Wreck|Wreck|2|Celestial
+Caldari Shuttle Wreck|Wreck|2|Celestial
+Caldari Titan Wreck|Wreck|2|Celestial
+Gallente Battlecruiser Wreck|Wreck|2|Celestial
+Gallente Battleship Wreck|Wreck|2|Celestial
+Gallente Carrier Wreck|Wreck|2|Celestial
+Gallente Cruiser Wreck|Wreck|2|Celestial
+Gallente Destroyer Wreck|Wreck|2|Celestial
+Gallente Dreadnought Wreck|Wreck|2|Celestial
+Gallente Elite Battlecruiser Wreck|Wreck|2|Celestial
+Gallente Elite Battleship Wreck|Wreck|2|Celestial
+Gallente Elite Cruiser Wreck|Wreck|2|Celestial
+Gallente Elite Destroyer Wreck|Wreck|2|Celestial
+Gallente Elite Frigate Wreck|Wreck|2|Celestial
+Gallente Elite Industrial Wreck|Wreck|2|Celestial
+Gallente Elite Mining Barge Wreck|Wreck|2|Celestial
+Gallente Freighter Wreck|Wreck|2|Celestial
+Gallente Frigate Wreck|Wreck|2|Celestial
+Gallente Industrial Wreck|Wreck|2|Celestial
+Gallente Mining Barge Wreck|Wreck|2|Celestial
+Gallente Supercarrier Wreck|Wreck|2|Celestial
+Gallente Rookie ship Wreck|Wreck|2|Celestial
+Gallente Shuttle Wreck|Wreck|2|Celestial
+Gallente Titan Wreck|Wreck|2|Celestial
+Minmatar Battlecruiser Wreck|Wreck|2|Celestial
+Minmatar Battleship Wreck|Wreck|2|Celestial
+Minmatar Carrier Wreck|Wreck|2|Celestial
+Minmatar Cruiser Wreck|Wreck|2|Celestial
+Minmatar Destroyer Wreck|Wreck|2|Celestial
+Minmatar Dreadnought Wreck|Wreck|2|Celestial
+Minmatar Elite Battlecruiser Wreck|Wreck|2|Celestial
+Minmatar Elite Battleship Wreck|Wreck|2|Celestial
+Minmatar Elite Cruiser Wreck|Wreck|2|Celestial
+Minmatar Elite Destroyer Wreck|Wreck|2|Celestial
+Minmatar Elite Frigate Wreck|Wreck|2|Celestial
+Minmatar Elite Industrial Wreck|Wreck|2|Celestial
+Minmatar Elite Mining Barge Wreck|Wreck|2|Celestial
+Minmatar Freighter Wreck|Wreck|2|Celestial
+Minmatar Frigate Wreck|Wreck|2|Celestial
+Minmatar Industrial Wreck|Wreck|2|Celestial
+Minmatar Mining Barge Wreck|Wreck|2|Celestial
+Minmatar Supercarrier Wreck|Wreck|2|Celestial
+Minmatar Rookie ship Wreck|Wreck|2|Celestial
+Minmatar Shuttle Wreck|Wreck|2|Celestial
+Minmatar Titan Wreck|Wreck|2|Celestial
+Frigate Wreck|Wreck|2|Celestial
+Cruiser Wreck|Wreck|2|Celestial
+Battleship Wreck|Wreck|2|Celestial
+Pirate Wreck|Wreck|2|Celestial
+Angel Small Wreck|Wreck|2|Celestial
+Angel Medium Wreck|Wreck|2|Celestial
+Angel Large Wreck|Wreck|2|Celestial
+Angel Small Commander Wreck|Wreck|2|Celestial
+Angel Large Commander Wreck|Wreck|2|Celestial
+Angel Officer Wreck|Wreck|2|Celestial
+Blood Small Wreck|Wreck|2|Celestial
+Blood Medium Wreck|Wreck|2|Celestial
+Blood Large Wreck|Wreck|2|Celestial
+Blood Small Commander Wreck|Wreck|2|Celestial
+Blood Medium Commander Wreck|Wreck|2|Celestial
+Blood Officer Wreck|Wreck|2|Celestial
+Guristas Small Wreck|Wreck|2|Celestial
+Guristas Medium Wreck|Wreck|2|Celestial
+Guristas Large Wreck|Wreck|2|Celestial
+Guristas Small Commander Wreck|Wreck|2|Celestial
+Guristas Medium Commander Wreck|Wreck|2|Celestial
+Guristas Officer Wreck|Wreck|2|Celestial
+Sanshas Small Wreck|Wreck|2|Celestial
+Sanshas Medium Wreck|Wreck|2|Celestial
+Sanshas Large Wreck|Wreck|2|Celestial
+Sanshas Small Commander Wreck|Wreck|2|Celestial
+Sanshas Medium Commander Wreck|Wreck|2|Celestial
+Sanshas Officer Wreck|Wreck|2|Celestial
+Serpentis Small Wreck|Wreck|2|Celestial
+Serpentis Medium Wreck|Wreck|2|Celestial
+Serpentis Large Wreck|Wreck|2|Celestial
+Serpentis Small Commander Wreck|Wreck|2|Celestial
+Serpentis Medium Commander Wreck|Wreck|2|Celestial
+Serpentis Officer Wreck|Wreck|2|Celestial
+Rogue Small Wreck|Wreck|2|Celestial
+Rogue Medium Wreck|Wreck|2|Celestial
+Rogue Large Wreck|Wreck|2|Celestial
+Rogue Elite Small Wreck|Wreck|2|Celestial
+Rogue Elite Medium Wreck|Wreck|2|Celestial
+Rogue Officer Wreck|Wreck|2|Celestial
+Angel Medium Commander Wreck|Wreck|2|Celestial
+Blood Large Commander Wreck|Wreck|2|Celestial
+Guristas Large Commander Wreck|Wreck|2|Celestial
+Sanshas Large Commander Wreck|Wreck|2|Celestial
+Serpentis Large Commander Wreck|Wreck|2|Celestial
+Overseer Frigate Wreck|Wreck|2|Celestial
+Overseer Cruiser Wreck|Wreck|2|Celestial
+Overseer Battleship Wreck|Wreck|2|Celestial
+Mission Generic Large Wreck|Wreck|2|Celestial
+Mission Generic Medium Wreck|Wreck|2|Celestial
+Mission Generic Small Wreck|Wreck|2|Celestial
+CONCORD Large Wreck|Wreck|2|Celestial
+CONCORD Medium Wreck|Wreck|2|Celestial
+CONCORD Small Wreck|Wreck|2|Celestial
+Faction Drone Wreck|Wreck|2|Celestial
+Minmatar Large Wreck|Wreck|2|Celestial
+Minmatar Medium Wreck|Wreck|2|Celestial
+Minmatar Small Wreck|Wreck|2|Celestial
+Khanid Large Wreck|Wreck|2|Celestial
+Khanid Medium Wreck|Wreck|2|Celestial
+Khanid Small Wreck|Wreck|2|Celestial
+Caldari Large Wreck|Wreck|2|Celestial
+Caldari Medium Wreck|Wreck|2|Celestial
+Caldari Small Wreck|Wreck|2|Celestial
+Amarr Large Wreck|Wreck|2|Celestial
+Amarr Medium Wreck|Wreck|2|Celestial
+Amarr Small Wreck|Wreck|2|Celestial
+Gallente Large Wreck|Wreck|2|Celestial
+Gallente Medium Wreck|Wreck|2|Celestial
+Gallente Small Wreck|Wreck|2|Celestial
+Thukker Large Wreck|Wreck|2|Celestial
+Thukker Medium Wreck|Wreck|2|Celestial
+Thukker Small Wreck|Wreck|2|Celestial
+Mordu Large Wreck|Wreck|2|Celestial
+Mordu Medium Wreck|Wreck|2|Celestial
+Mordu Small Wreck|Wreck|2|Celestial
+Convoy Wreck|Wreck|2|Celestial
+Pirate Drone Wreck|Wreck|2|Celestial
+Mission Caldari Carrier Wreck|Wreck|2|Celestial
+Mission Amarr Carrier Wreck|Wreck|2|Celestial
+Mission Minmatar Carrier Wreck|Wreck|2|Celestial
+Mission Gallente Carrier Wreck|Wreck|2|Celestial
+Rogue Large Commander Wreck|Wreck|2|Celestial
+Rogue Medium Commander Wreck|Wreck|2|Celestial
+Rogue Small Commander Wreck|Wreck|2|Celestial
+Mission Faction Freighter Wreck|Wreck|2|Celestial
+Rorqual Wreck|Wreck|2|Celestial
+Amarr Elite Freighter Wreck|Wreck|2|Celestial
+Caldari Elite Freighter Wreck|Wreck|2|Celestial
+Gallente Elite Freighter Wreck|Wreck|2|Celestial
+Minmatar Elite Freighter Wreck|Wreck|2|Celestial
+Mission Faction Vessels Wreck|Wreck|2|Celestial
+Mission Faction Industrials Wreck|Wreck|2|Celestial
+Orca Wreck|Wreck|2|Celestial
+Sleeper Small Advanced Wreck|Wreck|2|Celestial
+Sleeper Medium Advanced Wreck|Wreck|2|Celestial
+Sleeper Large Wreck|Wreck|2|Celestial
+Sleeper Small Basic Wreck|Wreck|2|Celestial
+Sleeper Small Intermediate Wreck|Wreck|2|Celestial
+Sleeper Medium Basic Wreck|Wreck|2|Celestial
+Sleeper Medium Intermediate Wreck|Wreck|2|Celestial
+Sleeper Large Basic Wreck|Wreck|2|Celestial
+Sleeper Large Intermediate Wreck|Wreck|2|Celestial
+Sleeper Large Advanced Wreck|Wreck|2|Celestial
+Amarr Advanced Cruiser Wreck|Wreck|2|Celestial
+Caldari Advanced Cruiser Wreck|Wreck|2|Celestial
+Gallente Advanced Cruiser Wreck|Wreck|2|Celestial
+Minmatar Advanced Cruiser Wreck|Wreck|2|Celestial
+Ship Maintenance Array Wreck|Wreck|2|Celestial
+X-Large Ship Maintenance Array Wreck|Wreck|2|Celestial
+Mobile Structure Wreck|Wreck|2|Celestial
+Rorqual ORE Development Edition Wreck|Wreck|2|Celestial
+Orca ORE Development Edition Wreck|Wreck|2|Celestial
+Mordus Large Commander Wreck|Wreck|2|Celestial
+Mordus Medium Commander Wreck|Wreck|2|Celestial
+Mordus Small Commander Wreck|Wreck|2|Celestial
+Amarr Advanced Destroyer Wreck|Wreck|2|Celestial
+Sleeper Medium Wreck |Wreck|2|Celestial
+Minmatar Advanced Destroyer Wreck|Wreck|2|Celestial
+Drifter Battleship Wreck|Wreck|2|Celestial
+ORE Freighter Wreck|Wreck|2|Celestial
+Sleeper Huge Advanced Wreck|Wreck|2|Celestial
+Sleeper Large Advanced Anti-cap Wreck|Wreck|2|Celestial
+Caldari Advanced Destroyer Wreck|Wreck|2|Celestial
+Gallente Advanced Destroyer Wreck|Wreck|2|Celestial
+Caldari Supercarrier Wreckage|Large Collidable Object|2|Celestial
+Amarr Supercarrier Wreckage|Large Collidable Object|2|Celestial
+Gallente Supercarrier Wreckage|Large Collidable Object|2|Celestial
+Minmatar Supercarrier Wreckage|Large Collidable Object|2|Celestial
+Amarr Carrier Wreckage|Large Collidable Object|2|Celestial
+Caldari Carrier Wreckage|Large Collidable Object|2|Celestial
+Gallente Carrier Wreckage|Large Collidable Object|2|Celestial
+Minmatar Carrier Wreckage|Large Collidable Object|2|Celestial
+Amarr Freighter Wreckage|Large Collidable Object|2|Celestial
+Caldari Freighter Wreckage|Large Collidable Object|2|Celestial
+Gallente Freighter Wreckage|Large Collidable Object|2|Celestial
+Minmatar Freighter Wreckage|Large Collidable Object|2|Celestial
+Amarr Dreadnought Wreckage|Large Collidable Object|2|Celestial
+Caldari Dreadnought Wreckage|Large Collidable Object|2|Celestial
+Gallente Dreadnought Wreckage|Large Collidable Object|2|Celestial
+Minmatar Dreadnought Wreckage|Large Collidable Object|2|Celestial
+Amarr Titan Wreckage|Large Collidable Object|2|Celestial
+Caldari Titan Wreckage|Large Collidable Object|2|Celestial
+Gallente Titan Wreckage|Large Collidable Object|2|Celestial
+Minmatar Titan Wreckage|Large Collidable Object|2|Celestial
+Sansha's Battletower|Large Collidable Object|2|Celestial
+Roden Station|Large Collidable Object|2|Celestial
+Megathron (Roden)|Large Collidable Object|2|Celestial
+Dominix (Roden)|Large Collidable Object|2|Celestial
+Mysterious Probe|Large Collidable Object|2|Celestial
+The Terminus Stream|Large Collidable Object|2|Celestial
+Fortified Drone Structure II|Large Collidable Object|2|Celestial
+The Solitaire|Large Collidable Object|2|Celestial
+Hollow Asteroid|Large Collidable Object|2|Celestial
+Gallente Vexor Cruiser|Large Collidable Object|2|Celestial
+Serpentis Fortress|Large Collidable Object|2|Celestial
+Blood Raider Fortress|Large Collidable Object|2|Celestial
+Serpentis Station|Large Collidable Object|2|Celestial
+Sansha Cynosural Field|Large Collidable Object|2|Celestial
+Forlorn Hope|Large Collidable Object|2|Celestial
+Osnirdottir Memorial|Large Collidable Object|2|Celestial
+Gallente Passenger Liner Wreckage|Large Collidable Object|2|Celestial
+Serpentis Slave Transport|Large Collidable Object|2|Celestial
+Fortified Deadspace Particle Accelerator|Large Collidable Object|2|Celestial
+Fortified Asteroid Colony|Large Collidable Object|2|Celestial
+Fortified Sansha Deadspace Outpost I|Large Collidable Object|2|Celestial
+Sansha Starbase Control Tower|Large Collidable Object|2|Celestial
+Sansha Logistics Control Array|Large Collidable Object|2|Celestial
+Sansha Remote Logistics Station|Large Collidable Object|2|Celestial
+Caldari Chimera Carrier|Large Collidable Object|2|Celestial
+Caldari Wyvern Carrier |Large Collidable Object|2|Celestial
+Caldari Phoenix Dreadnough|Large Collidable Object|2|Celestial
+Caldari Leviathan Titan|Large Collidable Object|2|Celestial
+Caldari Badger Industrial Ship|Large Collidable Object|2|Celestial
+Caldari Tayra Industrial Ship|Large Collidable Object|2|Celestial
+Caldari Charon Freighter|Large Collidable Object|2|Celestial
+Gallente Atron Frigate|Large Collidable Object|2|Celestial
+Gallente Imicus Frigate|Large Collidable Object|2|Celestial
+Gallente Incursus Frigate|Large Collidable Object|2|Celestial
+Gallente Maulus Frigate|Large Collidable Object|2|Celestial
+Gallente Navitas Frigate|Large Collidable Object|2|Celestial
+Gallente Tristan Frigate|Large Collidable Object|2|Celestial
+Gallente Catalyst Destroyer|Large Collidable Object|2|Celestial
+Gallente Celestis Cruiser|Large Collidable Object|2|Celestial
+Gallente Exequror Cruiser|Large Collidable Object|2|Celestial
+Gallente Thorax Cruiser|Large Collidable Object|2|Celestial
+Fortified Starbase Shield Generator|Large Collidable Object|2|Celestial
+Sansha Station Ruins|Large Collidable Object|2|Celestial
+Amarr Crucifier Frigate|Large Collidable Object|2|Celestial
+Amarr Executioner Frigate|Large Collidable Object|2|Celestial
+Amarr Inquisitor Frigate|Large Collidable Object|2|Celestial
+Amarr Magnate Frigate|Large Collidable Object|2|Celestial
+Amarr Punisher Frigate|Large Collidable Object|2|Celestial
+Amarr Tormentor Frigate|Large Collidable Object|2|Celestial
+Amarr Coercer Destroyer|Large Collidable Object|2|Celestial
+Amarr Arbitrator Cruiser|Large Collidable Object|2|Celestial
+Amarr Augoror Cruiser|Large Collidable Object|2|Celestial
+Amarr Omen Cruiser|Large Collidable Object|2|Celestial
+Amarr Harbinger Battlecruiser|Large Collidable Object|2|Celestial
+Amarr Prophecy Battlecruiser|Large Collidable Object|2|Celestial
+Amarr Abaddon Battleship|Large Collidable Object|2|Celestial
+Amarr Apocalypse Battleship|Large Collidable Object|2|Celestial
+Amarr Bestower Industrial Ship|Large Collidable Object|2|Celestial
+Amarr Sigil Industrial Ship|Large Collidable Object|2|Celestial
+Amarr Maller Cruiser|Large Collidable Object|2|Celestial
+Amarr Aeon Carrier|Large Collidable Object|2|Celestial
+Amarr Archon Carrier|Large Collidable Object|2|Celestial
+Amarr Revelation Dreadnought|Large Collidable Object|2|Celestial
+Amarr Avatar Titan|Large Collidable Object|2|Celestial
+Amarr Providence Freighter|Large Collidable Object|2|Celestial
+Gallente Brutix Battlecruiser|Large Collidable Object|2|Celestial
+Gallente Myrmidon Battlecruiser|Large Collidable Object|2|Celestial
+Caldari Bantam Frigate|Large Collidable Object|2|Celestial
+Caldari Condor Frigate|Large Collidable Object|2|Celestial
+Caldari Griffin Frigate|Large Collidable Object|2|Celestial
+Caldari Heron Frigate|Large Collidable Object|2|Celestial
+Caldari Kestrel Frigate|Large Collidable Object|2|Celestial
+Caldari Merlin Frigate|Large Collidable Object|2|Celestial
+Caldari Cormorant Destroyer|Large Collidable Object|2|Celestial
+Caldari Blackbird Cruiser|Large Collidable Object|2|Celestial
+Caldari Caracal Cruiser|Large Collidable Object|2|Celestial
+Caldari Moa Cruiser|Large Collidable Object|2|Celestial
+Caldari Osprey Cruiser|Large Collidable Object|2|Celestial
+Caldari Drake Battlecruiser|Large Collidable Object|2|Celestial
+Caldari Ferox Battlecruiser|Large Collidable Object|2|Celestial
+Caldari Raven Battleship|Large Collidable Object|2|Celestial
+Caldari Rokh Battleship|Large Collidable Object|2|Celestial
+Caldari Scorpion Battleship |Large Collidable Object|2|Celestial
+Gallente Dominix Battleship|Large Collidable Object|2|Celestial
+Gallente Hyperion Battleship|Large Collidable Object|2|Celestial
+Gallente Megathron Battleship|Large Collidable Object|2|Celestial
+Gallente Nyx Carrier|Large Collidable Object|2|Celestial
+Gallente Thanatos Carrier|Large Collidable Object|2|Celestial
+Gallente Moros Dreadnought|Large Collidable Object|2|Celestial
+Gallente Erebus Titan|Large Collidable Object|2|Celestial
+Gallente Iteron Mark I Industrial Ship|Large Collidable Object|2|Celestial
+Gallente Iteron Mark II Industrial Ship|Large Collidable Object|2|Celestial
+Gallente Iteron Mark III Industrial Ship|Large Collidable Object|2|Celestial
+Gallente Iteron Mark IV Industrial Ship|Large Collidable Object|2|Celestial
+Gallente Iteron Mark V Industrial Ship|Large Collidable Object|2|Celestial
+Gallente Obelisk Freighter|Large Collidable Object|2|Celestial
+Minmatar Breacher Frigate|Large Collidable Object|2|Celestial
+Minmatar Burst Frigate|Large Collidable Object|2|Celestial
+Minmatar Probe Frigate|Large Collidable Object|2|Celestial
+Minmatar Rifter Frigate|Large Collidable Object|2|Celestial
+Minmatar Slasher Frigate|Large Collidable Object|2|Celestial
+Minmatar Vigil  Frigate|Large Collidable Object|2|Celestial
+Minmatar Thrasher Destroyer|Large Collidable Object|2|Celestial
+Minmatar Bellicose Cruiser|Large Collidable Object|2|Celestial
+Minmatar Rupture Cruiser|Large Collidable Object|2|Celestial
+Minmatar Scythe Cruiser|Large Collidable Object|2|Celestial
+Minmatar Stabber Cruiser|Large Collidable Object|2|Celestial
+Minmatar Cyclone Battlecruiser|Large Collidable Object|2|Celestial
+Minmatar Hurricane Battlecruiser|Large Collidable Object|2|Celestial
+Minmatar Maelstrom Battleship|Large Collidable Object|2|Celestial
+Minmatar Tempest Battleship|Large Collidable Object|2|Celestial
+Minmatar Typhoon Battleship|Large Collidable Object|2|Celestial
+Minmatar Hel Carrier|Large Collidable Object|2|Celestial
+Minmatar Nidhoggur Carrier|Large Collidable Object|2|Celestial
+Minmatar Naglfar Dreadnought|Large Collidable Object|2|Celestial
+Minmatar Ragnarok Titan|Large Collidable Object|2|Celestial
+Minmatar Hoarder Industrial Ship|Large Collidable Object|2|Celestial
+Minmatar Mammoth Industrial Ship|Large Collidable Object|2|Celestial
+Minmatar Wreathe Industrial Ship|Large Collidable Object|2|Celestial
+Minmatar Fenrir Freighter|Large Collidable Object|2|Celestial
+Miniball hax|Large Collidable Object|2|Celestial
+Ripped Superstructure|Large Collidable Object|2|Celestial
+Ruined Monument|Large Collidable Object|2|Celestial
+Fortified Amarr Industrial Station|Large Collidable Object|2|Celestial
+Fortified Archon|Large Collidable Object|2|Celestial
+Serpentis Stronghold|Large Collidable Object|2|Celestial
+Fortified Gallente Station 7|Large Collidable Object|2|Celestial
+Federation Administrative Outpost|Large Collidable Object|2|Celestial
+Minmatar Service Outpost Structure|Large Collidable Object|2|Celestial
+Fortified Minmatar Station|Large Collidable Object|2|Celestial
+Amarr Factory Outpost|Large Collidable Object|2|Celestial
+Caldari Research Outpost|Large Collidable Object|2|Celestial
+Protest Monument|Large Collidable Object|2|Celestial
+Minmatar Trade Station Ruins|Large Collidable Object|2|Celestial
+Fortified Amarr Commercial Station Ruins|Large Collidable Object|2|Celestial
+Amarr Military Station Ruins|Large Collidable Object|2|Celestial
+Amarr Mining Station Ruins|Large Collidable Object|2|Celestial
+Amarr Research Station Ruins|Large Collidable Object|2|Celestial
+Amarr Trade Station Ruins|Large Collidable Object|2|Celestial
+Fortified Caldari Station Ruins - Huge & Sprawling|Large Collidable Object|2|Celestial
+Caldari Station Ruins - Hook Shaped|Large Collidable Object|2|Celestial
+Fortified Caldari Station Ruins - Flat Hulk|Large Collidable Object|2|Celestial
+Caldari Station Ruins - Industry Drill|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Disc|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Fathom|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Ugly Industrial|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Biodomes|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Factory|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Military|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Research|Large Collidable Object|2|Celestial
+Gallente Station Ruins - Commercial|Large Collidable Object|2|Celestial
+Minmatar Commercial Station Ruins|Large Collidable Object|2|Celestial
+Minmatar Industry Station Ruins|Large Collidable Object|2|Celestial
+Minmatar Military Station Ruins|Large Collidable Object|2|Celestial
+Minmatar Mining Station Ruins|Large Collidable Object|2|Celestial
+Minmatar Research Station Ruins|Large Collidable Object|2|Celestial
+Minmatar General Station Ruins|Large Collidable Object|2|Celestial
+Frozen Corpse|Large Collidable Object|2|Celestial
+Outpost/Disc - Spiky & Pulsating|Large Collidable Object|2|Celestial
+Rock - Infested by Rogue Drones|Large Collidable Object|2|Celestial
+Small Asteroid w/Drone-tech|Large Collidable Object|2|Celestial
+Multi-purpose Pad|Large Collidable Object|2|Celestial
+Pulsating Power Generator|Large Collidable Object|2|Celestial
+Beacon|Large Collidable Object|2|Celestial
+Magnetic Double-Capped Bubble|Large Collidable Object|2|Celestial
+Depleted Station Battery|Large Collidable Object|2|Celestial
+Black Monolith|Large Collidable Object|2|Celestial
+Rock Formation - Branched & Twisted|Large Collidable Object|2|Celestial
+Spaceshuttle Wreck|Large Collidable Object|2|Celestial
+Circular Construction|Large Collidable Object|2|Celestial
+Debris - Broken Engine Part 1|Large Collidable Object|2|Celestial
+Debris - Broken Engine Part 2|Large Collidable Object|2|Celestial
+Debris - Power Conduit|Large Collidable Object|2|Celestial
+Debris - Twisted Metal|Large Collidable Object|2|Celestial
+Scanner Sentry - Rapid Pulse|Large Collidable Object|2|Celestial
+Gallente Outpost|Large Collidable Object|2|Celestial
+Amarr Refining Outpost|Large Collidable Object|2|Celestial
+Amarr Repair Outpost|Large Collidable Object|2|Celestial
+Amarr Tactical Outpost|Large Collidable Object|2|Celestial
+Caldari Refining Outpost|Large Collidable Object|2|Celestial
+Caldari Repair Outpost|Large Collidable Object|2|Celestial
+Caldari Tactical Outpost|Large Collidable Object|2|Celestial
+Minmatar Refining Outpost|Large Collidable Object|2|Celestial
+Minmatar Repair Outpost|Large Collidable Object|2|Celestial
+Minmatar Tactical Outpost|Large Collidable Object|2|Celestial
+Asteroid Mining Post|Large Collidable Object|2|Celestial
+Coral Rock Formation|Large Collidable Object|2|Celestial
+Floating Stonehenge|Large Collidable Object|2|Celestial
+Low-Tech Solar Harvester|Large Collidable Object|2|Celestial
+Ghost Ship|Large Collidable Object|2|Celestial
+Asteroid Colony - Factory|Large Collidable Object|2|Celestial
+Asteroid Colony - Refinery|Large Collidable Object|2|Celestial
+Asteroid Colony - Wedge Shape|Large Collidable Object|2|Celestial
+Asteroid Colony - High & Massive|Large Collidable Object|2|Celestial
+Asteroid Colony - Medium Size|Large Collidable Object|2|Celestial
+Asteroid Colony - High & Medium Size|Large Collidable Object|2|Celestial
+Asteroid Colony - Small Tower|Large Collidable Object|2|Celestial
+Asteroid Colony - Small & Flat|Large Collidable Object|2|Celestial
+Asteroid Colony - Flat Hulk|Large Collidable Object|2|Celestial
+Giant Snake-Shaped Asteroid|Large Collidable Object|2|Celestial
+Small Rock|Large Collidable Object|2|Celestial
+Small and Sharded Rock|Large Collidable Object|2|Celestial
+Sharded Rock|Large Collidable Object|2|Celestial
+Tiny Rock|Large Collidable Object|2|Celestial
+Snake Shaped Asteroid|Large Collidable Object|2|Celestial
+Gas/Storage Silo|Large Collidable Object|2|Celestial
+Barren Asteroid|Large Collidable Object|2|Celestial
+Sheared Rock Formation|Large Collidable Object|2|Celestial
+Particle Acceleration Superstructure|Large Collidable Object|2|Celestial
+TEST Beacon|Large Collidable Object|2|Celestial
+Abandoned Drill - Ruined|Large Collidable Object|2|Celestial
+Walkway Debris|Large Collidable Object|2|Celestial
+Ruined Neon Sign|Large Collidable Object|2|Celestial
+Astro Farm|Large Collidable Object|2|Celestial
+Dysfunctional Solar Harvester|Large Collidable Object|2|Celestial
+Dirty Bandit Shipyard|Large Collidable Object|2|Celestial
+Arena|Large Collidable Object|2|Celestial
+Hillside Gambling Hall|Large Collidable Object|2|Celestial
+Pleasure Hub|Large Collidable Object|2|Celestial
+Fortified Caldari Junction|Large Collidable Object|2|Celestial
+Fortified Gallente Outpost|Large Collidable Object|2|Celestial
+Habitation Brothel|Large Collidable Object|2|Celestial
+Habitation Prison|Large Collidable Object|2|Celestial
+Residential Habitation Module|Large Collidable Object|2|Celestial
+Habitation Pleasure Hub|Large Collidable Object|2|Celestial
+Habitation Casino|Large Collidable Object|2|Celestial
+Habitation Police Dpt|Large Collidable Object|2|Celestial
+Habitation Roadhouse|Large Collidable Object|2|Celestial
+Habitation Drughouse|Large Collidable Object|2|Celestial
+Indestructible Landing Pad|Large Collidable Object|2|Celestial
+Fortified Minmatar Wall|Large Collidable Object|2|Celestial
+Fortified Minmatar Fence|Large Collidable Object|2|Celestial
+Fortified Minmatar Junction|Large Collidable Object|2|Celestial
+Fortified Minmatar Lookout|Large Collidable Object|2|Celestial
+Fortified Minmatar Barrier|Large Collidable Object|2|Celestial
+Fortified Minmatar Bunker|Large Collidable Object|2|Celestial
+Fortified Minmatar Barricade|Large Collidable Object|2|Celestial
+Fortified Minmatar Battery|Large Collidable Object|2|Celestial
+Fortified Minmatar Elevator|Large Collidable Object|2|Celestial
+Elemental Base|Large Collidable Object|2|Celestial
+Indestructible Radio Telescope|Large Collidable Object|2|Celestial
+Fortified Serpentis Barricade|Large Collidable Object|2|Celestial
+Fortified Serpentis Barrier|Large Collidable Object|2|Celestial
+Fortified Serpentis Battery|Large Collidable Object|2|Celestial
+Fortified Serpentis Bunker|Large Collidable Object|2|Celestial
+Fortified Gallente Elevator|Large Collidable Object|2|Celestial
+Fortified Serpentis Fence|Large Collidable Object|2|Celestial
+Fortified Serpentis Junction|Large Collidable Object|2|Celestial
+Fortified Serpentis Lookout|Large Collidable Object|2|Celestial
+Fortified Serpentis Wall|Large Collidable Object|2|Celestial
+Indestructible Freight Pad|Large Collidable Object|2|Celestial
+Huge Silvery White Stalagmite|Large Collidable Object|2|Celestial
+Pleasure Cruiser|Large Collidable Object|2|Celestial
+Asteroid Station - Dark and Spiky|Large Collidable Object|2|Celestial
+Fortified Shipyard|Large Collidable Object|2|Celestial
+Pulsating Sensor|Large Collidable Object|2|Celestial
+Cloven Grey Asteroid|Large Collidable Object|2|Celestial
+Cloven Red Asteroid|Large Collidable Object|2|Celestial
+Broken Blue Crystal Asteroid|Large Collidable Object|2|Celestial
+Broken Metallic Crystal Asteroid|Large Collidable Object|2|Celestial
+Broken Orange Crystal Asteroid|Large Collidable Object|2|Celestial
+Amarr Starbase Control Tower|Large Collidable Object|2|Celestial
+Fortified Amarr Lookout|Large Collidable Object|2|Celestial
+Fortified Cargo Rig|Large Collidable Object|2|Celestial
+Fortified Amarr Battery|Large Collidable Object|2|Celestial
+Fortified Amarr Wall|Large Collidable Object|2|Celestial
+Indestructible Acceleration Gate|Large Collidable Object|2|Celestial
+Fortified Blood Raider Barrier|Large Collidable Object|2|Celestial
+Fortified Blood Raider Fence|Large Collidable Object|2|Celestial
+Human Farm|Large Collidable Object|2|Celestial
+Fortified Smuggler Stargate|Large Collidable Object|2|Celestial
+Fortified Blood Raider Bunker|Large Collidable Object|2|Celestial
+Fortified Blood Raider Junction|Large Collidable Object|2|Celestial
+Fortified Spatial Rift|Large Collidable Object|2|Celestial
+Stargate - Caldari |Large Collidable Object|2|Celestial
+Warning Sign|Large Collidable Object|2|Celestial
+Gallente Stargate|Large Collidable Object|2|Celestial
+Ammatar Holy Dome|Large Collidable Object|2|Celestial
+Stargate - Minmatar|Large Collidable Object|2|Celestial
+Stargate - Gallente|Large Collidable Object|2|Celestial
+Fortified Guristas Control Tower|Large Collidable Object|2|Celestial
+Fortified Minmatar Trade Station Ruins|Large Collidable Object|2|Celestial
+Fortified Minmatar Mining Station Ruins|Large Collidable Object|2|Celestial
+Fortified Minmatar Commercial Station Ruins|Large Collidable Object|2|Celestial
+Amarr Commercial Station Ruins|Large Collidable Object|2|Celestial
+Fortified Amarr Mining Station Ruins|Large Collidable Object|2|Celestial
+Fortified Amarr Research Station Ruins|Large Collidable Object|2|Celestial
+Caldari Station Ruins - Flat Hulk|Large Collidable Object|2|Celestial
+Caldari Station Ruins - Huge & Sprawling|Large Collidable Object|2|Celestial
+Fortified Gallente Station Ruins - Fathom|Large Collidable Object|2|Celestial
+Fortified Gallente Station Ruins - Military|Large Collidable Object|2|Celestial
+Fortified Gallente Station Ruins - Ugly Industrial|Large Collidable Object|2|Celestial
+Unstable Wormhole|Large Collidable Object|2|Celestial
+Fortified Bursar|Large Collidable Object|2|Celestial
+Amarr Prorator Industrial|Large Collidable Object|2|Celestial
+Caldari Crane Industrial|Large Collidable Object|2|Celestial
+Gallente Viator Industrial|Large Collidable Object|2|Celestial
+Docked Mammoth|Large Collidable Object|2|Celestial
+Avatar Wreck|Large Collidable Object|2|Celestial
+Fortified Drone Bunker|Large Collidable Object|2|Celestial
+Amarr Battlestation Ruins|Large Collidable Object|2|Celestial
+Caldari Station Ruins - Massive|Large Collidable Object|2|Celestial
+Minmatar Trade Station Ruins - Large|Large Collidable Object|2|Celestial
+Wrecked Revelation|Large Collidable Object|2|Celestial
+Wrecked Archon|Large Collidable Object|2|Celestial
+Wrecked Battleship|Large Collidable Object|2|Celestial
+Wrecked Cruiser|Large Collidable Object|2|Celestial
+Wrecked Frigate|Large Collidable Object|2|Celestial
+Fortified Billboard|Large Collidable Object|2|Celestial
+Fortified Large EM Forcefield|Large Collidable Object|2|Celestial
+Fortified Starbase Explosion Dampening Array|Large Collidable Object|2|Celestial
+Station - Caldari|Large Collidable Object|2|Celestial
+Apocalypse Bow|Large Collidable Object|2|Celestial
+Apocalypse Stern|Large Collidable Object|2|Celestial
+Armageddon Bow|Large Collidable Object|2|Celestial
+Armageddon Stern|Large Collidable Object|2|Celestial
+Raven Hull|Large Collidable Object|2|Celestial
+Raven Wing|Large Collidable Object|2|Celestial
+Scorpion Lower Hull|Large Collidable Object|2|Celestial
+Scorpion Masthead|Large Collidable Object|2|Celestial
+Scorpion Upper Hull|Large Collidable Object|2|Celestial
+Megathron Bow|Large Collidable Object|2|Celestial
+Megathron Hull|Large Collidable Object|2|Celestial
+Tempest Lower Sail|Large Collidable Object|2|Celestial
+Tempest Upper Sail|Large Collidable Object|2|Celestial
+Tempest Midsection|Large Collidable Object|2|Celestial
+Tempest Stern|Large Collidable Object|2|Celestial
+Naglfar Wreck|Large Collidable Object|2|Celestial
+Naglfar Upper Half|Large Collidable Object|2|Celestial
+Caldari Prime Station (Under Construction)|Large Collidable Object|2|Celestial
+CONCORD Battleship Wreck|Large Collidable Object|2|Celestial
+Fortified Gallente Bunker|Large Collidable Object|2|Celestial
+Fortified Gallente Lookout|Large Collidable Object|2|Celestial
+Fortified Gallente Barricade|Large Collidable Object|2|Celestial
+Fortified Gallente Barrier|Large Collidable Object|2|Celestial
+Fortified Gallente Battery|Large Collidable Object|2|Celestial
+Fortified Gallente Fence|Large Collidable Object|2|Celestial
+Fortified Gallente Junction|Large Collidable Object|2|Celestial
+Fortified Gallente Wall|Large Collidable Object|2|Celestial
+Gallente Starbase Control Tower|Large Collidable Object|2|Celestial
+Indestructible Minmatar Starbase|Large Collidable Object|2|Celestial
+Fortified Amarr Bunker|Large Collidable Object|2|Celestial
+Fortified Caldari Bunker|Large Collidable Object|2|Celestial
+Caldari Starbase Control Tower|Large Collidable Object|2|Celestial
+Fortified Caldari Lookout|Large Collidable Object|2|Celestial
+Fortified Caldari Elevator|Large Collidable Object|2|Celestial
+China Monument|Large Collidable Object|2|Celestial
+Amarr Revelation Dreadnought|Large Collidable Object|2|Celestial
+Fortified Angel Barricade|Large Collidable Object|2|Celestial
+Fortified Angel Barrier|Large Collidable Object|2|Celestial
+Fortified Angel Battery|Large Collidable Object|2|Celestial
+Fortified Angel Bunker|Large Collidable Object|2|Celestial
+Fortified Angel Elevator|Large Collidable Object|2|Celestial
+Fortified Angel Fence|Large Collidable Object|2|Celestial
+Fortified Angel Junction|Large Collidable Object|2|Celestial
+Fortified Angel Lookout|Large Collidable Object|2|Celestial
+Fortified Angel Wall|Large Collidable Object|2|Celestial
+Fortified Blood Raider Barricade|Large Collidable Object|2|Celestial
+Fortified Blood Raider Battery|Large Collidable Object|2|Celestial
+Fortified Blood Raider Elevator|Large Collidable Object|2|Celestial
+Fortified Blood Raider Lookout|Large Collidable Object|2|Celestial
+Fortified Blood Raider Wall|Large Collidable Object|2|Celestial
+Fortified Amarr Barricade|Large Collidable Object|2|Celestial
+Fortified Amarr Barrier|Large Collidable Object|2|Celestial
+Fortified Amarr Elevator|Large Collidable Object|2|Celestial
+Fortified Amarr Fence|Large Collidable Object|2|Celestial
+Fortified Amarr Junction|Large Collidable Object|2|Celestial
+Fortified Caldari Barricade|Large Collidable Object|2|Celestial
+Fortified Caldari Barrier|Large Collidable Object|2|Celestial
+Fortified Caldari Battery|Large Collidable Object|2|Celestial
+Fortified Caldari Fence|Large Collidable Object|2|Celestial
+Fortified Caldari Wall|Large Collidable Object|2|Celestial
+Fortified Guristas Barricade|Large Collidable Object|2|Celestial
+Fortified Guristas Barrier|Large Collidable Object|2|Celestial
+Fortified Guristas Battery|Large Collidable Object|2|Celestial
+Fortified Guristas Wall|Large Collidable Object|2|Celestial
+Fortified Guristas Lookout |Large Collidable Object|2|Celestial
+Fortified Guristas Junction|Large Collidable Object|2|Celestial
+Fortified Guristas Fence|Large Collidable Object|2|Celestial
+Fortified Guristas Elevator|Large Collidable Object|2|Celestial
+Fortified Guristas Bunker|Large Collidable Object|2|Celestial
+Fortified Drone Barricade|Large Collidable Object|2|Celestial
+Fortified Drone Barrier|Large Collidable Object|2|Celestial
+Fortified Drone Battery|Large Collidable Object|2|Celestial
+Fortified Drone Elevator|Large Collidable Object|2|Celestial
+Fortified Drone Fence|Large Collidable Object|2|Celestial
+Fortified Drone Junction|Large Collidable Object|2|Celestial
+Fortified Drone Lookout|Large Collidable Object|2|Celestial
+Fortified Drone Wall|Large Collidable Object|2|Celestial
+Fortified Serpentis Elevator|Large Collidable Object|2|Celestial
+Fortified Sansha Barricade|Large Collidable Object|2|Celestial
+Fortified Sansha Barrier|Large Collidable Object|2|Celestial
+Fortified Sansha Battery|Large Collidable Object|2|Celestial
+Fortified Sansha Bunker|Large Collidable Object|2|Celestial
+Fortified Sansha Elevator|Large Collidable Object|2|Celestial
+Fortified Sansha Fence|Large Collidable Object|2|Celestial
+Fortified Sansha Junction|Large Collidable Object|2|Celestial
+Fortified Sansha Lookout|Large Collidable Object|2|Celestial
+Fortified Sansha Wall|Large Collidable Object|2|Celestial
+Leviathan Wreck|Large Collidable Object|2|Celestial
+Sleeper Preservation Conduit|Large Collidable Object|2|Celestial
+Talocan Observation Dome|Large Collidable Object|2|Celestial
+Talocan Outpost Core|Large Collidable Object|2|Celestial
+Talocan Reactor Spire|Large Collidable Object|2|Celestial
+Sleeper Enclave|Large Collidable Object|2|Celestial
+Sleeper Thermoelectric Converter|Large Collidable Object|2|Celestial
+Sleeper Multiplex Forwarder|Large Collidable Object|2|Celestial
+Sleeper Interlink Hub|Large Collidable Object|2|Celestial
+Arena_GA_MainStructure01|Large Collidable Object|2|Celestial
+Caldari Arena MainStructure|Large Collidable Object|2|Celestial
+Arena_GA_SmallStructure01|Large Collidable Object|2|Celestial
+Caldari Arena SmallStructure|Large Collidable Object|2|Celestial
+Arena_GA_CenterFX01|Large Collidable Object|2|Celestial
+Caldari Arena CenterPiece|Large Collidable Object|2|Celestial
+Arena_MM_CenterPiece01|Large Collidable Object|2|Celestial
+Arena_GA_CenterPiece01|Large Collidable Object|2|Celestial
+Infested Lookout Ruins|Large Collidable Object|2|Celestial
+mobilestorage|Large Collidable Object|2|Celestial
+RedCloud|Large Collidable Object|2|Celestial
+Comet - Fire Comet Copy|Large Collidable Object|2|Celestial
+Comet - Dark Comet Copy|Large Collidable Object|2|Celestial
+Comet - Gold Comet Copy|Large Collidable Object|2|Celestial
+Comet - Toxic Comet Copy|Large Collidable Object|2|Celestial
+Gas Cloud 1 Copy|Large Collidable Object|2|Celestial
+Arena_AM_CenterPiece01|Large Collidable Object|2|Celestial
+Arena_AM_MainStructure01|Large Collidable Object|2|Celestial
+Arena_MM_MainStructure01|Large Collidable Object|2|Celestial
+Arena_AM_CenterFX01|Large Collidable Object|2|Celestial
+Arena_AM_SmallStructure01|Large Collidable Object|2|Celestial
+Arena_MM_SmallStructure01|Large Collidable Object|2|Celestial
+Talocan Polestar|Large Collidable Object|2|Celestial
+Talocan Coupling Array|Large Collidable Object|2|Celestial
+Talocan Static Gate|Large Collidable Object|2|Celestial
+Talocan Exchange Depot|Large Collidable Object|2|Celestial
+Talocan Extraction Silo|Large Collidable Object|2|Celestial
+Sleeper Drone Hangar|Large Collidable Object|2|Celestial
+Talocan Wreckage|Large Collidable Object|2|Celestial
+Unidentified Wreckage|Large Collidable Object|2|Celestial
+Storage Warehouse|Large Collidable Object|2|Celestial
+Fortified Starbase Auxiliary Power Array|Large Collidable Object|2|Celestial
+Talocan Outpost Hub|Large Collidable Object|2|Celestial
+Talocan Outpost Conduit|Large Collidable Object|2|Celestial
+Debris - Broken Drive Unit Part 1|Large Collidable Object|2|Celestial
+Debris - Broken Drive Unit Part 2|Large Collidable Object|2|Celestial
+Debris - Power Feed|Large Collidable Object|2|Celestial
+Debris - Crumpled Metal|Large Collidable Object|2|Celestial
+Amarr Armageddon Battleship|Large Collidable Object|2|Celestial
+Caldari Raven Battleship|Large Collidable Object|2|Celestial
+Minmatar Tempest Battleship|Large Collidable Object|2|Celestial
+Gallente Dominix Battleship|Large Collidable Object|2|Celestial
+Minmatar Wreathe industrial|Large Collidable Object|2|Celestial
+Fortified Drone Structure I|Large Collidable Object|2|Celestial
+Sleeper Engineering Station|Large Collidable Object|2|Celestial
+Talocan Embarkment Destroyer|Large Collidable Object|2|Celestial
+Talocan Disruption Tower|Large Collidable Object|2|Celestial
+Talocan Engineering Station|Large Collidable Object|2|Celestial
+Sleeper linkage structure|Large Collidable Object|2|Celestial
+Pandemic Legion - Winners of Alliance Tournament VI|Large Collidable Object|2|Celestial
+Fortified Partially Constructed Megathron|Large Collidable Object|2|Celestial
+Small Armory|Large Collidable Object|2|Celestial
+Fortified Starbase Capital Shipyard|Large Collidable Object|2|Celestial
+Fortified Starbase Hangar|Large Collidable Object|2|Celestial
+Gallente Megathron Battleship|Large Collidable Object|2|Celestial
+Gallente Thorax Cruiser|Large Collidable Object|2|Celestial
+Gallente Occator Industrial|Large Collidable Object|2|Celestial
+Gallente Incursus Frigate|Large Collidable Object|2|Celestial
+Gallente Obelisk Freighter|Large Collidable Object|2|Celestial
+Fortified Amarr Cathedral|Large Collidable Object|2|Celestial
+Fortified Amarr Chapel|Large Collidable Object|2|Celestial
+Violent Wormhole|Large Collidable Object|2|Celestial
+Stable Wormhole|Large Collidable Object|2|Celestial
+Statehood Incarnate Monument|Large Collidable Object|2|Celestial
+Serpentis Research Facility|Large Collidable Object|2|Celestial
+Caldari Charon Freighter|Large Collidable Object|2|Celestial
+Fortified Orca|Large Collidable Object|2|Celestial
+Fortified Hulk|Large Collidable Object|2|Celestial
+Caldari Kestrel Frigate|Large Collidable Object|2|Celestial
+Mobile Shipping Unit|Large Collidable Object|2|Celestial
+Exploration Monument|Large Collidable Object|2|Celestial
+Titanomachy Monument|Large Collidable Object|2|Celestial
+???????|Large Collidable Object|2|Celestial
+Amarr Battleship Wreck 1|Large Collidable Object|2|Celestial
+Amarr Battleship Wreck 2|Large Collidable Object|2|Celestial
+Caldari Battleship Wreck 1|Large Collidable Object|2|Celestial
+Caldari Battleship Wreck 2|Large Collidable Object|2|Celestial
+Gallente Battleship Wreck 1|Large Collidable Object|2|Celestial
+Gallente Battleship Wreck 2|Large Collidable Object|2|Celestial
+Minmatar Battleship Wreck 1|Large Collidable Object|2|Celestial
+Minmatar Battleship Wreck 2|Large Collidable Object|2|Celestial
+Plasma Chamber Debris|Large Collidable Object|2|Celestial
+Wrecked Storage Depot|Large Collidable Object|2|Celestial
+Unidentified Structure|Large Collidable Object|2|Celestial
+Damaged Spatial Concealment Chamber|Large Collidable Object|2|Celestial
+Expedition Command Outpost Wreck|Large Collidable Object|2|Celestial
+Planetary Colonization Office Wreck|Large Collidable Object|2|Celestial
+Testing Facilities Wreck|Large Collidable Object|2|Celestial
+Exotic Specimen Warehouse Wreck|Large Collidable Object|2|Celestial
+Revenant Wreckage|Large Collidable Object|2|Celestial
+Inactive Sentry Gun|Large Collidable Object|2|Celestial
+Immobile Tractor Beam|Large Collidable Object|2|Celestial
+Impenetrable Storage Depot|Large Collidable Object|2|Celestial
+Spatial Rift|Large Collidable Object|2|Celestial
+Communication Relay|Large Collidable Object|2|Celestial
+Matyrhan Lakat-Hro|Large Collidable Object|2|Celestial
+Bioinformatics Processing Cells|Large Collidable Object|2|Celestial
+Solray Unaligned Power Terminal|Large Collidable Object|2|Celestial
+Solray Aligned Power Terminal|Large Collidable Object|2|Celestial
+Smoldering Archive Ruins|Large Collidable Object|2|Celestial
+Angel Fence|Large Collidable Object|2|Celestial
+Unidentified Wormhole|Large Collidable Object|2|Celestial
+Sentinel Hive|Large Collidable Object|2|Celestial
+Barbican Hive|Large Collidable Object|2|Celestial
+Vidette Hive|Large Collidable Object|2|Celestial
+Conflux Hive|Large Collidable Object|2|Celestial
+Redoubt Hive|Large Collidable Object|2|Celestial
+Unidentified Sleeper Device|Large Collidable Object|2|Celestial
+Unidentified Structure|Large Collidable Object|2|Celestial
+Jove Observatory|Large Collidable Object|2|Celestial
+Jove Observatory|Large Collidable Object|2|Celestial
+Jove Observatory|Large Collidable Object|2|Celestial
+Jove Observatory|Large Collidable Object|2|Celestial
+Jove Observatory|Large Collidable Object|2|Celestial
+Jove Observatory|Large Collidable Object|2|Celestial
+Jove Corpse|Large Collidable Object|2|Celestial
+Jove Corpse|Large Collidable Object|2|Celestial
+Sleeper Vessel|Large Collidable Object|2|Celestial
+Jove Corpse|Large Collidable Object|2|Celestial
+Jove Corpse|Large Collidable Object|2|Celestial
+Jove Corpse|Large Collidable Object|2|Celestial
+Jove Corpse|Large Collidable Object|2|Celestial
+Sleeper Canopic|Large Collidable Object|2|Celestial
+Sleeper Canopic|Large Collidable Object|2|Celestial
+Sleeper Canopic|Large Collidable Object|2|Celestial
+Enclave Debris|Large Collidable Object|2|Celestial
+Sail Charger|Large Collidable Object|2|Celestial
+Massive Debris|Large Collidable Object|2|Celestial
+Massive Debris|Large Collidable Object|2|Celestial
+Massive Debris|Large Collidable Object|2|Celestial
+Massive Debris|Large Collidable Object|2|Celestial
+Massive Debris|Large Collidable Object|2|Celestial
+Unidentified Sleeper Device|Large Collidable Object|2|Celestial
+Unidentified Sleeper Device|Large Collidable Object|2|Celestial
+Unidentified Sleeper Device|Large Collidable Object|2|Celestial
+Apocalypse Wreck|Large Collidable Object|2|Celestial
+Armageddon Wreck|Large Collidable Object|2|Celestial
+Abaddon Wreck|Large Collidable Object|2|Celestial
+Raven Wreck|Large Collidable Object|2|Celestial
+Rohk Wreck|Large Collidable Object|2|Celestial
+Scorpion Wreck|Large Collidable Object|2|Celestial
+Megathron Wreck|Large Collidable Object|2|Celestial
+Dominix Wreck|Large Collidable Object|2|Celestial
+Hyperion Wreck|Large Collidable Object|2|Celestial
+Typhoon Wreck|Large Collidable Object|2|Celestial
+Maelstrom Wreck|Large Collidable Object|2|Celestial
+Tempest Wreck|Large Collidable Object|2|Celestial
+Nestor Wreck|Large Collidable Object|2|Celestial
+Barghest Wreck|Large Collidable Object|2|Celestial
+CONCORD Battleship Wreck|Large Collidable Object|2|Celestial
+Machariel Wreck|Large Collidable Object|2|Celestial
+Nightmare Wreck|Large Collidable Object|2|Celestial
+Primae Wreck|Large Collidable Object|2|Celestial
+Noctis Wreck|Large Collidable Object|2|Celestial
+Drifter Battleship Wreck|Large Collidable Object|2|Celestial
+Astrohus Construction|Large Collidable Object|2|Celestial
+Sisters of EVE Stratios|Large Collidable Object|2|Celestial
+Sisters of EVE Astero|Large Collidable Object|2|Celestial
+Sisters of EVE Nestor|Large Collidable Object|2|Celestial
+Commercial Billboard|Large Collidable Object|2|Celestial
+Invisible Cloud|Cloud|2|Celestial
+Rusty Cloud|Cloud|2|Celestial
+Dark Cloud|Cloud|2|Celestial
+Dark Green Cloud|Cloud|2|Celestial
+Dust Cloud|Cloud|2|Celestial
+Ion Cloud|Cloud|2|Celestial
+Spark Cloud|Cloud|2|Celestial
+Dark Gray Cloud|Cloud|2|Celestial
+Dark Gray Turbulent Cloud|Cloud|2|Celestial
+Electric Cloud|Cloud|2|Celestial
+Fire Cloud|Cloud|2|Celestial
+Plasma Cloud|Cloud|2|Celestial
+Debris Cloud|Cloud|2|Celestial
+Meteor Cloud|Cloud|2|Celestial
+Soft Cloud|Cloud|2|Celestial
+Wispy Orange Cloud|Cloud|2|Celestial
+Sulphuric Cloud|Cloud|2|Celestial
+Dust Streak|Cloud|2|Celestial
+Plasmic Gas Cloud|Cloud|2|Celestial
+Wispy Chlorine Cloud|Cloud|2|Celestial
+Micro Nebula|Cloud|2|Celestial
+Acidic Cloud|Cloud|2|Celestial
+Nebulaic Cloud|Cloud|2|Celestial
+Chlorine Cloud|Cloud|2|Celestial
+Gaseous Cloud|Cloud|2|Celestial
+Amber Cloud|Cloud|2|Celestial
+Green Gas Cloud|Cloud|2|Celestial
+Argon Gas Environment|Cloud|2|Celestial
+Dust Storm Environment|Cloud|2|Celestial
+Lightning Storm Environment|Cloud|2|Celestial
+Ethereal Environment|Cloud|2|Celestial
+Celestial Environment|Cloud|2|Celestial
+Infernal Environment|Cloud|2|Celestial
+Icefield Environment|Cloud|2|Celestial
+Krypton Gas Environment|Cloud|2|Celestial
+Toxic Cloud Environment|Cloud|2|Celestial
+Radon Gas Environment|Cloud|2|Celestial
+Turbulent Storm Environment|Cloud|2|Celestial
+Xenon Gas Environment|Cloud|2|Celestial
+Drone Beacon|Cloud|2|Celestial
+Debris Cloud Flat|Cloud|2|Celestial
+Amber Cytoserocin 2|Cloud|2|Celestial
+Amarr Prime Station Cloud|Cloud|2|Celestial
+Cloud Rings|Cloud|2|Celestial
+Strange Beacon|Cloud|2|Celestial
+|Cloud|2|Celestial
+Toxic Comet|Comet|2|Celestial
+Gold Comet|Comet|2|Celestial
+Gas Cloud 1|Comet|2|Celestial
+Gas Cloud 2|Comet|2|Celestial
+Gas Cloud 3|Comet|2|Celestial
+Gas Cloud 4|Comet|2|Celestial
+Gas Cloud 5|Comet|2|Celestial
+Gas Cloud 6|Comet|2|Celestial
+Gas Cloud 7|Comet|2|Celestial
+Gas Cloud 8|Comet|2|Celestial
+Gallente Administrative Outpost Platform|Construction Platform|2|Celestial
+Minmatar Service Outpost Platform|Construction Platform|2|Celestial
+Amarr Factory Outpost Platform|Construction Platform|2|Celestial
+Caldari Research Outpost Platform|Construction Platform|2|Celestial
+Celestial Beacon|Beacon|2|Celestial
+Celestial Beacon II|Beacon|2|Celestial
+Cynosural Field I|Beacon|2|Celestial
+Drone Celestial Beacon|Beacon|2|Celestial
+Celestial Agent Site Beacon|Beacon|2|Celestial
+Novice Military Beacon|Beacon|2|Celestial
+Small Military Beacon|Beacon|2|Celestial
+Medium Military Beacon|Beacon|2|Celestial
+Core Military Beacon|Beacon|2|Celestial
+Large Military Beacon|Beacon|2|Celestial
+Cynosural Jammer Beacon|Beacon|2|Celestial
+Titanomachy|Beacon|2|Celestial
+??????|Beacon|2|Celestial
+Abandoned CRC Monitoring Station|Beacon|2|Celestial
+Command Node Beacon|Beacon|2|Celestial
+Thick White|Planetary Cloud|2|Celestial
+Bllue faint|Planetary Cloud|2|Celestial
+Blue quarter|Planetary Cloud|2|Celestial
+White sharp hemisphere|Planetary Cloud|2|Celestial
+Brown hemisphere|Planetary Cloud|2|Celestial
+Faint hemisphere|Planetary Cloud|2|Celestial
+White Crescent|Planetary Cloud|2|Celestial
+Brown crescent|Planetary Cloud|2|Celestial
+Brown quarter|Planetary Cloud|2|Celestial
+Quarter shard|Planetary Cloud|2|Celestial
+Bitter edge|Planetary Cloud|2|Celestial
+Thin claw|Planetary Cloud|2|Celestial
+White solid|Planetary Cloud|2|Celestial
+White solid 2|Planetary Cloud|2|Celestial
+map Landmark|Landmark|2|Celestial
+Sentinel Sentry Gun I|Mobile Sentry Gun|2|Celestial
+Sentinel Sentry Gun II|Mobile Sentry Gun|2|Celestial
+Sentinel Sentry Gun III|Mobile Sentry Gun|2|Celestial
+Sentinel Sentry Gun IV|Mobile Sentry Gun|2|Celestial
+Sentinel Sentry Gun V|Mobile Sentry Gun|2|Celestial
+Guardian Sentry Gun I|Mobile Sentry Gun|2|Celestial
+Guardian Sentry Gun II|Mobile Sentry Gun|2|Celestial
+Guardian Sentry Gun III|Mobile Sentry Gun|2|Celestial
+Guardian Sentry Gun IV|Mobile Sentry Gun|2|Celestial
+Guardian Sentry Gun V|Mobile Sentry Gun|2|Celestial
+BH Sentry Gun|Mobile Sentry Gun|2|Celestial
+Large Secure Container|Secure Cargo Container|2|Celestial
+Medium Secure Container|Secure Cargo Container|2|Celestial
+Small Secure Container|Secure Cargo Container|2|Celestial
+Huge Secure Container|Secure Cargo Container|2|Celestial
+Giant Secure Container|Secure Cargo Container|2|Celestial
+Colossal Secure Container|Secure Cargo Container|2|Celestial
+Acceleration Gate (Precise)|Warp Gate|2|Celestial
+Ancient Acceleration Gate|Warp Gate|2|Celestial
+Acceleration Gate|Warp Gate|2|Celestial
+Spatial Rift|Warp Gate|2|Celestial
+Newly Constructed Acceleration Gate|Warp Gate|2|Celestial
+Pathfinder Gate|Warp Gate|2|Celestial
+Large Acceleration Gate|Warp Gate|2|Celestial
+Basic Global Warp Disruptor|Global Warp Disruptor|2|Celestial
+Ammo Shipping Crate|Shipping Crates|2|Celestial
+General Shipping Crate|Shipping Crates|2|Celestial
+Consumable Shipping Crate|Shipping Crates|2|Celestial
+Hazardous Material Shipping Crate|Shipping Crates|2|Celestial
+Raw Material Shipping Crate|Shipping Crates|2|Celestial
+Frigate Shipping Crate|Shipping Crates|2|Celestial
+Mineral Shipping Crate|Shipping Crates|2|Celestial
+Force Field|Force Field|2|Celestial
+Small Audit Log Secure Container|Audit Log Secure Container|2|Celestial
+Medium Audit Log Secure Container|Audit Log Secure Container|2|Celestial
+Large Audit Log Secure Container|Audit Log Secure Container|2|Celestial
+Station Container|Audit Log Secure Container|2|Celestial
+Station Vault Container|Audit Log Secure Container|2|Celestial
+Station Warehouse Container|Audit Log Secure Container|2|Celestial
+Deadspace Signature|Cosmic Signature|2|Celestial
+Cosmic Agent Site Signature|Cosmic Signature|2|Celestial
+Patrikia Noirild's Reaper|Agents in Space|2|Celestial
+Karsten Lundham's Typhoon|Agents in Space|2|Celestial
+Hasaziras Assa's Scorpion|Agents in Space|2|Celestial
+Rohan Shadrak's Bellicose|Agents in Space|2|Celestial
+Cosmos Condor|Agents in Space|2|Celestial
+Cosmos Incursus|Agents in Space|2|Celestial
+Cosmos Heron|Agents in Space|2|Celestial
+Cosmos Merlin|Agents in Space|2|Celestial
+Cosmos Probe|Agents in Space|2|Celestial
+Cosmos Buzzard|Agents in Space|2|Celestial
+Cosmos Crow|Agents in Space|2|Celestial
+Erudin Hanka's Harpy|Agents in Space|2|Celestial
+Cosmos Hawk|Agents in Space|2|Celestial
+Cosmos Raptor|Agents in Space|2|Celestial
+Cosmos Cormorant|Agents in Space|2|Celestial
+Cosmos Ferox|Agents in Space|2|Celestial
+Cosmos Badger|Agents in Space|2|Celestial
+Cosmos Badger Mark II|Agents in Space|2|Celestial
+Cosmos Blackbird|Agents in Space|2|Celestial
+Cosmos Caracal|Agents in Space|2|Celestial
+Cosmos Moa|Agents in Space|2|Celestial
+Cosmos Osprey|Agents in Space|2|Celestial
+Cosmos Raven|Agents in Space|2|Celestial
+Cosmos Bustard|Agents in Space|2|Celestial
+Cosmos Capsule|Agents in Space|2|Celestial
+Turu's Harpy|Agents in Space|2|Celestial
+Helkelen's Blackbird|Agents in Space|2|Celestial
+Ariato's Condor|Agents in Space|2|Celestial
+Awazhen's Moa|Agents in Space|2|Celestial
+Hatamei's Cormorant|Agents in Space|2|Celestial
+Sakkaro's Badger|Agents in Space|2|Celestial
+Makachi's Probe|Agents in Space|2|Celestial
+Mottoya's Crow|Agents in Space|2|Celestial
+Poyri's Harpy|Agents in Space|2|Celestial
+Niemenen's Capsule|Agents in Space|2|Celestial
+Kirku's Heron|Agents in Space|2|Celestial
+Arkimo's Hawk|Agents in Space|2|Celestial
+Riutta's Ferox|Agents in Space|2|Celestial
+Taihti's Raven|Agents in Space|2|Celestial
+Kanji's Caracal|Agents in Space|2|Celestial
+Jitainen's Probe|Agents in Space|2|Celestial
+Tuuri's Raptor|Agents in Space|2|Celestial
+Urigamu's Crow|Agents in Space|2|Celestial
+Sayto's Badger Mark II|Agents in Space|2|Celestial
+Setala's Blackbird|Agents in Space|2|Celestial
+Hekkiren's Badger|Agents in Space|2|Celestial
+Ikonen's Buzzard|Agents in Space|2|Celestial
+Hochi's Badger Mark II|Agents in Space|2|Celestial
+Saturi's Bustard|Agents in Space|2|Celestial
+Etsuya's Merlin|Agents in Space|2|Celestial
+Rost's Ferox|Agents in Space|2|Celestial
+Aikato's Probe|Agents in Space|2|Celestial
+Dechien's Heron|Agents in Space|2|Celestial
+Tekkurs's Crow|Agents in Space|2|Celestial
+Tanaka's Raptor|Agents in Space|2|Celestial
+Anekoji's Osprey|Agents in Space|2|Celestial
+Gojivi's Bustard|Agents in Space|2|Celestial
+Gorgoz's Raptor|Agents in Space|2|Celestial
+Opainen's Cormorant|Agents in Space|2|Celestial
+Pihrava's Condor|Agents in Space|2|Celestial
+Nakamuta's Incursus|Agents in Space|2|Celestial
+Katori's Cormorant|Agents in Space|2|Celestial
+Suruki's Hawk|Agents in Space|2|Celestial
+Yama's Moa|Agents in Space|2|Celestial
+Adakita's Caracal|Agents in Space|2|Celestial
+Nobayashi's Incursus|Agents in Space|2|Celestial
+Karpela's Ferox|Agents in Space|2|Celestial
+Rahkamo's Buzzard|Agents in Space|2|Celestial
+Nissiken's Condor|Agents in Space|2|Celestial
+Sirkya's Cormorant|Agents in Space|2|Celestial
+Rati's Moa|Agents in Space|2|Celestial
+Eskaila's Raven|Agents in Space|2|Celestial
+Aurio's Incursus|Agents in Space|2|Celestial
+Michi's Heron|Agents in Space|2|Celestial
+Utrainen's Merlin|Agents in Space|2|Celestial
+Otalen's Caracal|Agents in Space|2|Celestial
+Nikainen's Moa|Agents in Space|2|Celestial
+Raytio's Badger Mark II|Agents in Space|2|Celestial
+Magye's Bustard|Agents in Space|2|Celestial
+Koronen's Raptor|Agents in Space|2|Celestial
+Ahti's Osprey|Agents in Space|2|Celestial
+Watanen's Heron|Agents in Space|2|Celestial
+Oshima's Crow|Agents in Space|2|Celestial
+Fujimo's Caracal|Agents in Space|2|Celestial
+Kubona's Merlin|Agents in Space|2|Celestial
+Kanerva's Condor|Agents in Space|2|Celestial
+Tazaki's Buzzard|Agents in Space|2|Celestial
+Aura's Osprey|Agents in Space|2|Celestial
+Sagimoro's Blackbird|Agents in Space|2|Celestial
+Wakomi's Raven|Agents in Space|2|Celestial
+Cosmos Bellicose|Agents in Space|2|Celestial
+Cosmos Bestower|Agents in Space|2|Celestial
+Cosmos Claw|Agents in Space|2|Celestial
+Cosmos Executioner|Agents in Space|2|Celestial
+Cosmos Hoarder|Agents in Space|2|Celestial
+Cosmos Hound|Agents in Space|2|Celestial
+Cosmos Mammoth|Agents in Space|2|Celestial
+Cosmos Maulus|Agents in Space|2|Celestial
+Cosmos Navitas|Agents in Space|2|Celestial
+Cosmos Omen|Agents in Space|2|Celestial
+Cosmos Retribution|Agents in Space|2|Celestial
+Cosmos Rifter|Agents in Space|2|Celestial
+Cosmos Rupture|Agents in Space|2|Celestial
+Cosmos Scythe|Agents in Space|2|Celestial
+Cosmos Stiletto|Agents in Space|2|Celestial
+Cosmos Tempest|Agents in Space|2|Celestial
+Cosmos Thrasher|Agents in Space|2|Celestial
+Cosmos Vagabond|Agents in Space|2|Celestial
+Cosmos Vigil|Agents in Space|2|Celestial
+Cosmos Wolf|Agents in Space|2|Celestial
+Cosmos Wreathe|Agents in Space|2|Celestial
+Burkur's Vigil|Agents in Space|2|Celestial
+Mork's Probe|Agents in Space|2|Celestial
+Kersos' Thrasher|Agents in Space|2|Celestial
+Rakken's Claw|Agents in Space|2|Celestial
+Pokkolen's Wreathe|Agents in Space|2|Celestial
+Hekken's Condor|Agents in Space|2|Celestial
+Nitrut's Vigil|Agents in Space|2|Celestial
+Takson's Wreathe|Agents in Space|2|Celestial
+Rochet's Incursus|Agents in Space|2|Celestial
+Darrchien's Navitas|Agents in Space|2|Celestial
+Stokk's Claw|Agents in Space|2|Celestial
+Rikkiryo's Heron|Agents in Space|2|Celestial
+Hatram's Executioner|Agents in Space|2|Celestial
+Nitrus' Vigil|Agents in Space|2|Celestial
+Ouche's Navitas|Agents in Space|2|Celestial
+Bokh's Rifter|Agents in Space|2|Celestial
+Karkinen's Cormorant|Agents in Space|2|Celestial
+Sakt's Stiletto|Agents in Space|2|Celestial
+Sarbaert's Hound|Agents in Space|2|Celestial
+Tekrawhol's Rupture|Agents in Space|2|Celestial
+Tromkurt's Vagabond|Agents in Space|2|Celestial
+Rugaert's Vigil|Agents in Space|2|Celestial
+Asshala's Retribution|Agents in Space|2|Celestial
+Horkund's Scythe|Agents in Space|2|Celestial
+Korten's Vagabond|Agents in Space|2|Celestial
+Patrenn's Rifter|Agents in Space|2|Celestial
+Tikrest's Rupture|Agents in Space|2|Celestial
+Ucham's Omen|Agents in Space|2|Celestial
+Sharum's Maulus|Agents in Space|2|Celestial
+Mothrus's Bellicose|Agents in Space|2|Celestial
+Maertigor's Wreathe|Agents in Space|2|Celestial
+Ristiger's Bellicose|Agents in Space|2|Celestial
+Frain's Blackbird|Agents in Space|2|Celestial
+Karadom's Mammoth|Agents in Space|2|Celestial
+Robaerger's Scythe|Agents in Space|2|Celestial
+Torsont's Bellicose|Agents in Space|2|Celestial
+Jogmundt's Probe|Agents in Space|2|Celestial
+Hakkars' Wolf|Agents in Space|2|Celestial
+Murchor's Tempest|Agents in Space|2|Celestial
+Ossiam's Retribution|Agents in Space|2|Celestial
+Quereg's Omen|Agents in Space|2|Celestial
+Kverkinn's Stiletto|Agents in Space|2|Celestial
+Namian's Retribution|Agents in Space|2|Celestial
+Tyrfin's Rupture|Agents in Space|2|Celestial
+Spitek's Bellicose|Agents in Space|2|Celestial
+Gurmurkur's Vagabond|Agents in Space|2|Celestial
+Verkort's Scythe|Agents in Space|2|Celestial
+Guristas Prison|Agents in Space|2|Celestial
+Cosmos Iteron Mark III|Agents in Space|2|Celestial
+Barou Lardoss|Agents in Space|2|Celestial
+Frain's Rupture|Agents in Space|2|Celestial
+Apheta Zenakon's Rifter|Agents in Space|2|Celestial
+Hakno Lekan's Rifter|Agents in Space|2|Celestial
+Jachael Menson's Rifter|Agents in Space|2|Celestial
+Cosmos Tristan|Agents in Space|2|Celestial
+Wenda Lamort|Agents in Space|2|Celestial
+Jaak Rozake|Agents in Space|2|Celestial
+Beteux Maron|Agents in Space|2|Celestial
+Cosmos Punisher|Agents in Space|2|Celestial
+Demi Lazerus's Punisher|Agents in Space|2|Celestial
+Nikmar Jyran's Punisher|Agents in Space|2|Celestial
+Taspar Zolankor's Punisher|Agents in Space|2|Celestial
+Cosmos Kestrel|Agents in Space|2|Celestial
+Peeta Waikon's Kestrel|Agents in Space|2|Celestial
+Rokuza Taman's Kestrel|Agents in Space|2|Celestial
+Vaktan Sido's Kestrel|Agents in Space|2|Celestial
+Cosmos Scorpion|Agents in Space|2|Celestial
+Viljanen's Heron|Agents in Space|2|Celestial
+Nikmar Jyran's Retribution|Agents in Space|2|Celestial
+Taspar Zolankor's Retribution|Agents in Space|2|Celestial
+Kaiko Maina (Merlin)|Agents in Space|2|Celestial
+Emma Tharkin (MOA)|Agents in Space|2|Celestial
+Zoun Makui (Scorpion)|Agents in Space|2|Celestial
+Mutama Czeik's Rifter|Agents in Space|2|Celestial
+Thora Desto's Rupture|Agents in Space|2|Celestial
+Makor Desto's Tempest|Agents in Space|2|Celestial
+Jordan Usquen's Tristan|Agents in Space|2|Celestial
+Cosmos Celestis|Agents in Space|2|Celestial
+Babalu Wrezka's Celestis|Agents in Space|2|Celestial
+Cosmos Dominix|Agents in Space|2|Celestial
+Timmothy Sawyr's Dominix|Agents in Space|2|Celestial
+Mandor Neek's Punisher|Agents in Space|2|Celestial
+Jeeta Neek's Omen|Agents in Space|2|Celestial
+Cosmos Armageddon|Agents in Space|2|Celestial
+Zaestra Kuramor's Armageddon|Agents in Space|2|Celestial
+Skami Zarton's Dramiel|Agents in Space|2|Celestial
+Numa Fashit's Cynabal|Agents in Space|2|Celestial
+Kardimo Menka Machariel|Agents in Space|2|Celestial
+Pol Pat's Rattlesnake|Agents in Space|2|Celestial
+Jakuzi Makar's Gila|Agents in Space|2|Celestial
+Ippana Maltyr's Worm|Agents in Space|2|Celestial
+Jaquon Jalibar's Daredevil|Agents in Space|2|Celestial
+Luthetion Preque's Vigilant|Agents in Space|2|Celestial
+Hara Lafleur's Vindicator|Agents in Space|2|Celestial
+Miguel Maktar's Succubus|Agents in Space|2|Celestial
+Karhoum Ykta's Phantasm|Agents in Space|2|Celestial
+Ophana Zett's Nightmare|Agents in Space|2|Celestial
+Farak Kali's Cruor|Agents in Space|2|Celestial
+Unnaya Mafir's Ashimmu|Agents in Space|2|Celestial
+Sari Arkhi's Bhaalgorn|Agents in Space|2|Celestial
+Cosmos Atron|Agents in Space|2|Celestial
+Cosmos Imicus|Agents in Space|2|Celestial
+Cosmos Helios|Agents in Space|2|Celestial
+Cosmos Nemesis|Agents in Space|2|Celestial
+Cosmos Enyo|Agents in Space|2|Celestial
+Cosmos Catalyst|Agents in Space|2|Celestial
+Cosmos Thorax|Agents in Space|2|Celestial
+Cosmos Vexor|Agents in Space|2|Celestial
+Cosmos Megathron|Agents in Space|2|Celestial
+Madibe Arnadi's Rifter|Agents in Space|2|Celestial
+Tori Aman's Punisher|Agents in Space|2|Celestial
+Hakkuna Baille's Thorax|Agents in Space|2|Celestial
+Testo Hrinz's Merlin|Agents in Space|2|Celestial
+Zaknar Cente's Tristan|Agents in Space|2|Celestial
+Bakkla Viftuin's Rifter|Agents in Space|2|Celestial
+Minas Iksan's Control Tower|Agents in Space|2|Celestial
+Oggiin Kalda's Maller|Agents in Space|2|Celestial
+Krard Wengalill's Punisher|Agents in Space|2|Celestial
+Nuo Tuotura's Kestrel|Agents in Space|2|Celestial
+Zama Fedas's Khanid Punisher|Agents in Space|2|Celestial
+Ison Tiadala's Tempest|Agents in Space|2|Celestial
+Ison Tiadala's Naglfar|Agents in Space|2|Celestial
+Fassara Nazarut's Slicer|Agents in Space|2|Celestial
+Wirdar Erazako's Firetail|Agents in Space|2|Celestial
+Daemire Adamia's Tristan|Agents in Space|2|Celestial
+Aville Ancare's Comet|Agents in Space|2|Celestial
+Rasnik's Rifter|Agents in Space|2|Celestial
+Akoto's Kestrel|Agents in Space|2|Celestial
+Rikkolen's Heron|Agents in Space|2|Celestial
+Arkiso's Hawk|Agents in Space|2|Celestial
+Rekkai's Moa|Agents in Space|2|Celestial
+Hokoru's Blackbird|Agents in Space|2|Celestial
+Tagrina Angi's Rifter|Agents in Space|2|Celestial
+Kaeg Zkaen's Omen|Agents in Space|2|Celestial
+Opeau's Celestis|Agents in Space|2|Celestial
+Arghe's Megathron|Agents in Space|2|Celestial
+Estacan's Tristan|Agents in Space|2|Celestial
+Gallot's Atron|Agents in Space|2|Celestial
+Lamuette's Nemesis|Agents in Space|2|Celestial
+Ardillan's Maulus|Agents in Space|2|Celestial
+Nortul's Probe|Agents in Space|2|Celestial
+Angetyn's Iteron Mark III|Agents in Space|2|Celestial
+Rupptofs' Scythe|Agents in Space|2|Celestial
+Formur's Tempest|Agents in Space|2|Celestial
+Amakkit's Thrasher|Agents in Space|2|Celestial
+Ameisoure's Enyo|Agents in Space|2|Celestial
+Karmane Ban's Blackbird|Agents in Space|2|Celestial
+Fam Kishemas's Punisher|Agents in Space|2|Celestial
+Esordik Mitt's Rifter|Agents in Space|2|Celestial
+Aakeo Oshaima's Blackbird|Agents in Space|2|Celestial
+Veko Tallaja's Scorpion|Agents in Space|2|Celestial
+Gara Kort's Raven|Agents in Space|2|Celestial
+Eron Hoyere's Catalyst|Agents in Space|2|Celestial
+Ardoen Dasaner's Navitas|Agents in Space|2|Celestial
+Onreun Coen's Tristan|Agents in Space|2|Celestial
+Nilla Elermare's Shuttle|Agents in Space|2|Celestial
+Aminn Flosin's Celestis|Agents in Space|2|Celestial
+Schabs Xalot's Iteron Mark III|Agents in Space|2|Celestial
+Ampsin Achippon's Tristan|Agents in Space|2|Celestial
+Bartezo Maphante's Omen|Agents in Space|2|Celestial
+Manel Kador's Apocalypse|Agents in Space|2|Celestial
+Damaged Drone Mind|Agents in Space|2|Celestial
+Nossa Farad's Inquisitor|Agents in Space|2|Celestial
+Odan Poun's Tormentor|Agents in Space|2|Celestial
+Ader Finn's Zealot|Agents in Space|2|Celestial
+Kofur Karveran's Armageddon|Agents in Space|2|Celestial
+Pomari Maara's Condor|Agents in Space|2|Celestial
+Hosiwo Onima's Condor|Agents in Space|2|Celestial
+Nakkito Ihadechi's Condor|Agents in Space|2|Celestial
+Furas Vaupero's Merlin|Agents in Space|2|Celestial
+Ontaa Jila's Harpy|Agents in Space|2|Celestial
+Cosmos Crucifier|Agents in Space|2|Celestial
+Cosmos Maller|Agents in Space|2|Celestial
+Cosmos Arbitrator|Agents in Space|2|Celestial
+Cosmos Coercer|Agents in Space|2|Celestial
+Cosmos Malediction|Agents in Space|2|Celestial
+Cosmos Crusader|Agents in Space|2|Celestial
+Cosmos Purifier|Agents in Space|2|Celestial
+Cosmos Prophecy|Agents in Space|2|Celestial
+Cora Chaktaren Armageddon|Agents in Space|2|Celestial
+Zar Forari's Bestower|Agents in Space|2|Celestial
+Zach Himen's Omen|Agents in Space|2|Celestial
+Ammargal Detrone's Zealot|Agents in Space|2|Celestial
+Dakumon's Punisher|Agents in Space|2|Celestial
+Ebotiz's Retribution|Agents in Space|2|Celestial
+Amokin's Malediction|Agents in Space|2|Celestial
+Parsik's Crucifier|Agents in Space|2|Celestial
+Arshah's Armageddon|Agents in Space|2|Celestial
+Cosmos Apocalypse|Agents in Space|2|Celestial
+Cosmos Impel|Agents in Space|2|Celestial
+Cosmos Anathema|Agents in Space|2|Celestial
+Kerth's Apocalypse|Agents in Space|2|Celestial
+Robikar's Anathema|Agents in Space|2|Celestial
+Shakai's Impel|Agents in Space|2|Celestial
+Zach Himum's Armageddon|Agents in Space|2|Celestial
+Mathon's Helios|Agents in Space|2|Celestial
+Udokas' Crusader|Agents in Space|2|Celestial
+The Curator's Armageddon|Agents in Space|2|Celestial
+Mazed Karadom's Armageddon|Agents in Space|2|Celestial
+Korhonomi Oti's Sparrow|Agents in Space|2|Celestial
+Tillen Matsu's Sparrow|Agents in Space|2|Celestial
+Autaris Pia's Sparrow|Agents in Space|2|Celestial
+Kikko Roisen's Retribution|Agents in Space|2|Celestial
+Mamo Guerre's Megathron|Agents in Space|2|Celestial
+Mamin Choonka's Crusader|Agents in Space|2|Celestial
+Shafra Gulias's Hawk|Agents in Space|2|Celestial
+Sevan Fagided's Hawk|Agents in Space|2|Celestial
+Hefaka Chubid's Hawk|Agents in Space|2|Celestial
+Etien Duloure's Navitas|Agents in Space|2|Celestial
+Vausitte Yrier's Navitas|Agents in Space|2|Celestial
+Maray Ygier's Navitas|Agents in Space|2|Celestial
+Avrue Auz's Merlin|Agents in Space|2|Celestial
+Rilbedur Tjar's Rifter|Agents in Space|2|Celestial
+West Ludorim's Rifter|Agents in Space|2|Celestial
+Albedur Vatzako's Rifter|Agents in Space|2|Celestial
+Logut Akell's Abode|Agents in Space|2|Celestial
+Fetosa Kanim's Crane|Agents in Space|2|Celestial
+Vena Saapialen's Crane|Agents in Space|2|Celestial
+Ocho Shusiian's Crane|Agents in Space|2|Celestial
+Ozomi Obanen's Crane|Agents in Space|2|Celestial
+Kara Morato's Bustard|Agents in Space|2|Celestial
+Tehjus Otsini's Bustard|Agents in Space|2|Celestial
+Heiraitah Siakkano's Bustard|Agents in Space|2|Celestial
+Rahli Saronu's Impel|Agents in Space|2|Celestial
+Enna Ahruneh's Impel|Agents in Space|2|Celestial
+Desra Nekri's Impel|Agents in Space|2|Celestial
+Galhar Lahara's Impel|Agents in Space|2|Celestial
+Marera Arghun's Prorator|Agents in Space|2|Celestial
+Rasa Jaswelu's Prorator|Agents in Space|2|Celestial
+Yoti Haraisha's Prorator|Agents in Space|2|Celestial
+Nemphad Azbias's Prorator|Agents in Space|2|Celestial
+Goligere Debanelis's Viator|Agents in Space|2|Celestial
+Gomosabin Zerdanne's Viator|Agents in Space|2|Celestial
+Juvoire Sche's Viator|Agents in Space|2|Celestial
+Oguet Aene's Viator|Agents in Space|2|Celestial
+Ravacesel Roque's Viator|Agents in Space|2|Celestial
+Binnie Nigolier's Occator|Agents in Space|2|Celestial
+Grisier Challier's Occator|Agents in Space|2|Celestial
+Mabvrion Atlete's Occator|Agents in Space|2|Celestial
+Baftot Asluzof's Prorator|Agents in Space|2|Celestial
+Horir Firvoon's Prorator|Agents in Space|2|Celestial
+Vianes Ounid's Prorator|Agents in Space|2|Celestial
+Bollen Odridur's Prowler|Agents in Space|2|Celestial
+Golarad Hjom's Prowler|Agents in Space|2|Celestial
+Urandi Krilin's Machariel|Agents in Space|2|Celestial
+Bleur Hein's Machariel|Agents in Space|2|Celestial
+Lunuin Eurek's Machariel|Agents in Space|2|Celestial
+Henara Vern's Sleipnir|Agents in Space|2|Celestial
+Kamal Sharadon's Nightmare|Agents in Space|2|Celestial
+Shusa Lemihonn's Nightmare|Agents in Space|2|Celestial
+Maboula Ahrenon's Phantasm|Agents in Space|2|Celestial
+Rerina Tarit's Phantasm|Agents in Space|2|Celestial
+Avora Alkas's Phantasm|Agents in Space|2|Celestial
+Riluko Hik's Prowler|Agents in Space|2|Celestial
+Uiswin Aurtur's Prowler|Agents in Space|2|Celestial
+Zwod Aden's Prowler|Agents in Space|2|Celestial
+Kakala Ikkawa's Obsidian|Agents in Space|2|Celestial
+Erakki Kihuo's Obsidian|Agents in Space|2|Celestial
+Oduma Pakane's Rokh|Agents in Space|2|Celestial
+Nuomo Kaavunin's Rokh|Agents in Space|2|Celestial
+Lauka Ikunol's Phoenix|Agents in Space|2|Celestial
+Yekti Kimebu's Malediction|Agents in Space|2|Celestial
+Kaymotin Gradance's Oneiros|Agents in Space|2|Celestial
+Wessette Gauze's Oneiros|Agents in Space|2|Celestial
+Bley Oreriel's Myrmidon|Agents in Space|2|Celestial
+Cliene Veine's Dominix|Agents in Space|2|Celestial
+Jarvas Ladier's Megathron|Agents in Space|2|Celestial
+Valedt Midalle's Dominix|Agents in Space|2|Celestial
+Ovon Flac's Megathron|Agents in Space|2|Celestial
+Dars Amene's Brutix|Agents in Space|2|Celestial
+Orain Purcour's Tristan|Agents in Space|2|Celestial
+Marvernois Ruemin's Tristan|Agents in Space|2|Celestial
+Androver Hnill's Tempest|Agents in Space|2|Celestial
+Akelf Ortar's Tempest|Agents in Space|2|Celestial
+Lafuni Oduntra's Tempest|Agents in Space|2|Celestial
+Sigulo Ansa's Nidhoggur|Agents in Space|2|Celestial
+Ilkur Eiren's Nidhoggur|Agents in Space|2|Celestial
+Pondah Shanjih's Malediction|Agents in Space|2|Celestial
+Charit Rish's Baalgorn|Agents in Space|2|Celestial
+Neyan Khahsel's Baalgorn|Agents in Space|2|Celestial
+Dalitat Dakpor's Damnation|Agents in Space|2|Celestial
+Kanmilia Oldit's Tempest|Agents in Space|2|Celestial
+Altan Uigot's Bunker|Agents in Space|2|Celestial
+Frera Elgas's Bunker|Agents in Space|2|Celestial
+Frie Tasmulo's Bunker|Agents in Space|2|Celestial
+Adari Jammalgen's Bunker|Agents in Space|2|Celestial
+Sanderi Ualmun's Bunker|Agents in Space|2|Celestial
+Habad Rokusten's Bunker|Agents in Space|2|Celestial
+Skia Alfota's Bunker|Agents in Space|2|Celestial
+Eget Skovilen's Bunker|Agents in Space|2|Celestial
+Osidei Esama's Bunker|Agents in Space|2|Celestial
+Blique Hazardt's Bunker|Agents in Space|2|Celestial
+Alliot Graferr's Bunker|Agents in Space|2|Celestial
+Mobas Jouey's Bunker|Agents in Space|2|Celestial
+Alon Ahrassine's Bunker|Agents in Space|2|Celestial
+Amatin Chens's Bunker|Agents in Space|2|Celestial
+Fims Artalanche's Bunker|Agents in Space|2|Celestial
+Hana Isourin's Bunker|Agents in Space|2|Celestial
+Carvaire Botesane's Bunker|Agents in Space|2|Celestial
+Oisedia Gync's Bunker|Agents in Space|2|Celestial
+Selate Kalami's Bunker|Agents in Space|2|Celestial
+Jur Zehbani's Bunker|Agents in Space|2|Celestial
+Subin Barama's Bunker|Agents in Space|2|Celestial
+Timafa Esihiz's Bunker|Agents in Space|2|Celestial
+Hatia Madase's Bunker|Agents in Space|2|Celestial
+Odoosh Teroul's Bunker|Agents in Space|2|Celestial
+Matna Meri's Bunker|Agents in Space|2|Celestial
+Juki Khoun's Bunker|Agents in Space|2|Celestial
+Urat Mehrekar's Bunker|Agents in Space|2|Celestial
+Ollen Alulama's Outpost|Agents in Space|2|Celestial
+Ichmari Obesa's Outpost|Agents in Space|2|Celestial
+Kui Hisken's Outpost|Agents in Space|2|Celestial
+Tojawara Saziras's Outpost|Agents in Space|2|Celestial
+Oko Alo's Outpost|Agents in Space|2|Celestial
+Isu Jokaga's Outpost|Agents in Space|2|Celestial
+Ruupas Vonni's Outpost|Agents in Space|2|Celestial
+Ozunoa Poskat's Outpost|Agents in Space|2|Celestial
+Kanouchi Hisama's Outpost|Agents in Space|2|Celestial
+Hazar Arjidsi's Bunker|Agents in Space|2|Celestial
+Sish Iaokih's Bunker|Agents in Space|2|Celestial
+Darabu Harva's Bunker|Agents in Space|2|Celestial
+Derqa Mandame's Bunker|Agents in Space|2|Celestial
+Cimalo Mahnab's Bunker|Agents in Space|2|Celestial
+Bamona Pizteed's Bunker|Agents in Space|2|Celestial
+Rolnia Houmar's Bunker|Agents in Space|2|Celestial
+Migart Anunat's Bunker|Agents in Space|2|Celestial
+Tizeli Reymta's Bunker|Agents in Space|2|Celestial
+Jeremy Tacs's Eagle|Agents in Space|2|Celestial
+Adani Yusev's Raven|Agents in Space|2|Celestial
+Brus Colterne's Megathron|Agents in Space|2|Celestial
+Kitar Ang's Tempest|Agents in Space|2|Celestial
+Lear Evanus' Apocalypse|Agents in Space|2|Celestial
+Tevis Jak's Epithal|Agents in Space|2|Celestial
+Aursa Kunivuri's Tayra|Agents in Space|2|Celestial
+Sinas Egassuo's Chimera|Agents in Space|2|Celestial
+Gian Parele's Pleasure Cruiser|Agents in Space|2|Celestial
+Arsten Takalo's Republic Fleet Tempest|Agents in Space|2|Celestial
+Roineron Aviviere's Epithal|Agents in Space|2|Celestial
+Mourmarie Mone's Helios|Agents in Space|2|Celestial
+Karde Romu 's Armageddon|Agents in Space|2|Celestial
+Riff Hebian's Armageddon|Agents in Space|2|Celestial
+Krethar Mann's Crusader|Agents in Space|2|Celestial
+Cosmos Rapier|Agents in Space|2|Celestial
+Nilf Abruskur's Rapier|Agents in Space|2|Celestial
+Hiva Shesha's Shuttle|Agents in Space|2|Celestial
+Harkan's Apocalypse|Agents in Space|2|Celestial
+Atma Aulato's Falcon|Agents in Space|2|Celestial
+Arment Caute's Lachesis|Agents in Space|2|Celestial
+Yada Vinjivas's Gila|Agents in Space|2|Celestial
+Aton Hordner's Tempest|Agents in Space|2|Celestial
+Arajna Ashia's Arbitrator|Agents in Space|2|Celestial
+Ellar Stin's Dramiel|Agents in Space|2|Celestial
+Plastic Wrap|Freight Container|2|Celestial
+Giant Freight Container|Freight Container|2|Celestial
+Enormous Freight Container|Freight Container|2|Celestial
+Huge Freight Container|Freight Container|2|Celestial
+Large Freight Container|Freight Container|2|Celestial
+Medium Freight Container|Freight Container|2|Celestial
+Small Freight Container|Freight Container|2|Celestial
+Amber Cytoserocin|Harvestable Cloud|2|Celestial
+Golden Cytoserocin|Harvestable Cloud|2|Celestial
+Viridian Cytoserocin|Harvestable Cloud|2|Celestial
+Celadon Cytoserocin|Harvestable Cloud|2|Celestial
+Malachite Cytoserocin|Harvestable Cloud|2|Celestial
+Lime Cytoserocin|Harvestable Cloud|2|Celestial
+Vermillion Cytoserocin|Harvestable Cloud|2|Celestial
+Azure Cytoserocin|Harvestable Cloud|2|Celestial
+Gamboge Cytoserocin|Harvestable Cloud|2|Celestial
+Chartreuse Cytoserocin|Harvestable Cloud|2|Celestial
+Amber Mykoserocin|Harvestable Cloud|2|Celestial
+Azure Mykoserocin|Harvestable Cloud|2|Celestial
+Celadon Mykoserocin|Harvestable Cloud|2|Celestial
+Golden Mykoserocin|Harvestable Cloud|2|Celestial
+Lime Mykoserocin|Harvestable Cloud|2|Celestial
+Malachite Mykoserocin|Harvestable Cloud|2|Celestial
+Vermillion Mykoserocin|Harvestable Cloud|2|Celestial
+Viridian Mykoserocin|Harvestable Cloud|2|Celestial
+Fullerite-C50|Harvestable Cloud|2|Celestial
+Fullerite-C60|Harvestable Cloud|2|Celestial
+Fullerite-C70|Harvestable Cloud|2|Celestial
+Fullerite-C72|Harvestable Cloud|2|Celestial
+Fullerite-C84|Harvestable Cloud|2|Celestial
+Fullerite-C28|Harvestable Cloud|2|Celestial
+Fullerite-C32|Harvestable Cloud|2|Celestial
+Fullerite-C320|Harvestable Cloud|2|Celestial
+Fullerite-C540|Harvestable Cloud|2|Celestial
+Foundation Upgrade Platform|Station Upgrade Platform|2|Celestial
+Pedestal Upgrade Platform|Station Upgrade Platform|2|Celestial
+Monument Upgrade Platform|Station Upgrade Platform|2|Celestial
+Amarr Basic Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Amarr Advanced Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Amarr Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Caldari Basic Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Gallente Basic Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Minmatar Basic Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Caldari Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Caldari Advanced Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Amarr Basic Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Amarr Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Amarr Advanced Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Gallente Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Gallente Advanced Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Minmatar Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Minmatar Advanced Outpost Factory Platform|Station Improvement Platform|2|Celestial
+Gallente Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Gallente Advanced Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Minmatar Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Minmatar Advanced Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Gallente Basic Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Minmatar Basic Outpost Plant Platform|Station Improvement Platform|2|Celestial
+Amarr Basic Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Amarr Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Amarr Advanced Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Caldari Basic Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Caldari Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Caldari Advanced Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Caldari Basic Outpost Research Facility Platform|Station Improvement Platform|2|Celestial
+Caldari Outpost Research Facility Platform|Station Improvement Platform|2|Celestial
+Caldari Advanced Outpost Research Facility Platform|Station Improvement Platform|2|Celestial
+Gallente Basic Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Gallente Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Gallente Advanced Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Minmatar Basic Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Minmatar Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Minmatar Advanced Outpost Laboratory Platform|Station Improvement Platform|2|Celestial
+Amarr Basic Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Amarr Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Amarr Advanced Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Caldari Basic Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Caldari Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Caldari Advanced Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Gallente Basic Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Gallente Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Gallente Advanced Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Minmatar Basic Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Minmatar Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Minmatar Advanced Outpost Refinery Platform|Station Improvement Platform|2|Celestial
+Amarr Basic Outpost Office Platform|Station Improvement Platform|2|Celestial
+Amarr Outpost Office Platform|Station Improvement Platform|2|Celestial
+Amarr Advanced Outpost Office Platform|Station Improvement Platform|2|Celestial
+Caldari Basic Outpost Office Platform|Station Improvement Platform|2|Celestial
+Caldari Outpost Office Platform|Station Improvement Platform|2|Celestial
+Caldari Advanced Outpost Office Platform|Station Improvement Platform|2|Celestial
+Gallente Basic Outpost Office Platform|Station Improvement Platform|2|Celestial
+Gallente Outpost Office Platform|Station Improvement Platform|2|Celestial
+Gallente Advanced Outpost Office Platform|Station Improvement Platform|2|Celestial
+Minmatar Basic Outpost Office Platform|Station Improvement Platform|2|Celestial
+Minmatar Outpost Office Platform|Station Improvement Platform|2|Celestial
+Minmatar Advanced Outpost Office Platform|Station Improvement Platform|2|Celestial
+Fitting Service|Disruptable Station Services|2|Celestial
+Reprocessing Service|Disruptable Station Services|2|Celestial
+Factory Service|Disruptable Station Services|2|Celestial
+Cloning Service|Disruptable Station Services|2|Celestial
+Repair Service|Disruptable Station Services|2|Celestial
+Laboratory Service|Disruptable Station Services|2|Celestial
+Cosmic Anomaly|Cosmic Anomaly|2|Celestial
+Covert Cynosural Field I|Covert Beacon|2|Celestial
+Incursion ship attributes effects Vanguard|Effect Beacon|2|Celestial
+Incursion Effect Assault|Effect Beacon|2|Celestial
+Incursion Effect HQ|Effect Beacon|2|Celestial
+Incursion ship attributes effects Assault |Effect Beacon|2|Celestial
+Incursion ship attributes effects HQ|Effect Beacon|2|Celestial
+Electronic Effect Beacon|Effect Beacon|2|Celestial
+Omni Effect Beacon|Effect Beacon|2|Celestial
+Pulsar Effect Beacon Class 1|Effect Beacon|2|Celestial
+Black Hole Effect Beacon Class 1|Effect Beacon|2|Celestial
+Cataclysmic Variable Effect Beacon Class 1|Effect Beacon|2|Celestial
+Magnetar Effect Beacon Class 1|Effect Beacon|2|Celestial
+Red Giant Beacon Class 1|Effect Beacon|2|Celestial
+Wolf Rayet Effect Beacon Class 1|Effect Beacon|2|Celestial
+Black Hole Effect Beacon Class 2|Effect Beacon|2|Celestial
+Black Hole Effect Beacon Class 3|Effect Beacon|2|Celestial
+Black Hole Effect Beacon Class 4|Effect Beacon|2|Celestial
+Black Hole Effect Beacon Class 5|Effect Beacon|2|Celestial
+Black Hole Effect Beacon Class 6|Effect Beacon|2|Celestial
+Magnetar Effect Beacon Class 2|Effect Beacon|2|Celestial
+Magnetar Effect Beacon Class 3|Effect Beacon|2|Celestial
+Magnetar Effect Beacon Class 4|Effect Beacon|2|Celestial
+Magnetar Effect Beacon Class 5|Effect Beacon|2|Celestial
+Magnetar Effect Beacon Class 6|Effect Beacon|2|Celestial
+Pulsar Effect Beacon Class 2|Effect Beacon|2|Celestial
+Pulsar Effect Beacon Class 3|Effect Beacon|2|Celestial
+Pulsar Effect Beacon Class 4|Effect Beacon|2|Celestial
+Pulsar Effect Beacon Class 5|Effect Beacon|2|Celestial
+Pulsar Effect Beacon Class 6|Effect Beacon|2|Celestial
+Red Giant Beacon Class 2|Effect Beacon|2|Celestial
+Red Giant Beacon Class 3|Effect Beacon|2|Celestial
+Red Giant Beacon Class 4|Effect Beacon|2|Celestial
+Red Giant Beacon Class 5|Effect Beacon|2|Celestial
+Red Giant Beacon Class 6|Effect Beacon|2|Celestial
+Wolf Rayet Effect Beacon Class 2|Effect Beacon|2|Celestial
+Wolf Rayet Effect Beacon Class 3|Effect Beacon|2|Celestial
+Wolf Rayet Effect Beacon Class 4|Effect Beacon|2|Celestial
+Wolf Rayet Effect Beacon Class 5|Effect Beacon|2|Celestial
+Wolf Rayet Effect Beacon Class 6|Effect Beacon|2|Celestial
+Cataclysmic Variable Effect Beacon Class 2|Effect Beacon|2|Celestial
+Cataclysmic Variable Effect Beacon Class 3|Effect Beacon|2|Celestial
+Cataclysmic Variable Effect Beacon Class 6|Effect Beacon|2|Celestial
+Cataclysmic Variable Effect Beacon Class 5|Effect Beacon|2|Celestial
+Cataclysmic Variable Effect Beacon Class 4|Effect Beacon|2|Celestial
+Drifter Incursion 3 to 4 Victory|Effect Beacon|2|Celestial
+Drifter Incursion 5 to 7 Victory|Effect Beacon|2|Celestial
+Drifter Incursion 8+ Victory|Effect Beacon|2|Celestial
+Drifter Incursion 3 to 4 Defeat|Effect Beacon|2|Celestial
+Drifter Incursion 5 to 7 Defeat|Effect Beacon|2|Celestial
+Drifter Incursion 8+ Defeat|Effect Beacon|2|Celestial
+Tournament Resistance Lowering Beacon|Effect Beacon|2|Celestial
+Wormhole Z971|Wormhole|2|Celestial
+Wormhole R943|Wormhole|2|Celestial
+Wormhole X702|Wormhole|2|Celestial
+Wormhole O128|Wormhole|2|Celestial
+Wormhole N432|Wormhole|2|Celestial
+Wormhole M555|Wormhole|2|Celestial
+Wormhole B041|Wormhole|2|Celestial
+Wormhole U319|Wormhole|2|Celestial
+Wormhole B449|Wormhole|2|Celestial
+Wormhole N944|Wormhole|2|Celestial
+Wormhole S199|Wormhole|2|Celestial
+Wormhole A641|Wormhole|2|Celestial
+Wormhole R051|Wormhole|2|Celestial
+Wormhole V283|Wormhole|2|Celestial
+Wormhole H121|Wormhole|2|Celestial
+Wormhole C125|Wormhole|2|Celestial
+Wormhole O883|Wormhole|2|Celestial
+Wormhole M609|Wormhole|2|Celestial
+Wormhole L614|Wormhole|2|Celestial
+Wormhole S804|Wormhole|2|Celestial
+Wormhole N110|Wormhole|2|Celestial
+Wormhole J244|Wormhole|2|Celestial
+Wormhole Z060|Wormhole|2|Celestial
+Wormhole Z647|Wormhole|2|Celestial
+Wormhole D382|Wormhole|2|Celestial
+Wormhole O477|Wormhole|2|Celestial
+Wormhole Y683|Wormhole|2|Celestial
+Wormhole N062|Wormhole|2|Celestial
+Wormhole R474|Wormhole|2|Celestial
+Wormhole B274|Wormhole|2|Celestial
+Wormhole A239|Wormhole|2|Celestial
+Wormhole E545|Wormhole|2|Celestial
+Wormhole V301|Wormhole|2|Celestial
+Wormhole I182|Wormhole|2|Celestial
+Wormhole N968|Wormhole|2|Celestial
+Wormhole T405|Wormhole|2|Celestial
+Wormhole N770|Wormhole|2|Celestial
+Wormhole A982|Wormhole|2|Celestial
+Wormhole S047|Wormhole|2|Celestial
+Wormhole U210|Wormhole|2|Celestial
+Wormhole K346|Wormhole|2|Celestial
+Wormhole P060|Wormhole|2|Celestial
+Wormhole N766|Wormhole|2|Celestial
+Wormhole C247|Wormhole|2|Celestial
+Wormhole X877|Wormhole|2|Celestial
+Wormhole H900|Wormhole|2|Celestial
+Wormhole U574|Wormhole|2|Celestial
+Wormhole D845|Wormhole|2|Celestial
+Wormhole N290|Wormhole|2|Celestial
+Wormhole K329|Wormhole|2|Celestial
+Wormhole Y790|Wormhole|2|Celestial
+Wormhole D364|Wormhole|2|Celestial
+Wormhole M267|Wormhole|2|Celestial
+Wormhole E175|Wormhole|2|Celestial
+Wormhole H296|Wormhole|2|Celestial
+Wormhole V753|Wormhole|2|Celestial
+Wormhole D792|Wormhole|2|Celestial
+Wormhole C140|Wormhole|2|Celestial
+Wormhole Z142|Wormhole|2|Celestial
+Wormhole Q317|Wormhole|2|Celestial
+Wormhole G024|Wormhole|2|Celestial
+Wormhole L477|Wormhole|2|Celestial
+Wormhole Z457|Wormhole|2|Celestial
+Wormhole V911|Wormhole|2|Celestial
+Wormhole W237|Wormhole|2|Celestial
+Wormhole B520|Wormhole|2|Celestial
+Wormhole C391|Wormhole|2|Celestial
+Wormhole C248|Wormhole|2|Celestial
+Wormhole K162|Wormhole|2|Celestial
+QA Wormhole A|Wormhole|2|Celestial
+QA Wormhole B|Wormhole|2|Celestial
+Wormhole E004|Wormhole|2|Celestial
+Wormhole L005|Wormhole|2|Celestial
+Wormhole Z006|Wormhole|2|Celestial
+Wormhole M001|Wormhole|2|Celestial
+Wormhole C008|Wormhole|2|Celestial
+Wormhole G008|Wormhole|2|Celestial
+Wormhole Q003|Wormhole|2|Celestial
+Wormhole T458|Wormhole|2|Celestial
+Wormhole M164|Wormhole|2|Celestial
+Wormhole L031|Wormhole|2|Celestial
+Wormhole Q063|Wormhole|2|Celestial
+Wormhole V898|Wormhole|2|Celestial
+Wormhole E587|Wormhole|2|Celestial
+Wormhole F353|Wormhole|2|Celestial
+Wormhole F135|Wormhole|2|Celestial
+Wormhole A009|Wormhole|2|Celestial
+Wormhole S877|Wormhole|2|Celestial
+Wormhole B735|Wormhole|2|Celestial
+Wormhole V928|Wormhole|2|Celestial
+Wormhole C414|Wormhole|2|Celestial
+Wormhole R259|Wormhole|2|Celestial
+EVE Gate|Secondary Sun|2|Celestial
+Magnetar|Secondary Sun|2|Celestial
+Black Hole|Secondary Sun|2|Celestial
+Red Giant|Secondary Sun|2|Celestial
+Pulsar|Secondary Sun|2|Celestial
+Wolf-Rayet Star|Secondary Sun|2|Celestial
+Cataclysmic Variable|Secondary Sun|2|Celestial
+District Satellite|Satellite|2|Celestial
+Orbital Target|Orbital Target|2|Celestial
+Structure Command Node|Entosis Command Node|2|Celestial
+Caldari Logistics Station|Station|3|Station
+Gallente Military Station|Station|3|Station
+Gallente Station Hub |Station|3|Station
+C-O-1|Station|3|Station
+C-O-2|Station|3|Station
+Caldari Administrative Station|Station|3|Station
+Caldari Research Station|Station|3|Station
+Caldari Trading Station|Station|3|Station
+Amarr Station Hub|Station|3|Station
+Amarr Station Military|Station|3|Station
+Amarr Industrial Station|Station|3|Station
+Amarr Standard Station|Station|3|Station
+Amarr Mining Station|Station|3|Station
+Amarr Research Station|Station|3|Station
+Amarr Trade Post|Station|3|Station
+Station (InterBus)|Station|3|Station
+Minmatar Hub|Station|3|Station
+Minmatar Industrial Station|Station|3|Station
+Minmatar Military Station|Station|3|Station
+Minmatar Mining Station|Station|3|Station
+Minmatar Research Station|Station|3|Station
+Minmatar Station|Station|3|Station
+Minmatar Trade Post|Station|3|Station
+Amarr Citadel|Station|3|Station
+Gallente Research Station|Station|3|Station
+Gallente Trading Hub|Station|3|Station
+Gallente Industrial Station|Station|3|Station
+Gallente Administrative Station|Station|3|Station
+Gallente Logistics Station|Station|3|Station
+Gallente Mining Station|Station|3|Station
+Caldari Station Hub|Station|3|Station
+Caldari Military Station|Station|3|Station
+Caldari Mining Station|Station|3|Station
+Caldari Food Processing Plant Station|Station|3|Station
+Amarr Class A Starport|Station|3|Station
+Amarr Class B Starport|Station|3|Station
+Heaven|Station|3|Station
+Concord Starbase|Station|3|Station
+Dark Amarr Station O|Station|3|Station
+Jovian Construct|Station|3|Station
+Station (Conquerable 1)|Station|3|Station
+Station (Conquerable 2)|Station|3|Station
+Station (Conquerable 3)|Station|3|Station
+Research Outpost|Station|3|Station
+Caldari Research Outpost|Station|3|Station
+Amarr Factory Outpost|Station|3|Station
+Gallente Administrative Outpost|Station|3|Station
+Minmatar Service Outpost|Station|3|Station
+Blood Raider Logistics Outpost|Station|3|Station
+Blood Raider Military Outpost|Station|3|Station
+Blood Raider Trading Outpost|Station|3|Station
+Ishukone Corporation Headquarters|Station|3|Station
+Damaged Amarr Station Hub|Station|3|Station
+Damaged Amarr Military Station |Station|3|Station
+Damaged Amarr Trading Post|Station|3|Station
+Damaged CONCORD Station|Station|3|Station
+Sisters of EVE Logistics Station|Station|3|Station
+Sisters of EVE Industrial Station|Station|3|Station
+Office Folder|Station Services|3|Station
+Office|Station Services|3|Station
+Factory Folder|Station Services|3|Station
+Bantam|Frigate|6|Ship
+Condor|Frigate|6|Ship
+Griffin|Frigate|6|Ship
+Slasher|Frigate|6|Ship
+Probe|Frigate|6|Ship
+Rifter|Frigate|6|Ship
+Executioner|Frigate|6|Ship
+Inquisitor|Frigate|6|Ship
+Tormentor|Frigate|6|Ship
+Navitas|Frigate|6|Ship
+Tristan|Frigate|6|Ship
+Incursus|Frigate|6|Ship
+Gallente Police Ship|Frigate|6|Ship
+Punisher|Frigate|6|Ship
+Breacher|Frigate|6|Ship
+Burst|Frigate|6|Ship
+Minmatar Peacekeeper Ship|Frigate|6|Ship
+Kestrel|Frigate|6|Ship
+Merlin|Frigate|6|Ship
+Heron|Frigate|6|Ship
+Imicus|Frigate|6|Ship
+Atron|Frigate|6|Ship
+Maulus|Frigate|6|Ship
+Devourer|Frigate|6|Ship
+Fury|Frigate|6|Ship
+Medusa|Frigate|6|Ship
+Lynx|Frigate|6|Ship
+Swordspine|Frigate|6|Ship
+Concord Police Frigate|Frigate|6|Ship
+Concord SWAT Frigate|Frigate|6|Ship
+Concord Army Frigate|Frigate|6|Ship
+Concord Special Ops Frigate|Frigate|6|Ship
+Crucifier|Frigate|6|Ship
+Echelon|Frigate|6|Ship
+SOCT 1|Frigate|6|Ship
+SOCT 2|Frigate|6|Ship
+Vigil|Frigate|6|Ship
+Amarr Police Frigate|Frigate|6|Ship
+Cockroach|Frigate|6|Ship
+Gold Magnate|Frigate|6|Ship
+Silver Magnate|Frigate|6|Ship
+Immovable Enigma|Frigate|6|Ship
+Caldari Navy Hookbill|Frigate|6|Ship
+Imperial Navy Slicer|Frigate|6|Ship
+Khanid Navy Frigate|Frigate|6|Ship
+Mordus Frigate|Frigate|6|Ship
+Republic Fleet Firetail|Frigate|6|Ship
+Federation Navy Comet|Frigate|6|Ship
+Succubus|Frigate|6|Ship
+Cruor|Frigate|6|Ship
+Daredevil|Frigate|6|Ship
+Worm|Frigate|6|Ship
+Dramiel|Frigate|6|Ship
+Magnate|Frigate|6|Ship
+Venture|Frigate|6|Ship
+Sukuuvestaa Heron|Frigate|6|Ship
+Inner Zone Shipping Imicus|Frigate|6|Ship
+Sarum Magnate|Frigate|6|Ship
+Vherokior Probe|Frigate|6|Ship
+Tash-Murkon Magnate|Frigate|6|Ship
+Astero|Frigate|6|Ship
+Punisher Kador Edition|Frigate|6|Ship
+Punisher Tash-Murkon Edition|Frigate|6|Ship
+Merlin Nugoeihuvi Edition|Frigate|6|Ship
+Merlin Wiyrkomi Edition|Frigate|6|Ship
+Rifter Nefantar Edition|Frigate|6|Ship
+Rifter Krusual Edition|Frigate|6|Ship
+Incursus Aliastra Edition|Frigate|6|Ship
+Incursus Inner Zone Shipping Edition|Frigate|6|Ship
+Police Pursuit Comet|Frigate|6|Ship
+Garmur|Frigate|6|Ship
+Tristan Quafe Edition|Frigate|6|Ship
+Crucifier Navy Issue|Frigate|6|Ship
+Vigil Fleet Issue|Frigate|6|Ship
+Griffin Navy Issue|Frigate|6|Ship
+Maulus Navy Issue|Frigate|6|Ship
+Osprey|Cruiser|6|Ship
+Caracal|Cruiser|6|Ship
+Stabber|Cruiser|6|Ship
+Moa|Cruiser|6|Ship
+Maller|Cruiser|6|Ship
+Augoror|Cruiser|6|Ship
+Vexor|Cruiser|6|Ship
+Thorax|Cruiser|6|Ship
+Arbitrator|Cruiser|6|Ship
+Rupture|Cruiser|6|Ship
+Bellicose|Cruiser|6|Ship
+Scythe|Cruiser|6|Ship
+Blackbird|Cruiser|6|Ship
+Celestis|Cruiser|6|Ship
+Exequror|Cruiser|6|Ship
+Opux Luxury Yacht|Cruiser|6|Ship
+Concord Police Cruiser|Cruiser|6|Ship
+Omen|Cruiser|6|Ship
+Guardian-Vexor|Cruiser|6|Ship
+Caracal Navy Issue|Cruiser|6|Ship
+Omen Navy Issue|Cruiser|6|Ship
+Stabber Fleet Issue|Cruiser|6|Ship
+Gila|Cruiser|6|Ship
+Phantasm|Cruiser|6|Ship
+Cynabal|Cruiser|6|Ship
+Vigilant|Cruiser|6|Ship
+Vexor Navy Issue|Cruiser|6|Ship
+Ashimmu|Cruiser|6|Ship
+Opux Dragoon Yacht|Cruiser|6|Ship
+Scythe Fleet Issue|Cruiser|6|Ship
+Augoror Navy Issue|Cruiser|6|Ship
+Osprey Navy Issue|Cruiser|6|Ship
+Exequror Navy Issue|Cruiser|6|Ship
+Stratios|Cruiser|6|Ship
+Stratios Emergency Responder|Cruiser|6|Ship
+Omen Kador Edition|Cruiser|6|Ship
+Omen Tash-Murkon Edition|Cruiser|6|Ship
+Caracal Nugoeihuvi Edition|Cruiser|6|Ship
+Caracal Wiyrkomi Edition|Cruiser|6|Ship
+Stabber Nefantar Edition|Cruiser|6|Ship
+Stabber Krusual Edition|Cruiser|6|Ship
+Thorax Aliastra Edition|Cruiser|6|Ship
+Thorax Inner Zone Shipping Edition|Cruiser|6|Ship
+Orthrus|Cruiser|6|Ship
+Vexor Quafe Edition|Cruiser|6|Ship
+???YC117????|Cruiser|6|Ship
+Victorieux Luxury Yacht|Cruiser|6|Ship
+Raven|Battleship|6|Ship
+Tempest|Battleship|6|Ship
+Scorpion|Battleship|6|Ship
+Megathron|Battleship|6|Ship
+Apocalypse|Battleship|6|Ship
+Armageddon|Battleship|6|Ship
+Typhoon|Battleship|6|Ship
+Dominix|Battleship|6|Ship
+Concord Police Battleship|Battleship|6|Ship
+Concord Special Ops Battleship|Battleship|6|Ship
+Concord SWAT Battleship|Battleship|6|Ship
+Concord Army Battleship|Battleship|6|Ship
+Scorpion Ishukone Watch|Battleship|6|Ship
+Apocalypse Imperial Issue|Battleship|6|Ship
+Armageddon Imperial Issue|Battleship|6|Ship
+Megathron Federate Issue|Battleship|6|Ship
+Raven Navy Issue|Battleship|6|Ship
+Apocalypse Navy Issue|Battleship|6|Ship
+Megathron Navy Issue|Battleship|6|Ship
+Tempest Fleet Issue|Battleship|6|Ship
+Nightmare|Battleship|6|Ship
+Machariel|Battleship|6|Ship
+Vindicator|Battleship|6|Ship
+Rattlesnake|Battleship|6|Ship
+Bhaalgorn|Battleship|6|Ship
+Rokh|Battleship|6|Ship
+Hyperion|Battleship|6|Ship
+Abaddon|Battleship|6|Ship
+Maelstrom|Battleship|6|Ship
+Raven State Issue|Battleship|6|Ship
+Tempest Tribal Issue|Battleship|6|Ship
+Armageddon Navy Issue|Battleship|6|Ship
+Dominix Navy Issue|Battleship|6|Ship
+Scorpion Navy Issue|Battleship|6|Ship
+Typhoon Fleet Issue|Battleship|6|Ship
+Nestor|Battleship|6|Ship
+Abaddon Tash-Murkon Edition|Battleship|6|Ship
+Abaddon Kador Edition|Battleship|6|Ship
+Rokh Nugoeihuvi Edition|Battleship|6|Ship
+Rokh Wiyrkomi Edition|Battleship|6|Ship
+Maelstrom Nefantar Edition|Battleship|6|Ship
+Maelstrom Krusual Edition|Battleship|6|Ship
+Hyperion Aliastra Edition|Battleship|6|Ship
+Hyperion Inner Zone Shipping Edition|Battleship|6|Ship
+Barghest|Battleship|6|Ship
+Megathron Quafe Edition|Battleship|6|Ship
+Rattlesnake Victory Edition|Battleship|6|Ship
+Apocalypse Blood Raider Edition|Battleship|6|Ship
+Apocalypse Kador Edition|Battleship|6|Ship
+Apocalypse Tash-Murkon Edition|Battleship|6|Ship
+Raven Guristas Edition|Battleship|6|Ship
+Raven Kaalakiota Edition|Battleship|6|Ship
+Raven Nugoeihuvi Edition|Battleship|6|Ship
+Megathron Police Edition|Battleship|6|Ship
+Megathron Inner Zone Shipping Edition|Battleship|6|Ship
+Tempest Justice Edition|Battleship|6|Ship
+Tempest Krusual Edition|Battleship|6|Ship
+Tempest Nefantar Edition|Battleship|6|Ship
+Dominix Quafe Edition|Battleship|6|Ship
+?????YC117????|Battleship|6|Ship
+?????YC117????|Battleship|6|Ship
+????YC117????|Battleship|6|Ship
+????YC117????|Battleship|6|Ship
+??????YC117????|Battleship|6|Ship
+?????YC117????|Battleship|6|Ship
+???YC117????|Battleship|6|Ship
+???YC117????|Battleship|6|Ship
+Badger|Industrial|6|Ship
+Tayra|Industrial|6|Ship
+Nereus|Industrial|6|Ship
+Hoarder|Industrial|6|Ship
+Mammoth|Industrial|6|Ship
+Wreathe|Industrial|6|Ship
+Kryos|Industrial|6|Ship
+Epithal|Industrial|6|Ship
+Miasmos|Industrial|6|Ship
+Iteron Mark V|Industrial|6|Ship
+Bestower|Industrial|6|Ship
+Primae|Industrial|6|Ship
+Noctis|Industrial|6|Ship
+Miasmos Quafe Ultra Edition|Industrial|6|Ship
+Miasmos Quafe Ultramarine Edition|Industrial|6|Ship
+Sigil|Industrial|6|Ship
+Miasmos Amastris Edition|Industrial|6|Ship
+Iteron Inner Zone Shipping Edition|Industrial|6|Ship
+Tayra Wiyrkomi Edition|Industrial|6|Ship
+Mammoth Nefantar Edition|Industrial|6|Ship
+Bestower Tash-Murkon Edition|Industrial|6|Ship
+Capsule|Capsule|6|Ship
+Capsule - Genolution 'Auroral' 197-variant|Capsule|6|Ship
+Erebus|Titan|6|Ship
+Leviathan|Titan|6|Ship
+Avatar|Titan|6|Ship
+Ragnarok|Titan|6|Ship
+Caldari Shuttle|Shuttle|6|Ship
+Gallente Shuttle|Shuttle|6|Ship
+Minmatar Shuttle|Shuttle|6|Ship
+Amarr Shuttle|Shuttle|6|Ship
+Goru's Shuttle|Shuttle|6|Ship
+Guristas Shuttle|Shuttle|6|Ship
+Civilian Amarr Shuttle|Shuttle|6|Ship
+Civilian Caldari Shuttle|Shuttle|6|Ship
+Civilian Gallente Shuttle|Shuttle|6|Ship
+Civilian Minmatar Shuttle|Shuttle|6|Ship
+Apotheosis|Shuttle|6|Ship
+Amarr Media Shuttle|Shuttle|6|Ship
+Caldari Media Shuttle|Shuttle|6|Ship
+Gallente Media Shuttle|Shuttle|6|Ship
+Minmatar Media Shuttle|Shuttle|6|Ship
+InterBus Shuttle|Shuttle|6|Ship
+Leopard|Shuttle|6|Ship
+Council Diplomatic Shuttle|Shuttle|6|Ship
+Reaper|Rookie ship|6|Ship
+Impairor|Rookie ship|6|Ship
+Ibis|Rookie ship|6|Ship
+Velator|Rookie ship|6|Ship
+Immolator|Rookie ship|6|Ship
+Echo|Rookie ship|6|Ship
+Polaris Enigma Frigate|Rookie ship|6|Ship
+Polaris Inspector Frigate|Rookie ship|6|Ship
+Polaris Centurion TEST|Rookie ship|6|Ship
+Polaris Legatus Frigate|Rookie ship|6|Ship
+Polaris Centurion Frigate|Rookie ship|6|Ship
+Hematos|Rookie ship|6|Ship
+Taipan|Rookie ship|6|Ship
+Violator|Rookie ship|6|Ship
+Utu|Assault Frigate|6|Ship
+Malice|Assault Frigate|6|Ship
+Vengeance|Assault Frigate|6|Ship
+Wolf|Assault Frigate|6|Ship
+Blade|Assault Frigate|6|Ship
+Erinye|Assault Frigate|6|Ship
+Hawk|Assault Frigate|6|Ship
+Harpy|Assault Frigate|6|Ship
+Gatherer|Assault Frigate|6|Ship
+Kishar|Assault Frigate|6|Ship
+Retribution|Assault Frigate|6|Ship
+Jaguar|Assault Frigate|6|Ship
+Dagger|Assault Frigate|6|Ship
+Ishkur|Assault Frigate|6|Ship
+Enyo|Assault Frigate|6|Ship
+Freki|Assault Frigate|6|Ship
+Cambion|Assault Frigate|6|Ship
+Adrestia|Heavy Assault Cruiser|6|Ship
+Vangel|Heavy Assault Cruiser|6|Ship
+Cerberus|Heavy Assault Cruiser|6|Ship
+Vagabond|Heavy Assault Cruiser|6|Ship
+Zealot|Heavy Assault Cruiser|6|Ship
+Ishtar|Heavy Assault Cruiser|6|Ship
+Eagle|Heavy Assault Cruiser|6|Ship
+Muninn|Heavy Assault Cruiser|6|Ship
+Sacrilege|Heavy Assault Cruiser|6|Ship
+Deimos|Heavy Assault Cruiser|6|Ship
+Mimir|Heavy Assault Cruiser|6|Ship
+???YC117????|Heavy Assault Cruiser|6|Ship
+????YC117????|Heavy Assault Cruiser|6|Ship
+Bustard|Deep Space Transport|6|Ship
+Occator|Deep Space Transport|6|Ship
+Mastodon|Deep Space Transport|6|Ship
+Impel|Deep Space Transport|6|Ship
+Gnosis|Combat Battlecruiser|6|Ship
+Ferox|Combat Battlecruiser|6|Ship
+Brutix|Combat Battlecruiser|6|Ship
+Cyclone|Combat Battlecruiser|6|Ship
+Prophecy|Combat Battlecruiser|6|Ship
+Harbinger|Combat Battlecruiser|6|Ship
+Drake|Combat Battlecruiser|6|Ship
+Myrmidon|Combat Battlecruiser|6|Ship
+Hurricane|Combat Battlecruiser|6|Ship
+Brutix Navy Issue|Combat Battlecruiser|6|Ship
+Drake Navy Issue|Combat Battlecruiser|6|Ship
+Harbinger Navy Issue|Combat Battlecruiser|6|Ship
+Hurricane Fleet Issue|Combat Battlecruiser|6|Ship
+Brutix Serpentis Edition|Combat Battlecruiser|6|Ship
+Cyclone Thukker Tribe Edition|Combat Battlecruiser|6|Ship
+Ferox Guristas Edition|Combat Battlecruiser|6|Ship
+Prophecy Blood Raiders Edition|Combat Battlecruiser|6|Ship
+???YC117????|Combat Battlecruiser|6|Ship
+Coercer|Destroyer|6|Ship
+Cormorant|Destroyer|6|Ship
+Catalyst|Destroyer|6|Ship
+Thrasher|Destroyer|6|Ship
+InterBus Catalyst|Destroyer|6|Ship
+Intaki Syndicate Catalyst|Destroyer|6|Ship
+Inner Zone Shipping Catalyst|Destroyer|6|Ship
+Quafe Catalyst|Destroyer|6|Ship
+Aliastra Catalyst|Destroyer|6|Ship
+Algos|Destroyer|6|Ship
+Dragoon|Destroyer|6|Ship
+Corax|Destroyer|6|Ship
+Talwar|Destroyer|6|Ship
+Nefantar Thrasher|Destroyer|6|Ship
+Catalyst Serpentis Edition|Destroyer|6|Ship
+Coercer Blood Raiders Edition|Destroyer|6|Ship
+Cormorant Guristas Edition|Destroyer|6|Ship
+Thrasher Thukker Tribe Edition|Destroyer|6|Ship
+Covetor|Mining Barge|6|Ship
+Retriever|Mining Barge|6|Ship
+Procurer|Mining Barge|6|Ship
+Revelation|Dreadnought|6|Ship
+Naglfar|Dreadnought|6|Ship
+Moros|Dreadnought|6|Ship
+Phoenix|Dreadnought|6|Ship
+Moros Interbus Edition|Dreadnought|6|Ship
+Naglfar Justice Edition|Dreadnought|6|Ship
+Phoenix Wiyrkomi Edition|Dreadnought|6|Ship
+Revelation Sarum Edition|Dreadnought|6|Ship
+Providence|Freighter|6|Ship
+Charon|Freighter|6|Ship
+Obelisk|Freighter|6|Ship
+Fenrir|Freighter|6|Ship
+Bowhead|Freighter|6|Ship
+Eos|Command Ship|6|Ship
+Sleipnir|Command Ship|6|Ship
+Vulture|Command Ship|6|Ship
+Absolution|Command Ship|6|Ship
+Astarte|Command Ship|6|Ship
+Claymore|Command Ship|6|Ship
+Nighthawk|Command Ship|6|Ship
+Damnation|Command Ship|6|Ship
+Heretic|Interdictor|6|Ship
+Sabre|Interdictor|6|Ship
+Eris|Interdictor|6|Ship
+Flycatcher|Interdictor|6|Ship
+Hulk|Exhumer|6|Ship
+Skiff|Exhumer|6|Ship
+Mackinaw|Exhumer|6|Ship
+Mackinaw ORE Development Edition|Exhumer|6|Ship
+Archon|Carrier|6|Ship
+Thanatos|Carrier|6|Ship
+Chimera|Carrier|6|Ship
+Nidhoggur|Carrier|6|Ship
+Revenant|Supercarrier|6|Ship
+Nation|Supercarrier|6|Ship
+Hel|Supercarrier|6|Ship
+Nyx|Supercarrier|6|Ship
+Wyvern|Supercarrier|6|Ship
+Aeon|Supercarrier|6|Ship
+Helios|Covert Ops|6|Ship
+Cheetah|Covert Ops|6|Ship
+Anathema|Covert Ops|6|Ship
+Buzzard|Covert Ops|6|Ship
+Chremoas|Covert Ops|6|Ship
+Crow|Interceptor|6|Ship
+Raptor|Interceptor|6|Ship
+Crusader|Interceptor|6|Ship
+Malediction|Interceptor|6|Ship
+Claw|Interceptor|6|Ship
+Stiletto|Interceptor|6|Ship
+Taranis|Interceptor|6|Ship
+Ares|Interceptor|6|Ship
+Whiptail|Interceptor|6|Ship
+Imp|Interceptor|6|Ship
+Scimitar|Logistics|6|Ship
+Basilisk|Logistics|6|Ship
+Guardian|Logistics|6|Ship
+Oneiros|Logistics|6|Ship
+Etana|Logistics|6|Ship
+Falcon|Force Recon Ship|6|Ship
+Rapier|Force Recon Ship|6|Ship
+Pilgrim|Force Recon Ship|6|Ship
+Arazu|Force Recon Ship|6|Ship
+Moracha|Force Recon Ship|6|Ship
+Chameleon|Force Recon Ship|6|Ship
+Nemesis|Stealth Bomber|6|Ship
+Manticore|Stealth Bomber|6|Ship
+Hound|Stealth Bomber|6|Ship
+Purifier|Stealth Bomber|6|Ship
+Rorqual|Capital Industrial Ship|6|Ship
+Rorqual ORE Development Edition|Capital Industrial Ship|6|Ship
+Keres|Electronic Attack Ship|6|Ship
+Sentinel|Electronic Attack Ship|6|Ship
+Kitsune|Electronic Attack Ship|6|Ship
+Hyena|Electronic Attack Ship|6|Ship
+Onyx|Heavy Interdiction Cruiser|6|Ship
+Broadsword|Heavy Interdiction Cruiser|6|Ship
+Devoter|Heavy Interdiction Cruiser|6|Ship
+Phobos|Heavy Interdiction Cruiser|6|Ship
+Fiend|Heavy Interdiction Cruiser|6|Ship
+Redeemer|Black Ops|6|Ship
+Sin|Black Ops|6|Ship
+Widow|Black Ops|6|Ship
+Panther|Black Ops|6|Ship
+Paladin|Marauder|6|Ship
+Kronos|Marauder|6|Ship
+Vargur|Marauder|6|Ship
+Golem|Marauder|6|Ship
+Paladin Blood Raider Edition|Marauder|6|Ship
+Paladin Kador Edition|Marauder|6|Ship
+Paladin Tash-Murkon Edition|Marauder|6|Ship
+Golem Guristas Edition|Marauder|6|Ship
+Golem Kaalakiota Edition|Marauder|6|Ship
+Golem Nugoeihuvi Edition|Marauder|6|Ship
+Kronos Police Edition|Marauder|6|Ship
+Kronos Quafe Edition|Marauder|6|Ship
+Kronos Inner Zone Shipping Edition|Marauder|6|Ship
+Vargur Justice Edition|Marauder|6|Ship
+Vargur Krusual Edition|Marauder|6|Ship
+Vargur Nefantar Edition|Marauder|6|Ship
+Rhea|Jump Freighter|6|Ship
+Nomad|Jump Freighter|6|Ship
+Anshar|Jump Freighter|6|Ship
+Ark|Jump Freighter|6|Ship
+Rook|Combat Recon Ship|6|Ship
+Huginn|Combat Recon Ship|6|Ship
+Lachesis|Combat Recon Ship|6|Ship
+Curse|Combat Recon Ship|6|Ship
+Orca|Industrial Command Ship|6|Ship
+Orca ORE Development Edition|Industrial Command Ship|6|Ship
+Tengu|Strategic Cruiser|6|Ship
+Legion|Strategic Cruiser|6|Ship
+Proteus|Strategic Cruiser|6|Ship
+Loki|Strategic Cruiser|6|Ship
+Zephyr|Prototype Exploration Ship|6|Ship
+Oracle|Attack Battlecruiser|6|Ship
+Naga|Attack Battlecruiser|6|Ship
+Talos|Attack Battlecruiser|6|Ship
+Tornado|Attack Battlecruiser|6|Ship
+Crane|Blockade Runner|6|Ship
+Prorator|Blockade Runner|6|Ship
+Prowler|Blockade Runner|6|Ship
+Viator|Blockade Runner|6|Ship
+Prospect|Expedition Frigate|6|Ship
+Endurance|Expedition Frigate|6|Ship
+Confessor|Tactical Destroyer|6|Ship
+Svipul|Tactical Destroyer|6|Ship
+Jackdaw|Tactical Destroyer|6|Ship
+Hecate|Tactical Destroyer|6|Ship
+Deacon|Logistics Frigate|6|Ship
+Kirin|Logistics Frigate|6|Ship
+Thalia|Logistics Frigate|6|Ship
+Scalpel|Logistics Frigate|6|Ship
+Bifrost|Command Destroyers|6|Ship
+Pontifex|Command Destroyers|6|Ship
+Stork|Command Destroyers|6|Ship
+Magus|Command Destroyers|6|Ship
+Apostle|Force Auxiliary|6|Ship
+Minokawa|Force Auxiliary|6|Ship
+Lif|Force Auxiliary|6|Ship
+Sekhmet|Force Auxiliary|6|Ship
+Wasp I|Combat Drone|18|Drone
+Infiltrator I|Combat Drone|18|Drone
+Infiltrator II|Combat Drone|18|Drone
+Hammerhead I|Combat Drone|18|Drone
+Hammerhead II|Combat Drone|18|Drone
+Praetor I|Combat Drone|18|Drone
+Praetor II|Combat Drone|18|Drone
+Acolyte I|Combat Drone|18|Drone
+Acolyte II|Combat Drone|18|Drone
+Wasp II|Combat Drone|18|Drone
+Ogre I|Combat Drone|18|Drone
+Ogre II|Combat Drone|18|Drone
+Hobgoblin I|Combat Drone|18|Drone
+Hobgoblin II|Combat Drone|18|Drone
+Hornet I|Combat Drone|18|Drone
+Hornet II|Combat Drone|18|Drone
+Berserker I|Combat Drone|18|Drone
+Berserker II|Combat Drone|18|Drone
+Warrior I|Combat Drone|18|Drone
+Warrior II|Combat Drone|18|Drone
+Tutorial Attack Drone|Combat Drone|18|Drone
+Vespa I|Combat Drone|18|Drone
+Valkyrie I|Combat Drone|18|Drone
+Hellhound I|Combat Drone|18|Drone
+Vespa II|Combat Drone|18|Drone
+Valkyrie II|Combat Drone|18|Drone
+Curator I|Combat Drone|18|Drone
+Warden I|Combat Drone|18|Drone
+Garde I|Combat Drone|18|Drone
+Bouncer I|Combat Drone|18|Drone
+Warden II|Combat Drone|18|Drone
+Garde II|Combat Drone|18|Drone
+Curator II|Combat Drone|18|Drone
+Bouncer II|Combat Drone|18|Drone
+'Integrated' Acolyte|Combat Drone|18|Drone
+'Augmented' Acolyte|Combat Drone|18|Drone
+'Integrated' Berserker|Combat Drone|18|Drone
+'Augmented' Berserker|Combat Drone|18|Drone
+'Integrated' Hammerhead|Combat Drone|18|Drone
+'Augmented' Hammerhead|Combat Drone|18|Drone
+'Integrated' Hobgoblin|Combat Drone|18|Drone
+'Augmented' Hobgoblin|Combat Drone|18|Drone
+'Integrated' Hornet|Combat Drone|18|Drone
+'Augmented' Hornet|Combat Drone|18|Drone
+'Integrated' Infiltrator|Combat Drone|18|Drone
+'Augmented' Infiltrator|Combat Drone|18|Drone
+'Integrated' Ogre|Combat Drone|18|Drone
+'Augmented' Ogre|Combat Drone|18|Drone
+'Integrated' Praetor|Combat Drone|18|Drone
+'Augmented' Praetor|Combat Drone|18|Drone
+'Integrated' Valkyrie|Combat Drone|18|Drone
+'Augmented' Valkyrie|Combat Drone|18|Drone
+'Integrated' Vespa|Combat Drone|18|Drone
+'Augmented' Vespa|Combat Drone|18|Drone
+'Integrated' Warrior|Combat Drone|18|Drone
+'Augmented' Warrior|Combat Drone|18|Drone
+'Integrated' Wasp|Combat Drone|18|Drone
+'Augmented' Wasp|Combat Drone|18|Drone
+Imperial Navy Acolyte|Combat Drone|18|Drone
+Imperial Navy Infiltrator|Combat Drone|18|Drone
+Imperial Navy Curator|Combat Drone|18|Drone
+Imperial Navy Praetor|Combat Drone|18|Drone
+Caldari Navy Hornet|Combat Drone|18|Drone
+Caldari Navy Vespa|Combat Drone|18|Drone
+Caldari Navy Wasp|Combat Drone|18|Drone
+Caldari Navy Warden|Combat Drone|18|Drone
+Federation Navy Hobgoblin|Combat Drone|18|Drone
+Federation Navy Hammerhead|Combat Drone|18|Drone
+Federation Navy Ogre|Combat Drone|18|Drone
+Federation Navy Garde|Combat Drone|18|Drone
+Republic Fleet Warrior|Combat Drone|18|Drone
+Republic Fleet Valkyrie|Combat Drone|18|Drone
+Republic Fleet Berserker|Combat Drone|18|Drone
+Republic Fleet Bouncer|Combat Drone|18|Drone
+Civilian Hobgoblin|Combat Drone|18|Drone
+Gecko|Combat Drone|18|Drone
+Civilian Mining Drone|Mining Drone|18|Drone
+Harvester Mining Drone|Mining Drone|18|Drone
+Mining Drone I|Mining Drone|18|Drone
+Mining Drone - Improved|Mining Drone|18|Drone
+Mining Drone II|Mining Drone|18|Drone
+Mining Drone - Elite|Mining Drone|18|Drone
+Repair Drone|Repair Drone|18|Drone
+Unanchoring Drone|Unanchoring Drone|18|Drone
+Praetor EV-900|Energy Neutralizer Drone|18|Drone
+Acolyte EV-300|Energy Neutralizer Drone|18|Drone
+Infiltrator EV-600|Energy Neutralizer Drone|18|Drone
+Warp Scrambling Drone|Warp Scrambling Drone|18|Drone
+10mn webscramblifying Drone|Warp Scrambling Drone|18|Drone
+Fighter Uno|Fighter Drone|18|Drone
+Templar|Fighter Drone|18|Drone
+Dragonfly|Fighter Drone|18|Drone
+Firbolg|Fighter Drone|18|Drone
+Einherji|Fighter Drone|18|Drone
+FA-14 Templar|Fighter Drone|18|Drone
+Wasp EC-900|Electronic Warfare Drone|18|Drone
+Ogre SD-900|Electronic Warfare Drone|18|Drone
+Praetor TD-900|Electronic Warfare Drone|18|Drone
+Berserker TP-900|Electronic Warfare Drone|18|Drone
+Vespa EC-600|Electronic Warfare Drone|18|Drone
+Hornet EC-300|Electronic Warfare Drone|18|Drone
+Hammerhead SD-600|Electronic Warfare Drone|18|Drone
+Hobgoblin SD-300|Electronic Warfare Drone|18|Drone
+Valkyrie TP-600|Electronic Warfare Drone|18|Drone
+Warrior TP-300|Electronic Warfare Drone|18|Drone
+Infiltrator TD-600|Electronic Warfare Drone|18|Drone
+Acolyte TD-300|Electronic Warfare Drone|18|Drone
+Heavy Shield Maintenance Bot I|Logistic Drone|18|Drone
+Heavy Armor Maintenance Bot I|Logistic Drone|18|Drone
+Medium Armor Maintenance Bot I|Logistic Drone|18|Drone
+Light Armor Maintenance Bot I|Logistic Drone|18|Drone
+Medium Shield Maintenance Bot I|Logistic Drone|18|Drone
+Light Shield Maintenance Bot I|Logistic Drone|18|Drone
+Heavy Armor Maintenance Bot II|Logistic Drone|18|Drone
+Heavy Shield Maintenance Bot II|Logistic Drone|18|Drone
+Light Armor Maintenance Bot II|Logistic Drone|18|Drone
+Light Shield Maintenance Bot II|Logistic Drone|18|Drone
+Medium Armor Maintenance Bot II|Logistic Drone|18|Drone
+Medium Shield Maintenance Bot II|Logistic Drone|18|Drone
+Heavy Hull Maintenance Bot I|Logistic Drone|18|Drone
+Medium Hull Maintenance Bot I|Logistic Drone|18|Drone
+Light Hull Maintenance Bot I|Logistic Drone|18|Drone
+Heavy Hull Maintenance Bot II|Logistic Drone|18|Drone
+Medium Hull Maintenance Bot II|Logistic Drone|18|Drone
+Light Hull Maintenance Bot II|Logistic Drone|18|Drone
+Berserker SW-900|Stasis Webifying Drone|18|Drone
+Valkyrie SW-600|Stasis Webifying Drone|18|Drone
+Warrior SW-300|Stasis Webifying Drone|18|Drone
+Shadow|Fighter Bomber|18|Drone
+Cyclops|Fighter Bomber|18|Drone
+Malleus|Fighter Bomber|18|Drone
+Tyrfing|Fighter Bomber|18|Drone
+Mantis|Fighter Bomber|18|Drone
+Salvage Drone I|Salvage Drone|18|Drone
+Mobile Small Warp Disruptor I|Mobile Warp Disruptor|22|Deployable
+Mobile Medium Warp Disruptor I|Mobile Warp Disruptor|22|Deployable
+Mobile Large Warp Disruptor I|Mobile Warp Disruptor|22|Deployable
+Tournament Bubble TEST|Mobile Warp Disruptor|22|Deployable
+Mobile Large Warp Disruptor II|Mobile Warp Disruptor|22|Deployable
+Mobile Medium Warp Disruptor II|Mobile Warp Disruptor|22|Deployable
+Mobile Small Warp Disruptor II|Mobile Warp Disruptor|22|Deployable
+Syndicate Mobile Large Warp Disruptor|Mobile Warp Disruptor|22|Deployable
+Syndicate Mobile Medium Warp Disruptor|Mobile Warp Disruptor|22|Deployable
+Syndicate Mobile Small Warp Disruptor|Mobile Warp Disruptor|22|Deployable
+Mobile Large Jump Disruptor I|Mobile Jump Disruptor|22|Deployable
+Mobile Depot|Mobile Depot|22|Deployable
+'Wetu' Mobile Depot|Mobile Depot|22|Deployable
+'Yurt' Mobile Depot|Mobile Depot|22|Deployable
+Small Mobile Siphon Unit|Mobile Siphon Unit|22|Deployable
+Medium Mobile Siphon Unit|Mobile Siphon Unit|22|Deployable
+Large Mobile Siphon Unit|Mobile Siphon Unit|22|Deployable
+Small Mobile 'Hybrid' Siphon Unit|Mobile Siphon Unit|22|Deployable
+Small Mobile 'Rote' Siphon Unit|Mobile Siphon Unit|22|Deployable
+Mobile Cynosural Inhibitor|Mobile Cyno Inhibitor|22|Deployable
+Mobile Tractor Unit|Mobile Tractor Unit|22|Deployable
+'Packrat' Mobile Tractor Unit|Mobile Tractor Unit|22|Deployable
+'Magpie' Mobile Tractor Unit|Mobile Tractor Unit|22|Deployable
+Amarr Encounter Surveillance System|Encounter Surveillance System|22|Deployable
+Caldari Encounter Surveillance System|Encounter Surveillance System|22|Deployable
+Gallente Encounter Surveillance System|Encounter Surveillance System|22|Deployable
+Minmatar Encounter Surveillance System|Encounter Surveillance System|22|Deployable
+Mobile Decoy Unit|Mobile Decoy Unit|22|Deployable
+Mobile Scan Inhibitor|Mobile Scan Inhibitor|22|Deployable
+Tournament Practice Unit|Mobile Scan Inhibitor|22|Deployable
+Mobile Micro Jump Unit|Mobile Micro Jump Unit|22|Deployable
+Tournament Micro Jump Unit|Mobile Micro Jump Unit|22|Deployable
+Mobile Competitive Vault|Mobile Vault|22|Deployable
+Reprocessing Array|Reprocessing Array|23|Starbase
+Intensive Reprocessing Array|Reprocessing Array|23|Starbase
+Ship Maintenance Array|Ship Maintenance Array|23|Starbase
+X-Large Ship Maintenance Array|Ship Maintenance Array|23|Starbase
+Medium Storage Array|Mobile Storage|23|Starbase
+Small Storage Array|Mobile Storage|23|Starbase
+QA Fuel Control Tower|Control Tower|23|Starbase
+Amarr Control Tower|Control Tower|23|Starbase
+Gallente Control Tower|Control Tower|23|Starbase
+Caldari Control Tower|Control Tower|23|Starbase
+Minmatar Control Tower|Control Tower|23|Starbase
+QA Control Tower|Control Tower|23|Starbase
+Amarr Control Tower Medium|Control Tower|23|Starbase
+Amarr Control Tower Small|Control Tower|23|Starbase
+Caldari Control Tower Medium|Control Tower|23|Starbase
+Caldari Control Tower Small|Control Tower|23|Starbase
+Gallente Control Tower Medium|Control Tower|23|Starbase
+Gallente Control Tower Small|Control Tower|23|Starbase
+Minmatar Control Tower Medium|Control Tower|23|Starbase
+Minmatar Control Tower Small|Control Tower|23|Starbase
+Blood Control Tower|Control Tower|23|Starbase
+Dark Blood Control Tower|Control Tower|23|Starbase
+Guristas Control Tower|Control Tower|23|Starbase
+Dread Guristas Control Tower|Control Tower|23|Starbase
+Serpentis Control Tower|Control Tower|23|Starbase
+Shadow Control Tower|Control Tower|23|Starbase
+Angel Control Tower|Control Tower|23|Starbase
+Domination Control Tower|Control Tower|23|Starbase
+Blood Control Tower Medium|Control Tower|23|Starbase
+Dark Blood Control Tower Medium|Control Tower|23|Starbase
+Blood Control Tower Small|Control Tower|23|Starbase
+Dark Blood Control Tower Small|Control Tower|23|Starbase
+Guristas Control Tower Medium|Control Tower|23|Starbase
+Dread Guristas Control Tower Medium|Control Tower|23|Starbase
+Guristas Control Tower Small|Control Tower|23|Starbase
+Dread Guristas Control Tower Small|Control Tower|23|Starbase
+Serpentis Control Tower Medium|Control Tower|23|Starbase
+Shadow Control Tower Medium|Control Tower|23|Starbase
+Serpentis Control Tower Small|Control Tower|23|Starbase
+Shadow Control Tower Small|Control Tower|23|Starbase
+Angel Control Tower Medium|Control Tower|23|Starbase
+Domination Control Tower Medium|Control Tower|23|Starbase
+Angel Control Tower Small|Control Tower|23|Starbase
+Domination Control Tower Small|Control Tower|23|Starbase
+Sansha Control Tower|Control Tower|23|Starbase
+Sansha Control Tower Medium|Control Tower|23|Starbase
+Sansha Control Tower Small|Control Tower|23|Starbase
+True Sansha Control Tower|Control Tower|23|Starbase
+True Sansha Control Tower Medium|Control Tower|23|Starbase
+True Sansha Control Tower Small|Control Tower|23|Starbase
+Equipment Assembly Array|Assembly Array|23|Starbase
+Rapid Equipment Assembly Array|Assembly Array|23|Starbase
+Small Ship Assembly Array|Assembly Array|23|Starbase
+Supercapital Ship Assembly Array|Assembly Array|23|Starbase
+Advanced Small Ship Assembly Array|Assembly Array|23|Starbase
+Medium Ship Assembly Array|Assembly Array|23|Starbase
+Advanced Medium Ship Assembly Array|Assembly Array|23|Starbase
+Capital Ship Assembly Array|Assembly Array|23|Starbase
+Advanced Large Ship Assembly Array|Assembly Array|23|Starbase
+Ammunition Assembly Array|Assembly Array|23|Starbase
+Drone Assembly Array|Assembly Array|23|Starbase
+Component Assembly Array|Assembly Array|23|Starbase
+Drug Lab|Assembly Array|23|Starbase
+Large Ship Assembly Array|Assembly Array|23|Starbase
+Subsystem Assembly Array|Assembly Array|23|Starbase
+Thukker Component Assembly Array|Assembly Array|23|Starbase
+Silo|Silo|23|Starbase
+Ultra Fast Silo|Silo|23|Starbase
+Coupling Array|Silo|23|Starbase
+Biochemical Silo|Silo|23|Starbase
+Catalyst Silo|Silo|23|Starbase
+Hazardous Chemical Silo|Silo|23|Starbase
+General Storage|Silo|23|Starbase
+Reception Center|Silo|23|Starbase
+Holding Pen|Silo|23|Starbase
+Slave Pen|Silo|23|Starbase
+Freedom Hospital|Silo|23|Starbase
+Expanded Silo|Silo|23|Starbase
+Hybrid Polymer Silo|Silo|23|Starbase
+Research Laboratory|Laboratory|23|Starbase
+Experimental Laboratory|Laboratory|23|Starbase
+Design Laboratory|Laboratory|23|Starbase
+Hyasyoda Research Laboratory|Laboratory|23|Starbase
+Small Auxiliary Power Array|Mobile Power Core|23|Starbase
+Medium Auxiliary Power Array|Mobile Power Core|23|Starbase
+Large Auxiliary Power Array|Mobile Power Core|23|Starbase
+Moon Harvesting Array|Moon Mining|23|Starbase
+Light Missile Battery|Mobile Missile Sentry|23|Starbase
+Heavy Missile Battery|Mobile Missile Sentry|23|Starbase
+Cruise Missile Battery|Mobile Missile Sentry|23|Starbase
+Torpedo Battery|Mobile Missile Sentry|23|Starbase
+Citadel Torpedo Battery|Mobile Missile Sentry|23|Starbase
+Guristas Citadel Torpedo Battery|Mobile Missile Sentry|23|Starbase
+Dread Guristas Citadel Torpedo Battery|Mobile Missile Sentry|23|Starbase
+Guristas Cruise Missile Battery|Mobile Missile Sentry|23|Starbase
+Dread Guristas Cruise Missile Battery|Mobile Missile Sentry|23|Starbase
+Guristas Torpedo Battery|Mobile Missile Sentry|23|Starbase
+Dread Guristas Torpedo Battery|Mobile Missile Sentry|23|Starbase
+Shield Generation Array|Mobile Shield Generator|23|Starbase
+Small Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Medium Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Large Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Large AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Medium AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Small AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Angel Large AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Domination Large AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Angel Large Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Domination Large Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Angel Medium Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Domination Medium Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Angel Medium AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Domination Medium AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Angel Small Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Domination Small Artillery Battery|Mobile Projectile Sentry|23|Starbase
+Angel Small AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Domination Small AutoCannon Battery|Mobile Projectile Sentry|23|Starbase
+Large Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Ultra Fast Mobile Laser Sentry|Mobile Laser Sentry|23|Starbase
+Small Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Medium Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Large Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Medium Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Small Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Blood Large Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Dark Blood Large Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Blood Large Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Dark Blood Large Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Blood Medium Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Dark Blood Medium Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Blood Medium Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Dark Blood Medium Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Blood Small Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Dark Blood Small Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Blood Small Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Dark Blood Small Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Sansha Large Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Sansha Large Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Sansha Medium Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Sansha Medium Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Sansha Small Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+Sansha Small Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+True Sansha Large Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+True Sansha Large Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+True Sansha Medium Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+True Sansha Medium Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+True Sansha Small Beam Laser Battery|Mobile Laser Sentry|23|Starbase
+True Sansha Small Pulse Laser Battery|Mobile Laser Sentry|23|Starbase
+Complex Reactor Array|Mobile Reactor|23|Starbase
+Simple Reactor Array|Mobile Reactor|23|Starbase
+Academy|Mobile Reactor|23|Starbase
+Medium Biochemical Reactor Array|Mobile Reactor|23|Starbase
+Biochemical Reactor Array|Mobile Reactor|23|Starbase
+Trauma Treatment Facility|Mobile Reactor|23|Starbase
+Vitoc Injection Center|Mobile Reactor|23|Starbase
+Polymer Reactor Array|Mobile Reactor|23|Starbase
+Ion Field Projection Battery|Electronic Warfare Battery|23|Starbase
+Phase Inversion Battery|Electronic Warfare Battery|23|Starbase
+Spatial Destabilization Battery|Electronic Warfare Battery|23|Starbase
+White Noise Generation Battery|Electronic Warfare Battery|23|Starbase
+Guristas Ion Field Projection Battery|Electronic Warfare Battery|23|Starbase
+Dread Guristas Ion Field Projection Battery|Electronic Warfare Battery|23|Starbase
+Guristas Phase Inversion Battery|Electronic Warfare Battery|23|Starbase
+Dread Guristas Phase Inversion Battery|Electronic Warfare Battery|23|Starbase
+Guristas Spatial Destabilization Battery|Electronic Warfare Battery|23|Starbase
+Dread Guristas Spatial Destabilization Battery|Electronic Warfare Battery|23|Starbase
+Guristas White Noise Generation Battery|Electronic Warfare Battery|23|Starbase
+Dread Guristas White Noise Generation Battery|Electronic Warfare Battery|23|Starbase
+Sensor Dampening Battery|Sensor Dampening Battery|23|Starbase
+Serpentis Sensor Dampening Battery|Sensor Dampening Battery|23|Starbase
+Shadow Sensor Dampening Battery|Sensor Dampening Battery|23|Starbase
+Stasis Webification Battery|Stasis Webification Battery|23|Starbase
+Angel Stasis Webification Battery|Stasis Webification Battery|23|Starbase
+Domination Stasis Webification Battery|Stasis Webification Battery|23|Starbase
+Warp Disruption Battery|Warp Scrambling Battery|23|Starbase
+Warp Scrambling Battery|Warp Scrambling Battery|23|Starbase
+Serpentis Warp Disruption Battery|Warp Scrambling Battery|23|Starbase
+Shadow Warp Disruption Battery|Warp Scrambling Battery|23|Starbase
+Serpentis Warp Scrambling Battery|Warp Scrambling Battery|23|Starbase
+Shadow Warp Scrambling Battery|Warp Scrambling Battery|23|Starbase
+Ballistic Deflection Array|Shield Hardening Array|23|Starbase
+Explosion Dampening Array|Shield Hardening Array|23|Starbase
+Heat Dissipation Array|Shield Hardening Array|23|Starbase
+Photon Scattering Array|Shield Hardening Array|23|Starbase
+Force Field Array|Force Field Array|23|Starbase
+Small Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Medium Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Large Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Large Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Medium Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Small Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Serpentis Large Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Shadow Large Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Serpentis Large Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Shadow Large Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Serpentis Medium Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Shadow Medium Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Serpentis Medium Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Shadow Medium Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Serpentis Small Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Shadow Small Blaster Battery|Mobile Hybrid Sentry|23|Starbase
+Serpentis Small Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Shadow Small Railgun Battery|Mobile Hybrid Sentry|23|Starbase
+Corporate Hangar Array|Corporate Hangar Array|23|Starbase
+Capital Shipyard|Corporate Hangar Array|23|Starbase
+Tracking Array|Tracking Array|23|Starbase
+Stealth Emitter Array|Stealth Emitter Array|23|Starbase
+BH Structure Anchoring Array|Stealth Emitter Array|23|Starbase
+QA Jump Bridge|Jump Portal Array|23|Starbase
+Jump Bridge|Jump Portal Array|23|Starbase
+System Scanning Array|Scanner Array|23|Starbase
+Energy Neutralizing Battery|Energy Neutralizing Battery|23|Starbase
+Sansha Energy Neutralizing Battery|Energy Neutralizing Battery|23|Starbase
+True Sansha Energy Neutralizing Battery|Energy Neutralizing Battery|23|Starbase
+Blood Energy Neutralizing Battery|Energy Neutralizing Battery|23|Starbase
+Dark Blood Energy Neutralizing Battery|Energy Neutralizing Battery|23|Starbase
+Cynosural Generator Array|Cynosural Generator Array|23|Starbase
+Cynosural System Jammer|Cynosural System Jammer|23|Starbase
+Structure Repair Array|Structure Repair Array|23|Starbase
+Target Painting Battery|Target Painting Battery|23|Starbase
+Personal Hangar Array|Personal Hangar|23|Starbase
+Compression Array|Compression Array|23|Starbase
+Arkonor|Arkonor|25|Asteroid
+Crimson Arkonor|Arkonor|25|Asteroid
+Prime Arkonor|Arkonor|25|Asteroid
+Flawed Arkonor|Arkonor|25|Asteroid
+Compressed Arkonor|Arkonor|25|Asteroid
+Compressed Crimson Arkonor|Arkonor|25|Asteroid
+Compressed Prime Arkonor|Arkonor|25|Asteroid
+Polygypsum|Arkonor|25|Asteroid
+Bistot|Bistot|25|Asteroid
+Triclinic Bistot|Bistot|25|Asteroid
+Monoclinic Bistot|Bistot|25|Asteroid
+Compressed Bistot|Bistot|25|Asteroid
+Compressed Monoclinic Bistot|Bistot|25|Asteroid
+Compressed Triclinic Bistot|Bistot|25|Asteroid
+Crokite|Crokite|25|Asteroid
+Sharp Crokite|Crokite|25|Asteroid
+Crystalline Crokite|Crokite|25|Asteroid
+Fools Crokite|Crokite|25|Asteroid
+Compressed Crokite|Crokite|25|Asteroid
+Compressed Crystalline Crokite|Crokite|25|Asteroid
+Compressed Sharp Crokite|Crokite|25|Asteroid
+Geodite|Crokite|25|Asteroid
+Dark Ochre|Dark Ochre|25|Asteroid
+Onyx Ochre|Dark Ochre|25|Asteroid
+Obsidian Ochre|Dark Ochre|25|Asteroid
+Compressed Dark Ochre|Dark Ochre|25|Asteroid
+Compressed Obsidian Ochre|Dark Ochre|25|Asteroid
+Compressed Onyx Ochre|Dark Ochre|25|Asteroid
+Oeryl|Dark Ochre|25|Asteroid
+Hedbergite|Hedbergite|25|Asteroid
+Vitric Hedbergite|Hedbergite|25|Asteroid
+Glazed Hedbergite|Hedbergite|25|Asteroid
+Compressed Glazed Hedbergite|Hedbergite|25|Asteroid
+Compressed Hedbergite|Hedbergite|25|Asteroid
+Compressed Vitric Hedbergite|Hedbergite|25|Asteroid
+Hemorphite|Hemorphite|25|Asteroid
+Vivid Hemorphite|Hemorphite|25|Asteroid
+Radiant Hemorphite|Hemorphite|25|Asteroid
+Compressed Hemorphite|Hemorphite|25|Asteroid
+Compressed Radiant Hemorphite|Hemorphite|25|Asteroid
+Compressed Vivid Hemorphite|Hemorphite|25|Asteroid
+Jaspet|Jaspet|25|Asteroid
+Pure Jaspet|Jaspet|25|Asteroid
+Pristine Jaspet|Jaspet|25|Asteroid
+Flawed Jaspet|Jaspet|25|Asteroid
+Compressed Jaspet|Jaspet|25|Asteroid
+Compressed Pristine Jaspet|Jaspet|25|Asteroid
+Compressed Pure Jaspet|Jaspet|25|Asteroid
+Pithix|Jaspet|25|Asteroid
+Kernite|Kernite|25|Asteroid
+Luminous Kernite|Kernite|25|Asteroid
+Fiery Kernite|Kernite|25|Asteroid
+Compressed Fiery Kernite|Kernite|25|Asteroid
+Compressed Kernite|Kernite|25|Asteroid
+Compressed Luminous Kernite|Kernite|25|Asteroid
+Lyavite|Kernite|25|Asteroid
+Plagioclase|Plagioclase|25|Asteroid
+Azure Plagioclase|Plagioclase|25|Asteroid
+Rich Plagioclase|Plagioclase|25|Asteroid
+Compressed Azure Plagioclase|Plagioclase|25|Asteroid
+Compressed Plagioclase|Plagioclase|25|Asteroid
+Compressed Rich Plagioclase|Plagioclase|25|Asteroid
+Pyroxeres|Pyroxeres|25|Asteroid
+Solid Pyroxeres|Pyroxeres|25|Asteroid
+Viscous Pyroxeres|Pyroxeres|25|Asteroid
+Compressed Pyroxeres|Pyroxeres|25|Asteroid
+Compressed Solid Pyroxeres|Pyroxeres|25|Asteroid
+Compressed Viscous Pyroxeres|Pyroxeres|25|Asteroid
+Augumene|Pyroxeres|25|Asteroid
+Scordite|Scordite|25|Asteroid
+Condensed Scordite|Scordite|25|Asteroid
+Massive Scordite|Scordite|25|Asteroid
+Compressed Condensed Scordite|Scordite|25|Asteroid
+Compressed Massive Scordite|Scordite|25|Asteroid
+Compressed Scordite|Scordite|25|Asteroid
+Spodumain|Spodumain|25|Asteroid
+Bright Spodumain|Spodumain|25|Asteroid
+Gleaming Spodumain|Spodumain|25|Asteroid
+Compressed Bright Spodumain|Spodumain|25|Asteroid
+Compressed Gleaming Spodumain|Spodumain|25|Asteroid
+Compressed Spodumain|Spodumain|25|Asteroid
+Veldspar|Veldspar|25|Asteroid
+Concentrated Veldspar|Veldspar|25|Asteroid
+Dense Veldspar|Veldspar|25|Asteroid
+Chondrite|Veldspar|25|Asteroid
+Compressed Concentrated Veldspar|Veldspar|25|Asteroid
+Compressed Dense Veldspar|Veldspar|25|Asteroid
+Compressed Veldspar|Veldspar|25|Asteroid
+Banidine|Veldspar|25|Asteroid
+Clear Icicle|Ice|25|Asteroid
+Glacial Mass|Ice|25|Asteroid
+Blue Ice|Ice|25|Asteroid
+White Glaze|Ice|25|Asteroid
+Glare Crust|Ice|25|Asteroid
+Dark Glitter|Ice|25|Asteroid
+Gelidus|Ice|25|Asteroid
+Krystallos|Ice|25|Asteroid
+Thick Blue Ice|Ice|25|Asteroid
+Pristine White Glaze|Ice|25|Asteroid
+Smooth Glacial Mass|Ice|25|Asteroid
+Enriched Clear Icicle|Ice|25|Asteroid
+Compressed Blue Ice|Ice|25|Asteroid
+Compressed Clear Icicle|Ice|25|Asteroid
+Compressed Dark Glitter|Ice|25|Asteroid
+Compressed Enriched Clear Icicle|Ice|25|Asteroid
+Compressed Gelidus|Ice|25|Asteroid
+Compressed Glacial Mass|Ice|25|Asteroid
+Compressed Glare Crust|Ice|25|Asteroid
+Compressed Krystallos|Ice|25|Asteroid
+Compressed Pristine White Glaze|Ice|25|Asteroid
+Compressed Smooth Glacial Mass|Ice|25|Asteroid
+Compressed Thick Blue Ice|Ice|25|Asteroid
+Compressed White Glaze|Ice|25|Asteroid
+Azure Ice|Ice|25|Asteroid
+Crystalline Icicle|Ice|25|Asteroid
+Gneiss|Gneiss|25|Asteroid
+Iridescent Gneiss|Gneiss|25|Asteroid
+Prismatic Gneiss|Gneiss|25|Asteroid
+Flawed Gneiss|Gneiss|25|Asteroid
+Compressed Gneiss|Gneiss|25|Asteroid
+Compressed Iridescent Gneiss|Gneiss|25|Asteroid
+Compressed Prismatic Gneiss|Gneiss|25|Asteroid
+Green Arisite|Gneiss|25|Asteroid
+Mercoxit|Mercoxit|25|Asteroid
+Magma Mercoxit|Mercoxit|25|Asteroid
+Vitreous Mercoxit|Mercoxit|25|Asteroid
+Compressed Magma Mercoxit|Mercoxit|25|Asteroid
+Compressed Mercoxit|Mercoxit|25|Asteroid
+Compressed Vitreous Mercoxit|Mercoxit|25|Asteroid
+Zuthrine|Mercoxit|25|Asteroid
+Omber|Omber|25|Asteroid
+Silvery Omber|Omber|25|Asteroid
+Golden Omber|Omber|25|Asteroid
+Compressed Golden Omber|Omber|25|Asteroid
+Compressed Omber|Omber|25|Asteroid
+Compressed Silvery Omber|Omber|25|Asteroid
+Mercium|Omber|25|Asteroid
+Ancient Compressed Blue Ice|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Clear Icicle|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Dark Glitter|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Enriched Clear Icicle|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Gelidus|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Glacial Mass|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Glare Crust|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Krystallos|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Pristine White Glaze|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Smooth Glacial Mass|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed Thick Blue Ice|Ancient Compressed Ice|25|Asteroid
+Ancient Compressed White Glaze|Ancient Compressed Ice|25|Asteroid
+Territorial Claim Unit|Territorial Claim Unit|40|Sovereignty Structures
+QA Territorial Claim Unit|Territorial Claim Unit|40|Sovereignty Structures
+Sovereignty Blockade Unit|Sovereignty Blockade Unit|40|Sovereignty Structures
+QA Sovereignty Blockade Unit|Sovereignty Blockade Unit|40|Sovereignty Structures
+QA Infrastructure Hub|Infrastructure Hub|40|Sovereignty Structures
+Infrastructure Hub|Infrastructure Hub|40|Sovereignty Structures
+Customs Office|Orbital Infrastructure|46|Orbitals
+Orbital Command Center|Orbital Infrastructure|46|Orbitals
+InterBus Customs Office|Orbital Infrastructure|46|Orbitals
+Ion Cannon|Test Orbitals|46|Orbitals
+Customs Office Gantry|Orbital Construction Platform|46|Orbitals
+Astrahus|Citadel|65|Structure
+Fortizar|Citadel|65|Structure
+Keepstar|Citadel|65|Structure
+X-Large Posh Citadel|Citadel|65|Structure
+Medium Assembly Array|Assembly Array|65|Structure
+Large Assembly Array|Assembly Array|65|Structure
+X-Large Assembly Array|Assembly Array|65|Structure
+Medium Laboratory|Laboratory|65|Structure
+Large Laboratory|Laboratory|65|Structure
+X-Large Laboratory|Laboratory|65|Structure
+Medium Drilling Platform|Drilling Platform|65|Structure
+Large Drilling Platform|Drilling Platform|65|Structure
+X-Large Drilling Platform|Drilling Platform|65|Structure
+Medium Observatory Array|Observatory Array|65|Structure
+Large Observatory Array|Observatory Array|65|Structure
+X-Large Observatory Array|Observatory Array|65|Structure
+Medium Stargate|Stargate|65|Structure
+X-Large Stargate|Stargate|65|Structure
+Large Stargate|Stargate|65|Structure
+Medium Administration Hub|Administration Hub|65|Structure
+Large Administration Hub|Administration Hub|65|Structure
+X-Large Administration Hub|Administration Hub|65|Structure
+X-Large Advertisement Center|Advertisement Center|65|Structure
+Medium Advertisement Center|Advertisement Center|65|Structure
+Large Advertisement Center|Advertisement Center|65|Structure
