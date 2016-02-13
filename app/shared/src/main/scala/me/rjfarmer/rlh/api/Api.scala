@@ -105,9 +105,32 @@ final case class ListCharactersResponse(message: Option[String],
                                         solarSystem: Option[String],
                                         charinfos: Vector[CharInfo])
 
+
+//
+// DSCAN API
+//
+
+final case class CategoryAndGroup(category: String, group: String)
+
+final case class DScanLine(name: String, typ: String, groupCat: CategoryAndGroup, distAu: Option[Double])
+
+final case class DScanParseRequest(version: String, lines: Vector[String],
+                                   // again, filled in by server from request headers
+                                   clientIP: String, pilot: Option[String], solarSystem: Option[String])
+  extends WebserviceRequest
+
+final case class DScanParseResponse(message: Option[String],
+                                    // my be present if IGB
+                                    solarSystem: Option[String],
+                                    lines: Vector[DScanLine])
+
+
+
 trait Api {
 
   def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse]
+
+  def parseDScan(request: DScanParseRequest): DScanParseResponse
 
 }
 

@@ -37,11 +37,17 @@ case class ServerWithRequestData(clientIP: String, requestData: String, solarSys
     Server.listCharacters(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
   }
 
+  override def parseDScan(request: DScanParseRequest): DScanParseResponse = {
+    Server.parseDScan(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
+  }
+
 }
 
 object Server extends SimpleRoutingApp with Api with RequestTimeout with ShutdownIfNotBound {
 
   import Boot._
+
+  private[this] val clientVersionError = "Client version does not match server, please reload the page (F5)."
 
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager)), "characterIDPool")
   val characterInfoRetriever = bootSystem.actorOf(FromConfig.props(CharacterInfoRetriever.props(cacheManager,
@@ -105,12 +111,12 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
       .asInstanceOf[Future[CharacterIDResponse]]
   }
 
-  def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
+  override def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
     val ts = System.currentTimeMillis()
     val result = Promise[ListCharactersResponse]()
 
     if (req.version != BuildInfo.version) {
-      result.success(ListCharactersResponse(Some("Client version does not match server, please reload the page (F5)."),
+      result.success(ListCharactersResponse(Some(clientVersionError),
         req.solarSystem,
         Vector()))
     } else {
@@ -147,6 +153,20 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     result.future
   }
 
+  override def parseDScan(req: DScanParseRequest): DScanParseResponse = {
+    if (req.version != BuildInfo.version) {
+      DScanParseResponse(Some(clientVersionError), req.solarSystem, Vector())
+    } else {
+      try {
+        DScanParseResponse(None, req.solarSystem,
+          req.lines.map(DScanParser.parse))
+      } catch {
+        case ex: Exception =>
+          DScanParseResponse(Some("Error parsing request lines: " + ex),
+            req.solarSystem, Vector())
+      }
+    }
+  }
 }
 
 
