@@ -9,7 +9,7 @@ import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve.CharacterIDApi._
 import me.rjfarmer.rlh.eve._
 import me.rjfarmer.rlh.retriever.PriorityConfig
-import me.rjfarmer.rlh.shared.{SharedConfig, ClientConfig}
+import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
@@ -37,7 +37,7 @@ case class ServerWithRequestData(clientIP: String, requestData: String, solarSys
     Server.listCharacters(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
   }
 
-  override def parseDScan(request: DScanParseRequest): DScanParseResponse = {
+  override def parseDScan(request: DScanParseRequest): Future[DScanParseResponse] = {
     Server.parseDScan(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
   }
 
@@ -153,19 +153,21 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     result.future
   }
 
-  override def parseDScan(req: DScanParseRequest): DScanParseResponse = {
-    if (req.version != BuildInfo.version) {
-      DScanParseResponse(Some(clientVersionError), req.solarSystem, Vector())
-    } else {
-      try {
-        DScanParseResponse(None, req.solarSystem,
-          req.lines.map(DScanParser.parse))
-      } catch {
-        case ex: Exception =>
-          DScanParseResponse(Some("Error parsing request lines: " + ex),
-            req.solarSystem, Vector())
+  override def parseDScan(req: DScanParseRequest): Future[DScanParseResponse] = {
+    Promise.successful(
+      if (req.version != BuildInfo.version) {
+        DScanParseResponse(Some(clientVersionError), req.solarSystem, Vector())
+      } else {
+        try {
+          DScanParseResponse(None, req.solarSystem,
+            req.lines.map(DScanParser.parse))
+        } catch {
+          case ex: Exception =>
+            DScanParseResponse(Some("Error parsing request lines: " + ex),
+              req.solarSystem, Vector())
+        }
       }
-    }
+    ).future
   }
 }
 

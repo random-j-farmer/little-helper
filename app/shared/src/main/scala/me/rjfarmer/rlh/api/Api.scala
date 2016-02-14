@@ -125,12 +125,11 @@ final case class DScanParseResponse(message: Option[String],
                                     lines: Vector[DScanLine])
 
 
-
 trait Api {
 
   def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse]
 
-  def parseDScan(request: DScanParseRequest): DScanParseResponse
+  def parseDScan(request: DScanParseRequest): Future[DScanParseResponse]
 
 }
 

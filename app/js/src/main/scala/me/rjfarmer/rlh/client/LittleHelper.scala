@@ -1,5 +1,6 @@
 package me.rjfarmer.rlh.client
 
+import me.rjfarmer.rlh.client.dscan.DScanTab
 import me.rjfarmer.rlh.client.local.{LocalTab, ScanDetailsView}
 import me.rjfarmer.rlh.client.logging.{LoggerRLH, LoggingTab}
 import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
@@ -14,7 +15,7 @@ class LittleHelper {
 
   val log = LoggerRLH("client.LittleHelper")
 
-  val tabPanel = TabPanel(Vector(LocalTab, LoggingTab))
+  val tabPanel = TabPanel(Vector(LocalTab, DScanTab, LoggingTab))
 
   def main(_body: html.Body) = {
 

@@ -49,7 +49,7 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
 
   val linksView: HTMLDivElement =
     div(cls := "pure-menu pure-menu-horizontal", onclick := menuClick _,
-      style := "display: inline; position: absolute; top: 0px; right: 0px; width: 5cm; text-align: right;",
+      style := "display: inline; position: absolute; top: 0px; right: 0px; width: 10cm; text-align: right;",
       ul(cls := "pure-menu-list", linkListItems)
     ).render
 

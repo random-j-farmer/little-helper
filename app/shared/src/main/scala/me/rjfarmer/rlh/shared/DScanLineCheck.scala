@@ -20,7 +20,7 @@ object DScanLineCheck {
           case "AU" => 1.0d
           case _ => throw new IllegalArgumentException("can not parse distance type: " + dist)
         }
-        Some(num.replace(",", "").toDouble)
+        Some(num.replace(",", "").toDouble * factor)
       case Array("-") =>
         None
       case _ =>

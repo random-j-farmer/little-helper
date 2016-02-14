@@ -16,7 +16,8 @@ import scalatags.JsDom.all._
 
 object LocalTab extends TabbedPanel {
 
-  private val pilotBox = textarea(cols := 20, rows := 10).render
+  private val pilotBox = textarea(cols := 20, rows := 10,
+    placeholder := "Paste EVE Local").render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
 
   private val messageBox = div(hidden).render

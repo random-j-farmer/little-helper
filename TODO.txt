@@ -1,3 +1,6 @@
+(A) extract common code local/dscan tabs
+(A) group dscan results
+(C) dscan history +dscan_history
 (C) local history +local_history
 (C) shareable links for local scans +local_history
 (C) diffs between scans in same system +local_history
