@@ -1,4 +1,3 @@
-(A) update timestamps dscan tab
 (A) group dscan results
 (C) dscan history +dscan_history
 (C) local history +local_history
@@ -10,6 +9,7 @@
 D-Scan
 Shopping list
 
+x (A) update timestamps dscan tab
 x (A) extract common code local/dscan tabs
 x (A) messages for incomplete or stale responses
 x (B) client code cleanup: tab panel trait
