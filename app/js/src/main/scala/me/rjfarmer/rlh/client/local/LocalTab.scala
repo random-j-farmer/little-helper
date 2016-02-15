@@ -31,15 +31,15 @@ object LocalTab extends TabbedPanel with Submitable {
       submitButton),
     div(cls := "pure-u-2-3",
       messageBox,
-      h1(ScanDetailsView.pilotCount, ScanDetailsView.solarSystem, ScanDetailsView.respTimeAgo),
+      h1(LocalDetailsView.pilotCount, LocalDetailsView.solarSystem, LocalDetailsView.respTimeAgo),
       h2("Pilots by Alliance/Corp"),
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Alliance/Corp"), th("# Pilots"))),
-        ScanDetailsView.corpList),
+        LocalDetailsView.corpList),
       h2("Pilots"),
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
-        ScanDetailsView.pilotList)
+        LocalDetailsView.pilotList)
     )
   ).render
 
@@ -53,7 +53,7 @@ object LocalTab extends TabbedPanel with Submitable {
       resp.solarSystem + " in " +
       (now - started) + "ms")
 
-    ScanDetailsView.update(resp)
+    LocalDetailsView.update(resp)
 
     submitFinished(started, messages(resp))
   }

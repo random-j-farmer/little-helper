@@ -1,43 +1,24 @@
 package me.rjfarmer.rlh.client.dscan
 
 import me.rjfarmer.rlh.api.DScanParseResponse
+import me.rjfarmer.rlh.client.Refreshable
 
 import scalatags.JsDom.all._
 
-object DScanDetailsView {
+object DScanDetailsView extends Refreshable {
 
-  var respTs = System.currentTimeMillis()
-  val respTimeAgo = span(responseTimeAgo).render
   val dscanItemCount = span().render
   val solarSystem = span().render
 
   val dscanList = tbody().render
 
-  // XXX extract me
-  def responseTimeAgo: String = {
-    val totalSeconds = (System.currentTimeMillis() - respTs) / 1000L
-    val totalMinutes = totalSeconds / 60
-    val totalHours = totalMinutes / 60
-
-    if (totalHours > 0) {
-      s"""${totalHours}h ${totalMinutes % 60}m ago"""
-    } else {
-      s"""${totalMinutes}m ago"""
-    }
-  }
-
-  def refreshResponseTimeAgo = {
-    respTimeAgo.innerHTML = responseTimeAgo
-    responseTimeAgo
-  }
-
   def update(resp: DScanParseResponse) = {
+    updateResponseTimestamp()
+    refreshResponseTimeAgo
 
     val lines = resp.lines
 
     dscanItemCount.innerHTML = s"${lines.size} scanned objects, "
-    respTs = System.currentTimeMillis()
-    refreshResponseTimeAgo
 
     resp.solarSystem match {
       case None =>

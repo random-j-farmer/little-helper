@@ -1,6 +1,7 @@
 package me.rjfarmer.rlh.client.local
 
 import me.rjfarmer.rlh.api.{CharInfo, ListCharactersResponse, WebserviceResult}
+import me.rjfarmer.rlh.client.Refreshable
 import me.rjfarmer.rlh.shared.SharedConfig
 import org.scalajs.dom.raw.HTMLElement
 
@@ -8,32 +9,13 @@ import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 
-object ScanDetailsView {
+object LocalDetailsView extends Refreshable {
 
-  var respTs = System.currentTimeMillis()
-  val respTimeAgo = span(responseTimeAgo).render
   val pilotCount = span().render
   val solarSystem = span().render
 
   val corpList = tbody().render
   val pilotList = tbody().render
-
-  def responseTimeAgo: String = {
-    val totalSeconds = (System.currentTimeMillis() - respTs) / 1000L
-    val totalMinutes = totalSeconds / 60
-    val totalHours = totalMinutes / 60
-
-    if (totalHours > 0) {
-      s"""${totalHours}h ${totalMinutes % 60}m ago"""
-    } else {
-      s"""${totalMinutes}m ago"""
-    }
-  }
-
-  def refreshResponseTimeAgo = {
-    respTimeAgo.innerHTML = responseTimeAgo
-    responseTimeAgo
-  }
 
   def freshnessKlass(nowMillis: Long, wsr: WebserviceResult): String = {
     val relativeAge = (nowMillis - wsr.receivedTimestamp) / SharedConfig.client.staleOlderThanMillis.toDouble
@@ -62,7 +44,7 @@ object ScanDetailsView {
     val pilots = resp.charinfos
 
     pilotCount.innerHTML = s"${resp.charinfos.size} pilots, "
-    respTs = System.currentTimeMillis()
+    updateResponseTimestamp()
     refreshResponseTimeAgo
 
     resp.solarSystem match {

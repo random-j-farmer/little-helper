@@ -1,7 +1,7 @@
 package me.rjfarmer.rlh.client
 
 import me.rjfarmer.rlh.client.dscan.{DScanDetailsView, DScanTab}
-import me.rjfarmer.rlh.client.local.{LocalTab, ScanDetailsView}
+import me.rjfarmer.rlh.client.local.{LocalTab, LocalDetailsView}
 import me.rjfarmer.rlh.client.logging.{LoggerRLH, LoggingTab}
 import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
 import org.scalajs.dom
@@ -26,7 +26,7 @@ class LittleHelper {
 
     _body.appendChild(rlhMain)
 
-    dom.window.setInterval(ScanDetailsView.refreshResponseTimeAgo _, 10000d)
+    dom.window.setInterval(LocalDetailsView.refreshResponseTimeAgo _, 10000d)
     dom.window.setInterval(DScanDetailsView.refreshResponseTimeAgo _, 10000d)
 
     log.info("LittleHelper.main: " + SharedConfig.client)
