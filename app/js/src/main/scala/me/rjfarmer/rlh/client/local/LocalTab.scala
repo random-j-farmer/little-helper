@@ -5,24 +5,21 @@ package me.rjfarmer.rlh.client.local
 import autowire._
 import me.rjfarmer.rlh.api.{Api, ListCharactersRequest, ListCharactersResponse}
 import me.rjfarmer.rlh.client.logging.LoggerRLH
-import me.rjfarmer.rlh.client.{Message, Ajaxer, PimpedDomElement, TabbedPanel}
+import me.rjfarmer.rlh.client._
 import me.rjfarmer.rlh.shared.{EveCharacterName, SharedConfig}
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+import scala.util.{Failure,Success}
 import scalatags.JsDom.all._
 
 
-object LocalTab extends TabbedPanel {
+object LocalTab extends TabbedPanel with Submitable {
 
   private val pilotBox = textarea(cols := 20, rows := 10,
     placeholder := "Paste EVE Local").render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
-
-  private val messageBox = div(hidden).render
-
-  private val submitButton = button(cls := "pure-button pure-button-primary", `type` := "submit", "Submit").render
 
   override val panelName: String = "Local"
 
@@ -46,14 +43,7 @@ object LocalTab extends TabbedPanel {
     )
   ).render
 
-  import PimpedDomElement._
-
-  private val log = LoggerRLH("client.local.LocalTab")
-
-  def submitStarted: Long = {
-    submitButton.addClass("pure-button-disabled")
-    System.currentTimeMillis()
-  }
+  override val log = LoggerRLH("client.local.LocalTab")
 
   def submitSuccess(started: Long, resp: ListCharactersResponse): Unit = {
     val now = System.currentTimeMillis
@@ -63,40 +53,12 @@ object LocalTab extends TabbedPanel {
       resp.solarSystem + " in " +
       (now - started) + "ms")
 
-    submitButton.removeClass("pure-button-disabled")
-
-    handleMessageBox(messages(resp))
-
     ScanDetailsView.update(resp)
+
+    submitFinished(started, messages(resp))
   }
 
-  def handleMessageBox(messages: Seq[Message]): Unit = {
-    messages match {
-      case Seq() =>
-        messageBox.setAttribute("hidden", "hidden")
-        messageBox.innerHTML = ""
-      case _ =>
-        messageBox.innerHTML = ""
-        messages.foreach { msg =>
-          messageBox.appendChild(div(`class` := msg.msgType.messageClass, msg.msg).render)
-        }
-        messageBox.removeAttribute("hidden")
-    }
-  }
-
-  def submitError(started: Long, ex: Throwable): Unit = {
-    val now = System.currentTimeMillis
-    log.error("Ajax Exception after " + (now - started) + "ms: " + ex)
-    submitButton.removeClass("pure-button-disabled")
-
-    handleMessageBox(Seq(Message.error("Error communicating with the server")))
-  }
-
-  def formSubmit(ev: dom.Event): Unit = {
-    ev.preventDefault()
-
-    val tsStarted = submitStarted
-
+  override def formSubmitAction(ev: dom.Event, tsStarted: Long): Unit = {
     val pilotNames = pilotBox.value.split( """\n""").map(_.trim)
     val illegalNames = pilotNames.filterNot(EveCharacterName.isValidCharacterName)
     if (illegalNames.nonEmpty) {
@@ -108,10 +70,12 @@ object LocalTab extends TabbedPanel {
     log.debug("calling listCharacters with " + validNames.length + " pilots")
     val req = ListCharactersRequest(SharedConfig.client.clientSoftwareVersion, validNames, "", None, None)
     val future = Ajaxer[Api].listCharacters(req).call()
-    future.onFailure { case ex: Throwable =>
-      submitError(tsStarted, ex)
+    future.onComplete {
+      case Failure(ex) =>
+        submitError(tsStarted, ex)
+      case Success(resp) =>
+        submitSuccess(tsStarted, resp)
     }
-    future.foreach { response => submitSuccess(tsStarted, response) }
   }
 
   def messages(resp: ListCharactersResponse): Seq[Message] = {

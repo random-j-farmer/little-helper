@@ -3,16 +3,16 @@ package me.rjfarmer.rlh.client.dscan
 // for correct macro appliction
 import autowire._
 import me.rjfarmer.rlh.api._
-import me.rjfarmer.rlh.client.{Message, Ajaxer, TabbedPanel}
 import me.rjfarmer.rlh.client.logging.LoggerRLH
+import me.rjfarmer.rlh.client.{Ajaxer, Message, Submitable, TabbedPanel}
 import me.rjfarmer.rlh.shared.{DScanLineCheck, SharedConfig}
 import org.scalajs.dom
 
+import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
-object DScanTab extends TabbedPanel {
+object DScanTab extends TabbedPanel with Submitable {
 
-  import me.rjfarmer.rlh.client.PimpedDomElement._
   import scala.concurrent.ExecutionContext.Implicits.global
 
   override val panelName = "D-Scan"
@@ -20,10 +20,6 @@ object DScanTab extends TabbedPanel {
   private val dscanBox = textarea(cols := 20, rows := 10,
     placeholder := "Paste EVE D-Scan").render
   dscanBox.onfocus = (ev: dom.Event) => dscanBox.value = ""
-
-  private val messageBox = div(hidden).render
-
-  private val submitButton = button(cls := "pure-button pure-button-primary", `type` := "submit", "Submit").render
 
   override val panelView = div(id := "dscanTab",
     cls := "pure-g",
@@ -40,14 +36,9 @@ object DScanTab extends TabbedPanel {
     )
   ).render
 
+  override val log = LoggerRLH("client.local.DScanTab")
 
-  private val log = LoggerRLH("client.local.DScanTab")
-
-  def formSubmit(ev: dom.Event): Unit = {
-    ev.preventDefault()
-
-    val tsStarted = submitStarted
-
+  override def formSubmitAction(ev: dom.Event, started: Long): Unit = {
     val dscanLines = dscanBox.value.split( """\n""")
     val illegalLines = dscanLines.filterNot(DScanLineCheck.isValidDScanLine)
     if (illegalLines.nonEmpty) {
@@ -59,61 +50,26 @@ object DScanTab extends TabbedPanel {
     log.debug("calling parseDScan with " + validLines.length + " lines")
     val req = DScanParseRequest(SharedConfig.client.clientSoftwareVersion, validLines, "", None, None)
     val future= Ajaxer[Api].parseDScan(req).call()
-    future.onFailure { case ex: Throwable =>
-      submitError(tsStarted, ex)
-    }
-    future.foreach { response => submitSuccess(tsStarted, response) }
-  }
 
-  // XXX extract me
-  def submitStarted: Long = {
-    submitButton.addClass("pure-button-disabled")
-    System.currentTimeMillis()
-  }
+    future.onComplete {
+      case Failure(ex) =>
+        submitError(started, ex)
 
-  // XXX extract me
-  def submitSuccess(started: Long, resp: DScanParseResponse): Unit = {
-    val now = System.currentTimeMillis
-    val lines = resp.lines
+      case Success(resp) =>
+        val now = System.currentTimeMillis
+        val lines = resp.lines
 
-    log.info("parseDScan: received " + lines.size + " dscan lines in " +
-      resp.solarSystem + " in " +
-      (now - started) + "ms")
+        log.info("parseDScan: received " + lines.size + " dscan lines in " +
+          resp.solarSystem + " in " +
+          (now - started) + "ms")
+        DScanDetailsView.update(resp)
+        submitFinished(started, messages(resp))
 
-    submitButton.removeClass("pure-button-disabled")
-
-    handleMessageBox(messages(resp))
-
-    DScanDetailsView.update(resp)
-  }
-
-  def handleMessageBox(messages: Seq[Message]): Unit = {
-    messages match {
-      case Seq() =>
-        messageBox.setAttribute("hidden", "hidden")
-        messageBox.innerHTML = ""
-      case _ =>
-        messageBox.innerHTML = ""
-        messages.foreach { msg =>
-          messageBox.appendChild(div(`class` := msg.msgType.messageClass, msg.msg).render)
-        }
-        messageBox.removeAttribute("hidden")
     }
   }
 
-  def submitError(started: Long, ex: Throwable): Unit = {
-    val now = System.currentTimeMillis
-    log.error("Ajax Exception after " + (now - started) + "ms: " + ex)
-    submitButton.removeClass("pure-button-disabled")
-
-    handleMessageBox(Seq(Message.error("Error communicating with the server")))
-  }
-
-  // XXX extract me
   def messages(resp: DScanParseResponse): Seq[Message] = {
     resp.message.map(Message.error).toSeq
   }
-
-
 
 }
