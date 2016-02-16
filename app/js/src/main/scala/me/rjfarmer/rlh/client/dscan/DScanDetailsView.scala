@@ -54,7 +54,7 @@ object DScanDetailsView extends Refreshable {
             td(), td()
           ).render)
 
-          for (item <- groupItems.sorted(DScanDistanceOrdering)) {
+          for (item <- typItems.sorted(DScanDistanceOrdering)) {
             dscanList.appendChild(tr(`class` := lineClasses,
               td(), td(), td(),
               td(item.name),
@@ -71,10 +71,10 @@ object DScanDetailsView extends Refreshable {
   }
 
   def groupAndSort(seq: Seq[DScanLine], groupFn: DScanLine => String): Seq[(String, Seq[DScanLine])] = {
-    // lt function is > because we want descending order
-    seq.groupBy(groupFn).toSeq.sortWith((p1, p2) => p1._2.length > p2._2.length)
+    seq.groupBy(groupFn).toSeq.sortWith(dscanGroupSorter)
   }
 
+  // sort by distance
   object DScanDistanceOrdering extends Ordering[DScanLine] {
     override def compare(x: DScanLine, y: DScanLine): Int = {
       (x.distAu, y.distAu) match {
@@ -85,5 +85,16 @@ object DScanDetailsView extends Refreshable {
       }
     }
   }
+
+  // sort by the size of the group, or otherwise the string extracted by fn
+  def dscanGroupSorter(x: (String, Seq[DScanLine]), y: (String, Seq[DScanLine])) = {
+    if (x._2.length == y._2.length) {
+      x._1 < y._1
+    } else {
+      // reverse order!
+      x._2.length > y._2.length
+    }
+  }
+
 
 }
