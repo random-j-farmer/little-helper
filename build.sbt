@@ -11,8 +11,8 @@ val app = crossProject.settings(
   unmanagedSourceDirectories in Compile +=
     baseDirectory.value / "shared" / "main" / "scala",
   libraryDependencies ++= Seq(
-    "com.lihaoyi" %%% "scalatags" % "0.5.3",
-    "com.lihaoyi" %%% "upickle" % "0.3.6",
+    "com.lihaoyi" %%% "scalatags" % "0.5.4",
+    "com.lihaoyi" %%% "upickle" % "0.3.8",
     "com.lihaoyi" %%% "utest" % "0.3.1",
     "com.lihaoyi" %%% "autowire" % "0.2.5"
   ),
@@ -40,7 +40,7 @@ val app = crossProject.settings(
 ).enablePlugins(GitVersioning, BuildInfoPlugin, JavaAppPackaging
 ).jsSettings(
   libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.8.2"
+    "org.scala-js" %%% "scalajs-dom" % "0.9.0"
   )
 ).jvmSettings(
   Revolver.settings: _*
@@ -54,13 +54,14 @@ val app = crossProject.settings(
     "com.typesafe.akka" %% "akka-actor" % akkaVersion,
     "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
-    "ch.qos.logback"      %  "logback-classic" % "1.1.3",
+    "ch.qos.logback"      %  "logback-classic" % "1.1.5",
     "io.spray" %% "spray-can" % sprayVersion,
     "io.spray" %% "spray-routing" % sprayVersion,
+    // ignore pure 2.83, that points to pure beebole which is something completely different
     "org.webjars" % "pure" % "0.6.0",
     "org.json4s" %% "json4s-jackson" % "3.3.0",
     "org.ehcache" % "ehcache" % "3.0.0.m4",
-    "com.lihaoyi" % "ammonite-repl" % "0.5.2" % "test" cross CrossVersion.full
+    "com.lihaoyi" % "ammonite-repl" % "0.5.4" % "test" cross CrossVersion.full
   )
 )
 
