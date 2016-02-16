@@ -2,6 +2,8 @@ package me.rjfarmer.rlh.shared
 
 object DScanLineCheck {
 
+  private[this] val kmToAU = 149598000.0d
+
   /**
    * Convert a string of the form to the distance in AU.
    *
@@ -15,12 +17,12 @@ object DScanLineCheck {
   def parseDistance(dist: String): Option[Double] = {
     dist.split(' ') match {
       case Array(num, typ) =>
-        val factor = typ match {
-          case "km" => 1.0d / 149598000.0d
+        val divBy = typ match {
+          case "km" => kmToAU
           case "AU" => 1.0d
           case _ => throw new IllegalArgumentException("can not parse distance type: " + dist)
         }
-        Some(num.replace(",", "").toDouble * factor)
+        Some(num.replace(",", "").toDouble / divBy)
       case Array("-") =>
         None
       case _ =>
@@ -57,5 +59,14 @@ object DScanLineCheck {
     }
   }
 
+
+  def formatDistance(distAu: Option[Double]): String = {
+      distAu match {
+        case None =>
+          "-"
+        case Some(d) =>
+          if (d < 0.01d) f"${d*kmToAU}%2.0f km" else f"$d%2.2f AU"
+      }
+  }
 
 }
