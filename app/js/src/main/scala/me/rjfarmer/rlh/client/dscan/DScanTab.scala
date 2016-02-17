@@ -30,13 +30,13 @@ object DScanTab extends TabbedPanel with Submitable {
     div(cls := "pure-u-2-3",
       messageBox,
       h1(DScanDetailsView.dscanItemCount, DScanDetailsView.solarSystem, DScanDetailsView.respTimeAgo),
-      table(cls := "pure-table pure-table-striped",
-        thead(tr(th("Name"), th("Type"), th("Group"), th("Category"), th("Distance"))),
+      table(cls := "pure-table dscan-tree",
+        thead(tr(th(`class` := "name-col", "Type/Name"), th(`class` := "dist-col", "Distance"))),
         DScanDetailsView.dscanList)
     )
   ).render
 
-  override val log = LoggerRLH("client.local.DScanTab")
+  override val log = LoggerRLH("client.dscan.DScanTab")
 
   override def formSubmitAction(ev: dom.Event, started: Long): Unit = {
     val dscanLines = dscanBox.value.split( """\n""")

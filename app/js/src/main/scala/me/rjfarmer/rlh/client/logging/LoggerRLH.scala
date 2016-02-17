@@ -72,7 +72,7 @@ object LoggerRLH {
 
 object LoggerRLHConfig {
 
-  var defaultLevel = LoggerRLH.INFO
+  var defaultLevel = LoggerRLH.DEBUG
 
   var config = Map[String,Int]()
 

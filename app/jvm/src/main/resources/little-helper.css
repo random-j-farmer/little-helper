@@ -23,3 +23,53 @@
 .message-error {
     background: rgb(202, 60, 60); /* error */
 }
+
+
+
+.dscan-tree {
+    table-layout: fixed;
+    width: 100%;
+    white-space: nowrap;
+}
+.dscan-tree td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.dscan-tree .name-col {
+    width: 75%;
+}
+.dscan-tree .dist-col {
+    width: 25%;
+}
+
+/* closed node: triangle right */
+.dscan-tree span::before {
+    content: "\0025B6";
+}
+
+/* open node: triangle down */
+.dscan-tree tr.open span::before {
+    content: "\0025BC";
+}
+
+/* no symbol for leaf nodes */
+.dscan-tree tr.leaf span::before {
+    content: "";
+}
+.dscan-tree span.level1 {
+    padding-left: 1em;
+}
+
+.dscan-tree span.level2 {
+    padding-left: 2em;
+}
+
+.dscan-tree span.level3 {
+    padding-left: 3em;
+}
+
+.dscan-tree span.level4 {
+    padding-left: 4em;
+}
+

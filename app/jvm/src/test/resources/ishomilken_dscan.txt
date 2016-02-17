@@ -1,0 +1,11 @@
+Bericon Ernaga's Kestrel	Kestrel	-
+Klerai Otomeya's Merlin	Merlin	-
+Orbital Manufacturing Platform's Velator	Velator	-
+Ishomilken V - State Protectorate Logistic Support	Caldari Research Station	349 km
+Ishomilken - Star	Sun M0 (Orange radiant)	1.0 AU
+Uuna	Stargate (Caldari System)	1.6 AU
+Ishomilken VIII - Moon 2 - Perkone Factory	Caldari Food Processing Plant Station	2.8 AU
+Ishomilken IX - Moon 4 - Corporate Police Force Assembly Plant	Caldari Administrative Station	6.1 AU
+Ishomilken IX - Moon 4 - Chief Executive Panel Bureau	Caldari Trading Station	6.1 AU
+Ishomilken IX - Moon 12 - Mercantile Club Bureau	Caldari Trading Station	6.1 AU
+Ishomilken IX - Moon 14 - Perkone Factory	Caldari Food Processing Plant Station	6.2 AU

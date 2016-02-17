@@ -1,5 +1,5 @@
-(A) group dscan results
 (A) client side router +dscan_history
+(C) display nearest celestial for dscan
 (C) dscan history +dscan_history
 (C) local history +local_history
 (C) shareable links for local scans +local_history
@@ -10,6 +10,7 @@
 D-Scan
 Shopping list
 
+x (A) group dscan results
 x (A) dependency updates
 x (A) update timestamps dscan tab
 x (A) extract common code local/dscan tabs
