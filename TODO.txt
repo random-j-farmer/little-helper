@@ -6,7 +6,9 @@
 (C) diffs between scans in same system +local_history
 (C) crest login and api to determine current system for browser other than IGB +local_history
 (E) one chunk of disk space shared between all caches
-(E) error message when started multiple times (currently it just hangs in ehc cache)
+(E) error message when started multiple times
+(E) clean up dscan grouping, maybe make general purpose dynamic tree?
+(E) clean up main server api
 D-Scan
 Shopping list
 

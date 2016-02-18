@@ -47,15 +47,18 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
   }
 
 
+  /** the view with the links that switch between tabs */
   val linksView: HTMLDivElement =
     div(cls := "pure-menu pure-menu-horizontal", onclick := menuClick _,
       style := "display: inline; position: absolute; top: 0px; right: 0px; width: 10cm; text-align: right;",
       ul(cls := "pure-menu-list", linkListItems)
     ).render
 
+  /** the view with the panels that are hidden/shown as needed */
   val panelView: HTMLDivElement = div(tabs.map(_.panelView)).render
 
-  def menuClick(ev: dom.Event): Unit = {
+
+  private def menuClick(ev: dom.Event): Unit = {
     try {
       ev.stopPropagation()
       val myA = ev.target.asInstanceOf[html.Anchor]
@@ -68,6 +71,17 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
     } catch {
       case ex: Exception => log.error("Exception:", ex)
     }
+  }
+
+  /**
+   * Route to the panel described by fragmentPath.
+   *
+   * fragmentPath is the panel id followed by optional arguments
+   *
+   * @param fragmentPath sequence of strings
+   */
+  def route(fragmentPath: Seq[String]): Unit = {
+    activatePanel(fragmentPath.head)
   }
 
 }

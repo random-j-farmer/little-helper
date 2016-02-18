@@ -11,38 +11,41 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
 import scalatags.JsDom.all._
 
-class LittleHelper {
+@JSExport
+object LittleHelper {
 
   val log = LoggerRLH("client.LittleHelper")
 
   val tabPanel = TabPanel(Vector(LocalTab, DScanTab, LoggingTab))
 
-  def main(_body: html.Body) = {
-
-    val rlhMain = div(id := "rlhMain",
+  val mainView = div(id := "rlhMain",
       tabPanel.linksView,
       tabPanel.panelView
     ).render
 
-    _body.appendChild(rlhMain)
-
-    dom.window.setInterval(LocalDetailsView.refreshResponseTimeAgo _, 10000d)
-    dom.window.setInterval(DScanDetailsView.refreshResponseTimeAgo _, 10000d)
-
-    log.info("LittleHelper.main: " + SharedConfig.client)
-  }
-
-}
-
-@JSExport
-object LittleHelper {
+  private[this] val FragmentPattern = """^#(\w*)$""".r
 
   @JSExport
   def main(_body: html.Body, configJson: js.Any) = {
     val clientConfig = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
     SharedConfig.client = clientConfig
-    val lh = new LittleHelper()
-    lh.main(_body)
+
+    _body.appendChild(mainView)
+
+    // we cant log before the log div is added to the body
+    log.info("LittleHelper.main: " + SharedConfig.client)
+
+    // the fragment in the browser url
+    val currentFragment = Option(js.Dynamic.global.location.hash.asInstanceOf[String])
+    currentFragment match {
+      case Some(FragmentPattern(panelId)) =>
+        log.debug("document fragment: current panel id: " + panelId)
+        tabPanel.route(panelId.split('/'))
+    }
+
+
+    dom.window.setInterval(LocalDetailsView.refreshResponseTimeAgo _, 10000d)
+    dom.window.setInterval(DScanDetailsView.refreshResponseTimeAgo _, 10000d)
   }
 
 }
