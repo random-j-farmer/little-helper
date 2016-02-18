@@ -43,7 +43,9 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
     tabs.foreach { tab =>
       tab.panelView.setAttribute("hidden", "hidden")
     }
-    tabById(panelID).panelView.removeAttribute("hidden")
+    val active = tabById(panelID)
+    active.panelView.removeAttribute("hidden")
+    active
   }
 
 
@@ -81,7 +83,11 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
    * @param fragmentPath sequence of strings
    */
   def route(fragmentPath: Seq[String]): Unit = {
-    activatePanel(fragmentPath.head)
+    val active = activatePanel(fragmentPath.head)
+    val tail = fragmentPath.tail
+    if (tail.nonEmpty) {
+      active.route(tail)
+    }
   }
 
 }

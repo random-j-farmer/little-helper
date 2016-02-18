@@ -13,9 +13,8 @@
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="5000" unit="entries"/>
-            <ehcache:disk size="25" unit="mb" persistent="true"/>
+            <ehcache:disk size="50" unit="mb" persistent="true"/>
         </ehcache:resources>
-
     </ehcache:cache>
 
     <ehcache:cache alias="characterInfoCache">
@@ -26,7 +25,6 @@
             <ehcache:heap size="2000" unit="entries"/>
             <ehcache:disk size="100" unit="mb" persistent="true"/>
         </ehcache:resources>
-
     </ehcache:cache>
 
     <ehcache:cache alias="zkStatsCache">
@@ -37,7 +35,26 @@
             <ehcache:heap size="2000" unit="entries"/>
             <ehcache:disk size="100" unit="mb" persistent="true"/>
         </ehcache:resources>
+    </ehcache:cache>
 
+    <ehcache:cache alias="listCharactersCache">
+        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.ListCharactersResponse</ehcache:value-type>
+        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:resources>
+            <ehcache:heap size="200" unit="entries"/>
+            <ehcache:disk size="50" unit="mb" persistent="true"/>
+        </ehcache:resources>
+    </ehcache:cache>
+
+    <ehcache:cache alias="dscanResultsCache">
+        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.DScanParseResponse</ehcache:value-type>
+        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:resources>
+            <ehcache:heap size="200" unit="entries"/>
+            <ehcache:disk size="50" unit="mb" persistent="true"/>
+        </ehcache:resources>
     </ehcache:cache>
 
 </ehcache:config>

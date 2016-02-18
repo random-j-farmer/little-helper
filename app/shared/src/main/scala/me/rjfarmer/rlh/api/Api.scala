@@ -1,7 +1,8 @@
 package me.rjfarmer.rlh.api
 
-import scala.concurrent.Future
 import me.rjfarmer.rlh.shared.SharedConfig
+
+import scala.concurrent.Future
 
 
 /** all web service requests provide these, but they are filled in on the server in the IGB case */
@@ -40,7 +41,7 @@ final case class CharacterIDAndName(characterID: Long, characterName: String, re
   extends WebserviceResult
 
 
-final case class ZkActivePvP (kills: Int, regions: Int, ships: Int, systems: Int)
+final case class ZkActivePvP(kills: Int, regions: Int, ships: Int, systems: Int)
 
 final case class ZkInfo(allianceID: Long, corporationID: Long, factionID: Long, id: Long, killID: Long,
                         name: String)
@@ -50,6 +51,27 @@ final case class ZkMonthStats(year: Int, month: Int, shipsLost: Int, pointsLost:
 
 final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMonthStats, receivedTimestamp: Long)
   extends WebserviceResult
+
+
+/**
+ * Can be cached for sharing of results.
+ *
+ * @tparam T cached response type
+ */
+trait CachableResponse[+T] extends Serializable {
+
+  def cacheKey: Option[String]
+
+  def copyWithCacheKey(key: String): T
+
+}
+
+/** has version information that can be checked */
+trait VersionedRequest {
+
+  def version: String
+
+}
 
 
 /**
@@ -70,16 +92,16 @@ final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMon
  * @param recentLosses losses in last 2 months.  zkinfo probably not there for large requests
  */
 final case class CharInfo(name: String,
-                         characterID: Option[Long],
-                         complete: Boolean,
-                         receivedTimestamp: Long,
+                          characterID: Option[Long],
+                          complete: Boolean,
+                          receivedTimestamp: Long,
 
-                         characterAge: Option[Double],
-                         corporation: Option[String],
-                         alliance: Option[String],
+                          characterAge: Option[Double],
+                          corporation: Option[String],
+                          alliance: Option[String],
 
-                         recentKills: Option[Int],
-                         recentLosses: Option[Int])
+                          recentKills: Option[Int],
+                          recentLosses: Option[Int])
   extends WebserviceResult
 
 object CharInfo {
@@ -95,15 +117,26 @@ object CharInfo {
 }
 
 final case class ListCharactersRequest(version: String, names: Vector[String],
-                                       // these two are not currently filled in by the client
+                                       // these three are not currently filled in by the client
                                        // but by the server when reading request headers
                                        clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends WebserviceRequest
+  extends WebserviceRequest with VersionedRequest
+
+final case class CachedCharactersRequest(version: String, cacheKey: String,
+                                       // filled in on the server
+                                       clientIP: String, pilot: Option[String], solarSystem: Option[String])
+  extends WebserviceRequest with VersionedRequest
 
 final case class ListCharactersResponse(message: Option[String],
+                                        cacheKey: Option[String],
                                         // may be present if IGB
                                         solarSystem: Option[String],
                                         charinfos: Vector[CharInfo])
+  extends CachableResponse[ListCharactersResponse] {
+
+  override def copyWithCacheKey(key: String): ListCharactersResponse = copy(cacheKey = Some(key))
+
+}
 
 
 //
@@ -117,19 +150,33 @@ final case class DScanLine(name: String, typ: String, groupCat: CategoryAndGroup
 final case class DScanParseRequest(version: String, lines: Vector[String],
                                    // again, filled in by server from request headers
                                    clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends WebserviceRequest
+  extends WebserviceRequest with VersionedRequest
 
 final case class DScanParseResponse(message: Option[String],
+                                    cacheKey: Option[String],
                                     // my be present if IGB
                                     solarSystem: Option[String],
                                     lines: Vector[DScanLine])
+  extends CachableResponse[DScanParseResponse] {
+
+  override def copyWithCacheKey(key: String): DScanParseResponse = copy(cacheKey = Some(key))
+
+}
+
+final case class CachedDScanRequest(version: String, cacheKey: String,
+                                    clientIP: String, pilot: Option[String], solarSystem: Option[String])
+  extends WebserviceRequest with VersionedRequest
 
 
 trait Api {
 
   def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse]
 
+  def cachedCharacters(request: CachedCharactersRequest): Future[Option[ListCharactersResponse]]
+
   def parseDScan(request: DScanParseRequest): Future[DScanParseResponse]
+
+  def cachedDScan(request: CachedDScanRequest): Future[Option[DScanParseResponse]]
 
 }
 

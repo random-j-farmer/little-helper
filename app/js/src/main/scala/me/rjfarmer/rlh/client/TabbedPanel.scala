@@ -15,4 +15,7 @@ trait TabbedPanel {
   /** view to be shown/hidden. top div needs id */
   def panelView: HTMLDivElement
 
+  /** route the panel. default doesn't do anything */
+  def route(args: Seq[String]): Unit = {}
+
 }

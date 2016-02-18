@@ -3,15 +3,15 @@ package me.rjfarmer.rlh.client.local
 // for correct macro application
 
 import autowire._
-import me.rjfarmer.rlh.api.{Api, ListCharactersRequest, ListCharactersResponse}
-import me.rjfarmer.rlh.client.logging.LoggerRLH
+import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.client._
+import me.rjfarmer.rlh.client.logging.LoggerRLH
 import me.rjfarmer.rlh.shared.{EveCharacterName, SharedConfig}
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
-import scala.util.{Failure,Success}
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
 
@@ -54,7 +54,7 @@ object LocalTab extends TabbedPanel with Submitable {
       (now - started) + "ms")
 
     LocalDetailsView.update(resp)
-
+    LittleHelper.setLocationFragment("localTab", resp.cacheKey.toSeq)
     submitFinished(started, messages(resp))
   }
 
@@ -83,11 +83,24 @@ object LocalTab extends TabbedPanel with Submitable {
     val completeButStale = complete.filterNot(_.isFresh)
     val msgSuffix = " in the background and will be ready for your next request."
     val incompleteMsg: Option[Message] = if (incomplete.isEmpty) None
-      else Some(Message.warning(s"${incomplete.size} incomplete results.  The missing results will be retrieved and cached" + msgSuffix))
+    else Some(Message.warning(s"${incomplete.size} incomplete results.  The missing results will be retrieved and cached" + msgSuffix))
     val staleMsg: Option[Message] = if (completeButStale.isEmpty) None
-      else Some(Message.info(s"${completeButStale.size} stale responses.  The stale results will be refreshed" + msgSuffix))
+    else Some(Message.info(s"${completeButStale.size} stale responses.  The stale results will be refreshed" + msgSuffix))
     Seq() ++ resp.message.map(Message.error) ++ incompleteMsg ++ staleMsg
   }
 
+  override def route(args: Seq[String]): Unit = {
+    args match {
+      case Seq(cachedKey) =>
+        val req = CachedCharactersRequest(SharedConfig.client.clientSoftwareVersion, cachedKey, "", None, None)
+        Ajaxer[Api].cachedCharacters(req).call().onSuccess {
+          case None =>
+            log.info("route: cached result does not exist: " + cachedKey)
+          case Some(resp) =>
+            log.info("route: retrieved cached dscan result: " + resp.charinfos.length)
+            LocalDetailsView.update(resp)
+        }
+    }
+  }
 
 }

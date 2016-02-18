@@ -29,7 +29,23 @@
         <ehcache:resources>
             <ehcache:heap size="2000" unit="entries"/>
         </ehcache:resources>
-
     </ehcache:cache>
 
+    <ehcache:cache alias="listCharactersCache">
+        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.ListCharactersResponse</ehcache:value-type>
+        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:resources>
+            <ehcache:heap size="200" unit="entries"/>
+        </ehcache:resources>
+    </ehcache:cache>
+
+    <ehcache:cache alias="dscanResultsCache">
+        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.DScanParseResponse</ehcache:value-type>
+        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:resources>
+            <ehcache:heap size="200" unit="entries"/>
+        </ehcache:resources>
+    </ehcache:cache>
 </ehcache:config>

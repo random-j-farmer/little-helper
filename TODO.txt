@@ -1,4 +1,5 @@
-(A) client side router +dscan_history
+(A) display of cached results shows current timestamp
+(A) log output for retrieve of cached results
 (C) display nearest celestial for dscan
 (C) dscan history +dscan_history
 (C) local history +local_history
@@ -8,10 +9,12 @@
 (E) one chunk of disk space shared between all caches
 (E) error message when started multiple times
 (E) clean up dscan grouping, maybe make general purpose dynamic tree?
-(E) clean up main server api
+(E) clean up json parsing code, use jawn ast
 D-Scan
 Shopping list
 
+x (A) client side router +dscan_history
+x (E) clean up main server api
 x (A) group dscan results
 x (A) dependency updates
 x (A) update timestamps dscan tab

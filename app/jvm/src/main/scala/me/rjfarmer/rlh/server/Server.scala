@@ -1,12 +1,10 @@
 package me.rjfarmer.rlh.server
 
 import akka.actor.ActorSystem
-import akka.pattern.ask
 import akka.routing.FromConfig
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
-import me.rjfarmer.rlh.eve.CharacterIDApi._
 import me.rjfarmer.rlh.eve._
 import me.rjfarmer.rlh.retriever.PriorityConfig
 import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
@@ -18,8 +16,7 @@ import spray.httpx.encoding.{Deflate, Gzip, NoEncoding}
 import spray.routing.{RequestContext, SimpleRoutingApp}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Future, Promise}
-import scala.util.{Failure, Success}
+import scala.concurrent.Future
 
 
 object Router extends autowire.Server[String, upickle.default.Reader, upickle.default.Writer] {
@@ -37,8 +34,16 @@ case class ServerWithRequestData(clientIP: String, requestData: String, solarSys
     Server.listCharacters(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
   }
 
+  override def cachedCharacters(request: CachedCharactersRequest): Future[Option[ListCharactersResponse]] = {
+    Server.cachedCharacters(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
+  }
+
   override def parseDScan(request: DScanParseRequest): Future[DScanParseResponse] = {
     Server.parseDScan(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
+  }
+
+  override def cachedDScan(request: CachedDScanRequest): Future[Option[DScanParseResponse]] = {
+    Server.cachedDScan(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
   }
 
 }
@@ -47,13 +52,17 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 
   import Boot._
 
-  private[this] val clientVersionError = "Client version does not match server, please reload the page (F5)."
+  val clientVersionError = "Client version does not match server, please reload the page (F5)."
 
   val characterID = bootSystem.actorOf(FromConfig.props(CharacterIDApi.props(cacheManager)), "characterIDPool")
   val characterInfoRetriever = bootSystem.actorOf(FromConfig.props(CharacterInfoRetriever.props(cacheManager,
     restTimeout.duration)), "characterInfoRetrievers")
   val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager,
     restTimeout.duration)), "zkStatsRetrievers")
+
+  val dscanResultsCache = cacheManager.getCache("dscanResultsCache", classOf[java.lang.String], classOf[DScanParseResponse])
+  val listCharactersCache = cacheManager.getCache("listCharactersCache", classOf[java.lang.String], classOf[ListCharactersResponse])
+
 
   def main(args: Array[String]): Unit = {
 
@@ -106,69 +115,22 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
       headers.mapFind(f("EVE_SOLARSYSTEMNAME")), headers.mapFind(f("EVE_CHARNAME")))
   }
 
-  private def listIds(wsr: WebserviceRequest, names: Vector[String]): Future[CharacterIDResponse] = {
-    ask(characterID, CharacterIDRequest(wsr, names, Map(), None))(Boot.ajaxFutureTimeout)
-      .asInstanceOf[Future[CharacterIDResponse]]
+  override def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
+    ListCharactersRequestHandler(ListCharactersResponseCache(listCharactersCache)).handleRequest(req)
   }
 
-  override def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
-    val ts = System.currentTimeMillis()
-    val result = Promise[ListCharactersResponse]()
-
-    if (req.version != BuildInfo.version) {
-      result.success(ListCharactersResponse(Some(clientVersionError),
-        req.solarSystem,
-        Vector()))
-    } else {
-      val idsFuture = listIds(req, req.names)
-      idsFuture.onComplete {
-        case Success(idResp) =>
-          val pureIds = idResp.fullResult.values.map(_.characterID).toVector
-          if (idResp.unknownNames.nonEmpty) {
-            bootSystem.log.warning("<{}> unknown character names: {}", req.clientIP, idResp.unknownNames.mkString(", "))
-          }
-          val f1 = CharacterInfoRetriever.characterInfo(characterInfoRetriever, req, pureIds, ajaxFutureTimeout)
-          val f2 = ZkStatsRetriever.zkStats(zkStatsRetriever, req, pureIds, ajaxFutureTimeout)
-          f1.zip(f2).onComplete {
-            case Success(Pair(infoMap, zkMap)) =>
-              val cis = idResp.allNames.map { name =>
-                val idOpt = idResp.fullResult.get(name).map(ian => ian.characterID)
-                val id: Long = idOpt.getOrElse(0L)
-                // no results for key 0L, so if the id was not resolved, we return None
-                CharInfo(name, idOpt, infoMap.get(id), zkMap.get(id))
-              }.sorted(ByDestroyed)
-              bootSystem.log.info("<{}> listCharacters: successful response for {} names ({} stale) in {}ms",
-                req.clientIP, req.names.size,
-                cis.filterNot(_.isFresh).length,
-                System.currentTimeMillis() - ts)
-              result.success(ListCharactersResponse(None, req.solarSystem, cis))
-            case Failure(ex) =>
-              bootSystem.log.error("<{}> listCharacters: received error: {}", req.clientIP, ex)
-              result.failure(ex)
-          }
-        case Failure(ex) =>
-          result.failure(ex)
-      }
-    }
-    result.future
+  override def cachedCharacters(request: CachedCharactersRequest): Future[Option[ListCharactersResponse]] = {
+    ListCharactersRequestHandler(ListCharactersResponseCache(listCharactersCache)).cachedResponse(request.cacheKey)
   }
 
   override def parseDScan(req: DScanParseRequest): Future[DScanParseResponse] = {
-    Promise.successful(
-      if (req.version != BuildInfo.version) {
-        DScanParseResponse(Some(clientVersionError), req.solarSystem, Vector())
-      } else {
-        try {
-          DScanParseResponse(None, req.solarSystem,
-            req.lines.map(DScanParser.parse))
-        } catch {
-          case ex: Exception =>
-            DScanParseResponse(Some("Error parsing request lines: " + ex),
-              req.solarSystem, Vector())
-        }
-      }
-    ).future
+    DScanRequestHandler(DScanResponseCache(dscanResultsCache)).handleRequest(req)
   }
+
+  override def cachedDScan(request: CachedDScanRequest): Future[Option[DScanParseResponse]] = {
+    DScanRequestHandler(DScanResponseCache(dscanResultsCache)).cachedResponse(request.cacheKey)
+  }
+
 }
 
 

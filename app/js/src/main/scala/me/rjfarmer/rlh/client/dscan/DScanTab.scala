@@ -1,10 +1,11 @@
 package me.rjfarmer.rlh.client.dscan
 
 // for correct macro appliction
+
 import autowire._
 import me.rjfarmer.rlh.api._
+import me.rjfarmer.rlh.client._
 import me.rjfarmer.rlh.client.logging.LoggerRLH
-import me.rjfarmer.rlh.client.{Ajaxer, Message, Submitable, TabbedPanel}
 import me.rjfarmer.rlh.shared.{DScanLineCheck, SharedConfig}
 import org.scalajs.dom
 
@@ -49,7 +50,7 @@ object DScanTab extends TabbedPanel with Submitable {
 
     log.debug("calling parseDScan with " + validLines.length + " lines")
     val req = DScanParseRequest(SharedConfig.client.clientSoftwareVersion, validLines, "", None, None)
-    val future= Ajaxer[Api].parseDScan(req).call()
+    val future = Ajaxer[Api].parseDScan(req).call()
 
     future.onComplete {
       case Failure(ex) =>
@@ -63,6 +64,8 @@ object DScanTab extends TabbedPanel with Submitable {
           resp.solarSystem + " in " +
           (now - started) + "ms")
         DScanDetailsView.update(resp)
+        LittleHelper.setLocationFragment("dscanTab", resp.cacheKey.toSeq)
+
         submitFinished(started, messages(resp))
 
     }
@@ -70,6 +73,20 @@ object DScanTab extends TabbedPanel with Submitable {
 
   def messages(resp: DScanParseResponse): Seq[Message] = {
     resp.message.map(Message.error).toSeq
+  }
+
+  override def route(args: Seq[String]): Unit = {
+    args match {
+      case Seq(cachedKey) =>
+        val req = CachedDScanRequest(SharedConfig.client.clientSoftwareVersion, cachedKey, "", None, None)
+        Ajaxer[Api].cachedDScan(req).call().onSuccess {
+          case None =>
+            log.info("route: cached result does not exist: " + cachedKey)
+          case Some(resp) =>
+            log.info("route: retrieved cached dscan result: " + resp.lines.length)
+            DScanDetailsView.update(resp)
+        }
+    }
   }
 
 }

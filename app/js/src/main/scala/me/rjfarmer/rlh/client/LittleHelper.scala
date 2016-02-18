@@ -19,11 +19,17 @@ object LittleHelper {
   val tabPanel = TabPanel(Vector(LocalTab, DScanTab, LoggingTab))
 
   val mainView = div(id := "rlhMain",
-      tabPanel.linksView,
-      tabPanel.panelView
-    ).render
+    tabPanel.linksView,
+    tabPanel.panelView
+  ).render
 
-  private[this] val FragmentPattern = """^#(\w*)$""".r
+  private[this] val FragmentPattern = """^#([\w/]*)$""".r
+
+  /** set the location fragment (starting with #) for client side routing */
+  def setLocationFragment(panelID: String, args: Seq[String]): Unit = {
+    val frag = "#" + (Vector(panelID) ++ args).mkString("/")
+    js.Dynamic.global.location.hash = frag
+  }
 
   @JSExport
   def main(_body: html.Body, configJson: js.Any) = {
