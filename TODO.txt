@@ -1,4 +1,3 @@
-(A) display nearest celestial for dscan
 (B) button to share cached response (copy to clipboard?)
 (B) client-side routing with push-state https://developer.mozilla.org/en-US/docs/Web/API/History_API
 (B) change location when switching to a tab with a cached response
@@ -15,6 +14,7 @@
 D-Scan
 Shopping list
 
+x (A) display nearest celestial for dscan
 x (A) dscan grouping: when expanding, close everything on the level below
 x (A) display of cached results shows current timestamp
 x (A) log output for retrieve of cached results

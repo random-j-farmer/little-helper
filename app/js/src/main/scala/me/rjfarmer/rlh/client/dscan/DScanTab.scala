@@ -32,6 +32,7 @@ object DScanTab extends TabbedPanel with Submitable {
       messageBox,
       h1(DScanDetailsView.dscanItemCount, DScanDetailsView.solarSystem, DScanDetailsView.respTimeAgo),
       table(cls := "pure-table dscan-tree",
+        caption(DScanDetailsView.nearestCelestial),
         thead(tr(th(`class` := "name-col", "Type/Name"), th(`class` := "dist-col", "Distance"))),
         DScanDetailsView.dscanList)
     )

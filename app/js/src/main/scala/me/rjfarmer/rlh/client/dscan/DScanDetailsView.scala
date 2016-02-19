@@ -15,8 +15,11 @@ object DScanDetailsView extends Refreshable {
 
   private[this] val log = LoggerRLH("client.dscan.DScanTab")
 
-  val dscanItemCount = span().render
+  val dscanItemCount = span("0 objects, ").render
   val solarSystem = span().render
+
+  private val noCelestialMessage = "No celestial on D-Scan."
+  val nearestCelestial = span(noCelestialMessage).render
 
   val dscanList = tbody().render
 
@@ -26,12 +29,15 @@ object DScanDetailsView extends Refreshable {
 
     val lines = resp.lines
 
-    dscanItemCount.innerHTML = s"${lines.size} scanned objects, "
+    dscanItemCount.innerHTML = s"${lines.size} objects, "
 
     resp.solarSystem match {
       case None =>
       case Some(ssn) => solarSystem.appendChild(span(ssn, ", ").render)
     }
+
+    nearestCelestial.innerHTML = ""
+    nearestCelestial.appendChild(span(findNearestCelestial(resp)).render)
 
     dscanList.innerHTML = ""
 
@@ -56,6 +62,17 @@ object DScanDetailsView extends Refreshable {
         }
       }
     }
+  }
+
+  private val celestialCategories = Set("Celestial")
+
+  private def findNearestCelestial(resp: DScanParseResponse): String = {
+    resp.lines
+      .filter(line => celestialCategories.contains(line.groupCat.category))
+      .sorted(DScanDistanceOrdering)
+      .headOption
+      .map(cel => cel.name + " at " + DScanLineCheck.formatDistance(cel.distAu))
+      .getOrElse(noCelestialMessage)
   }
 
   /**

@@ -36,7 +36,7 @@ object LocalTab extends TabbedPanel with Submitable {
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Alliance/Corp"), th("# Pilots"))),
         LocalDetailsView.corpList),
-      h2("Pilots"),
+      h2("Pilots by kills in the last 2 months"),
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
         LocalDetailsView.pilotList)

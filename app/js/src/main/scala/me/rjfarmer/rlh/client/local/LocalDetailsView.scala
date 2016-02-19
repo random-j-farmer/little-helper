@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
 
 object LocalDetailsView extends Refreshable {
 
-  val pilotCount = span().render
+  val pilotCount = span("0 pilots, ").render
   val solarSystem = span().render
 
   val corpList = tbody().render

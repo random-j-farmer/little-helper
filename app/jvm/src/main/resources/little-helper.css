@@ -44,7 +44,7 @@
 }
 
 /* closed node: triangle right */
-.dscan-tree span::before {
+.dscan-tree tr span::before {
     content: "\0025B6";
 }
 
