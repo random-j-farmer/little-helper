@@ -1,7 +1,7 @@
 package me.rjfarmer.rlh.client.local
 
 import me.rjfarmer.rlh.api.{CharInfo, ListCharactersResponse, WebserviceResult}
-import me.rjfarmer.rlh.client.Refreshable
+import me.rjfarmer.rlh.client.{LittleHelper, Refreshable}
 import me.rjfarmer.rlh.shared.SharedConfig
 import org.scalajs.dom.raw.HTMLElement
 
@@ -16,6 +16,10 @@ object LocalDetailsView extends Refreshable {
 
   val corpList = tbody().render
   val pilotList = tbody().render
+
+  /** cache key of current result, if any */
+  var resultCacheKey: Option[String] = None
+
 
   def freshnessKlass(nowMillis: Long, wsr: WebserviceResult): String = {
     val relativeAge = (nowMillis - wsr.receivedTimestamp) / SharedConfig.client.staleOlderThanMillis.toDouble
@@ -40,6 +44,9 @@ object LocalDetailsView extends Refreshable {
   }
 
   def update(resp: ListCharactersResponse) = {
+
+    resultCacheKey = resp.cacheKey
+    LittleHelper.setLocationFragment(s"#localTab/${resp.cacheKey.get}")
 
     val pilots = resp.charinfos
 

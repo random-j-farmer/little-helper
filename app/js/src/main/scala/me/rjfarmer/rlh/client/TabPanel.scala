@@ -33,7 +33,7 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
 
   activatePanel(tabs.head.panelView.getAttribute("id"))
 
-  private def activatePanel(panelID: String) = {
+  private def activatePanel(panelID: String, changeBrowserLocation: Boolean = false) = {
     val frag = "#" + panelID
 
     linkListItems.foreach { item =>
@@ -45,6 +45,12 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
     }
     val active = tabById(panelID)
     active.panelView.removeAttribute("hidden")
+
+    if (changeBrowserLocation) {
+      log.debug("activate panel: setting browser location: " + active.urlFragment)
+      LittleHelper.setLocationFragment(active.urlFragment)
+    }
+
     active
   }
 
@@ -63,13 +69,14 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
   private def menuClick(ev: dom.Event): Unit = {
     try {
       ev.stopPropagation()
+      ev.preventDefault()
       val myA = ev.target.asInstanceOf[html.Anchor]
       val myLI = myA.parentNode.asInstanceOf[html.LI]
       val myUL = myLI.parentNode.asInstanceOf[html.UList]
       val linkTarget = myA.href.replaceFirst( """.*\#""", "")
       // log.info("linkTarget: " + linkTarget)
 
-      activatePanel(linkTarget)
+      activatePanel(linkTarget, changeBrowserLocation = true)
     } catch {
       case ex: Exception => log.error("Exception:", ex)
     }
@@ -83,6 +90,7 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
    * @param fragmentPath sequence of strings
    */
   def route(fragmentPath: Seq[String]): Unit = {
+    log.info("routing to: " + fragmentPath)
     val active = activatePanel(fragmentPath.head)
     val tail = fragmentPath.tail
     if (tail.nonEmpty) {

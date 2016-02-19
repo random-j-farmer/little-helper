@@ -11,6 +11,7 @@ import org.scalajs.dom
 import org.scalajs.dom.html.Div
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.scalajs.js
 import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
@@ -39,7 +40,8 @@ object LocalTab extends TabbedPanel with Submitable {
       h2("Pilots by kills in the last 2 months"),
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
-        LocalDetailsView.pilotList)
+        LocalDetailsView.pilotList),
+      button(cls := "pure-button",  onclick := shareUrl _, "Share Result")
     )
   ).render
 
@@ -54,7 +56,6 @@ object LocalTab extends TabbedPanel with Submitable {
       (now - started) + "ms")
 
     LocalDetailsView.update(resp)
-    LittleHelper.setLocationFragment("localTab", resp.cacheKey.toSeq)
     submitFinished(started, messages(resp))
   }
 
@@ -78,6 +79,10 @@ object LocalTab extends TabbedPanel with Submitable {
     }
   }
 
+  def shareUrl(ev: dom.Event): Unit = {
+    js.Dynamic.global.prompt("Ctrl/Cmd-C:", LittleHelper.getLocationUrl)
+  }
+
   def messages(resp: ListCharactersResponse): Seq[Message] = {
     val (complete, incomplete) = resp.charinfos.partition(_.complete)
     val completeButStale = complete.filterNot(_.isFresh)
@@ -88,6 +93,7 @@ object LocalTab extends TabbedPanel with Submitable {
     else Some(Message.info(s"${completeButStale.size} stale responses.  The stale results will be refreshed" + msgSuffix))
     Seq() ++ resp.message.map(Message.error) ++ incompleteMsg ++ staleMsg
   }
+
 
   override def route(args: Seq[String]): Unit = {
     args match {
@@ -103,4 +109,6 @@ object LocalTab extends TabbedPanel with Submitable {
     }
   }
 
+  /** get the panels fragment - changed by route! */
+  override def urlFragment: String = (Vector("#localTab") ++ LocalDetailsView.resultCacheKey).mkString("/")
 }

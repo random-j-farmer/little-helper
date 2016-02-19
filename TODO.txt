@@ -4,16 +4,16 @@
 (C) float the tab menu
 (C) dscan history +dscan_history
 (C) local history +local_history
-(C) shareable links for local scans +local_history
 (C) diffs between scans in same system +local_history
 (C) crest login and api to determine current system for browser other than IGB +local_history
 (E) one chunk of disk space shared between all caches
 (E) error message when started multiple times
-(E) clean up dscan grouping, maybe make general purpose dynamic tree?
 (E) clean up json parsing code, use jawn ast
 D-Scan
 Shopping list
 
+x (E) clean up dscan grouping, maybe make general purpose dynamic tree?
+x (C) shareable links for local scans +local_history
 x (A) display nearest celestial for dscan
 x (A) dscan grouping: when expanding, close everything on the level below
 x (A) display of cached results shows current timestamp

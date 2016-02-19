@@ -10,20 +10,19 @@
     color: #fff;
     padding: 2em;
 }
-
-
 .message-info {
     background: rgb(66, 184, 221); /* light blue */
 }
-
 .message-warning {
     background: rgb(223, 117, 20); /* orange */
 }
-
 .message-error {
     background: rgb(202, 60, 60); /* error */
 }
 
+.float-right {
+    float: right;
+}
 
 
 .dscan-tree {

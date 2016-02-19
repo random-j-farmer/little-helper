@@ -25,4 +25,6 @@ object LoggingTab extends TabbedPanel {
 
   def clearLogButtonClick(ev: dom.Event): Unit = dom.document.getElementById("logMessages").innerHTML = ""
 
+  /** get the panels fragment - changed by route! */
+  override def urlFragment: String = "#loggingTab"
 }

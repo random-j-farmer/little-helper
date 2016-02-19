@@ -5,10 +5,12 @@ package me.rjfarmer.rlh.client.dscan
 import autowire._
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.client._
+import me.rjfarmer.rlh.client.local.LocalDetailsView
 import me.rjfarmer.rlh.client.logging.LoggerRLH
 import me.rjfarmer.rlh.shared.{DScanLineCheck, SharedConfig}
 import org.scalajs.dom
 
+import scala.scalajs.js
 import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
@@ -30,11 +32,13 @@ object DScanTab extends TabbedPanel with Submitable {
       submitButton),
     div(cls := "pure-u-2-3",
       messageBox,
-      h1(DScanDetailsView.dscanItemCount, DScanDetailsView.solarSystem, DScanDetailsView.respTimeAgo),
+      h1(DScanDetailsView.dscanItemCount, DScanDetailsView.solarSystem,
+        DScanDetailsView.respTimeAgo),
       table(cls := "pure-table dscan-tree",
         caption(DScanDetailsView.nearestCelestial),
         thead(tr(th(`class` := "name-col", "Type/Name"), th(`class` := "dist-col", "Distance"))),
-        DScanDetailsView.dscanList)
+        DScanDetailsView.dscanList),
+      button(cls := "pure-button",  onclick := shareUrl _, "Share Result")
     )
   ).render
 
@@ -65,11 +69,14 @@ object DScanTab extends TabbedPanel with Submitable {
           resp.solarSystem + " in " +
           (now - started) + "ms")
         DScanDetailsView.update(resp)
-        LittleHelper.setLocationFragment("dscanTab", resp.cacheKey.toSeq)
 
         submitFinished(started, messages(resp))
 
     }
+  }
+
+  def shareUrl(ev: dom.Event): Unit = {
+    js.Dynamic.global.prompt("Ctrl/Cmd-C:", LittleHelper.getLocationUrl)
   }
 
   def messages(resp: DScanParseResponse): Seq[Message] = {
@@ -89,5 +96,8 @@ object DScanTab extends TabbedPanel with Submitable {
         }
     }
   }
+
+  /** get the panels fragment - changed by route! */
+  override def urlFragment: String = (Vector("#dscanTab") ++ DScanDetailsView.resultCacheKey).mkString("/")
 
 }

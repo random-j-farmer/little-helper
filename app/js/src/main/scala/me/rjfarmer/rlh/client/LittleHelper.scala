@@ -25,10 +25,18 @@ object LittleHelper {
 
   private[this] val FragmentPattern = """^#([\w/]*)$""".r
 
+  private[this] var locationFrag: String = ""
+
   /** set the location fragment (starting with #) for client side routing */
-  def setLocationFragment(panelID: String, args: Seq[String]): Unit = {
-    val frag = "#" + (Vector(panelID) ++ args).mkString("/")
-    js.Dynamic.global.location.hash = frag
+  def setLocationFragment(frag: String): Unit = {
+    locationFrag = frag
+    // does not work in IGB, so we set a var as well
+    js.Dynamic.global.location.hash = locationFrag
+  }
+
+  def getLocationUrl: String = {
+    val url = js.Dynamic.global.location.href.asInstanceOf[String].replaceAll("#.*".r.regex, "")
+    url + locationFrag
   }
 
   @JSExport
@@ -46,7 +54,11 @@ object LittleHelper {
     currentFragment match {
       case Some(FragmentPattern(panelId)) =>
         log.debug("document fragment: current panel id: " + panelId)
-        tabPanel.route(panelId.split('/'))
+        val path = panelId.split('/')
+        tabPanel.route(path)
+        setLocationFragment("#" + panelId)
+      case _ =>
+        log.debug("no fragment to route:" + currentFragment)
     }
 
 

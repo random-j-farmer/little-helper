@@ -1,8 +1,7 @@
 package me.rjfarmer.rlh.client.dscan
 
 import me.rjfarmer.rlh.api.{DScanLine, DScanParseResponse}
-import me.rjfarmer.rlh.client.Refreshable
-import me.rjfarmer.rlh.client.logging.LoggerRLH
+import me.rjfarmer.rlh.client.{LittleHelper, Refreshable}
 import me.rjfarmer.rlh.shared.DScanLineCheck
 import org.scalajs.dom
 import org.scalajs.dom.html
@@ -13,7 +12,7 @@ object DScanDetailsView extends Refreshable {
 
   import me.rjfarmer.rlh.client.PimpedDomElement._
 
-  private[this] val log = LoggerRLH("client.dscan.DScanTab")
+  // private[this] val log = LoggerRLH("client.dscan.DScanTab")
 
   val dscanItemCount = span("0 objects, ").render
   val solarSystem = span().render
@@ -23,7 +22,14 @@ object DScanDetailsView extends Refreshable {
 
   val dscanList = tbody().render
 
+  /** current result cache key, if any*/
+  var resultCacheKey: Option[String] = None
+
   def update(resp: DScanParseResponse) = {
+
+    resultCacheKey = resp.cacheKey
+    LittleHelper.setLocationFragment(s"#dscanTab/${resp.cacheKey.get}")
+
     updateResponseTimestamp(resp.timestamp)
     refreshResponseTimeAgo
 
