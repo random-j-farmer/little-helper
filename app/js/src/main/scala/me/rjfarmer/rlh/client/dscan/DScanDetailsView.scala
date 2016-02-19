@@ -6,6 +6,7 @@ import me.rjfarmer.rlh.shared.DScanLineCheck
 import org.scalajs.dom
 import org.scalajs.dom.html
 
+import scala.scalajs.js
 import scalatags.JsDom.all._
 
 object DScanDetailsView extends Refreshable {
@@ -24,11 +25,18 @@ object DScanDetailsView extends Refreshable {
 
   /** current result cache key, if any*/
   var resultCacheKey: Option[String] = None
+  val resultUrlBox = input(cls := "pure-input-2-3", `type` := "text", readonly).render
+  resultUrlBox.onfocus = selectAllOnFocus _
+
+  def selectAllOnFocus(ev: dom.Event) = {
+    js.timers.setTimeout(50.0d)(resultUrlBox.select())
+  }
 
   def update(resp: DScanParseResponse) = {
 
     resultCacheKey = resp.cacheKey
     LittleHelper.setLocationFragment(s"#dscanTab/${resp.cacheKey.get}")
+    resultUrlBox.value = LittleHelper.getLocationUrl
 
     updateResponseTimestamp(resp.timestamp)
     refreshResponseTimeAgo

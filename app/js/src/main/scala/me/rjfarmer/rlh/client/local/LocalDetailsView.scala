@@ -3,8 +3,10 @@ package me.rjfarmer.rlh.client.local
 import me.rjfarmer.rlh.api.{CharInfo, ListCharactersResponse, WebserviceResult}
 import me.rjfarmer.rlh.client.{LittleHelper, Refreshable}
 import me.rjfarmer.rlh.shared.SharedConfig
+import org.scalajs.dom
 import org.scalajs.dom.raw.HTMLElement
 
+import scala.scalajs.js
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
@@ -19,7 +21,12 @@ object LocalDetailsView extends Refreshable {
 
   /** cache key of current result, if any */
   var resultCacheKey: Option[String] = None
+  val resultUrlBox = input(cls := "pure-input-2-3", `type` := "text", readonly).render
+  resultUrlBox.onfocus = selectAllOnFocus _
 
+  def selectAllOnFocus(ev: dom.Event) = {
+    js.timers.setTimeout(50.0d)(resultUrlBox.select())
+  }
 
   def freshnessKlass(nowMillis: Long, wsr: WebserviceResult): String = {
     val relativeAge = (nowMillis - wsr.receivedTimestamp) / SharedConfig.client.staleOlderThanMillis.toDouble
@@ -47,6 +54,7 @@ object LocalDetailsView extends Refreshable {
 
     resultCacheKey = resp.cacheKey
     LittleHelper.setLocationFragment(s"#localTab/${resp.cacheKey.get}")
+    resultUrlBox.value = LittleHelper.getLocationUrl
 
     val pilots = resp.charinfos
 

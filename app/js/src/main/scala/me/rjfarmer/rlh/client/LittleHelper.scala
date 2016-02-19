@@ -34,9 +34,11 @@ object LittleHelper {
     js.Dynamic.global.location.hash = locationFrag
   }
 
-  def getLocationUrl: String = {
+  def getLocationUrl: String = getLocationUrl(locationFrag)
+
+  def getLocationUrl(frag: String): String = {
     val url = js.Dynamic.global.location.href.asInstanceOf[String].replaceAll("#.*".r.regex, "")
-    url + locationFrag
+    url + frag
   }
 
   @JSExport

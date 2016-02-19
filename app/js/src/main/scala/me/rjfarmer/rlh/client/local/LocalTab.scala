@@ -41,8 +41,11 @@ object LocalTab extends TabbedPanel with Submitable {
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
         LocalDetailsView.pilotList),
-      button(cls := "pure-button",  onclick := shareUrl _, "Share Result")
-    )
+      p(),
+      form(cls := "pure-form",
+        fieldset(
+          legend("Share result URL"),
+          LocalDetailsView.resultUrlBox)))
   ).render
 
   override val log = LoggerRLH("client.local.LocalTab")

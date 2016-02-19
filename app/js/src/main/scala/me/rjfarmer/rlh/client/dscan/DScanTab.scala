@@ -5,7 +5,6 @@ package me.rjfarmer.rlh.client.dscan
 import autowire._
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.client._
-import me.rjfarmer.rlh.client.local.LocalDetailsView
 import me.rjfarmer.rlh.client.logging.LoggerRLH
 import me.rjfarmer.rlh.shared.{DScanLineCheck, SharedConfig}
 import org.scalajs.dom
@@ -38,8 +37,11 @@ object DScanTab extends TabbedPanel with Submitable {
         caption(DScanDetailsView.nearestCelestial),
         thead(tr(th(`class` := "name-col", "Type/Name"), th(`class` := "dist-col", "Distance"))),
         DScanDetailsView.dscanList),
-      button(cls := "pure-button",  onclick := shareUrl _, "Share Result")
-    )
+      p(),
+      form(cls := "pure-form",
+        fieldset(
+          legend("Share result URL"),
+          DScanDetailsView.resultUrlBox)))
   ).render
 
   override val log = LoggerRLH("client.dscan.DScanTab")

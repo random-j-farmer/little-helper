@@ -1,6 +1,3 @@
-(B) button to share cached response (copy to clipboard?)
-(B) client-side routing with push-state https://developer.mozilla.org/en-US/docs/Web/API/History_API
-(B) change location when switching to a tab with a cached response
 (C) float the tab menu
 (C) dscan history +dscan_history
 (C) local history +local_history
@@ -9,9 +6,13 @@
 (E) one chunk of disk space shared between all caches
 (E) error message when started multiple times
 (E) clean up json parsing code, use jawn ast
+(E) client-side routing with push-state https://developer.mozilla.org/en-US/docs/Web/API/History_API
 D-Scan
 Shopping list
 
+x (A) prompt-button does not work in IGB, just display input with url pre-selected
+x (B) button to share cached response (copy to clipboard?)
+x (B) change location when switching to a tab with a cached response
 x (E) clean up dscan grouping, maybe make general purpose dynamic tree?
 x (C) shareable links for local scans +local_history
 x (A) display nearest celestial for dscan

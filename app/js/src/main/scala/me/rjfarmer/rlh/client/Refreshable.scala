@@ -1,5 +1,7 @@
 package me.rjfarmer.rlh.client
 
+import org.scalajs.dom
+
 import scalatags.JsDom.all._
 
 /**
