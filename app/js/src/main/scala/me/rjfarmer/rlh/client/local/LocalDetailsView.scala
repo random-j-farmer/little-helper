@@ -44,7 +44,7 @@ object LocalDetailsView extends Refreshable {
     val pilots = resp.charinfos
 
     pilotCount.innerHTML = s"${resp.charinfos.size} pilots, "
-    updateResponseTimestamp()
+    updateResponseTimestamp(resp.timestamp)
     refreshResponseTimeAgo
 
     resp.solarSystem match {

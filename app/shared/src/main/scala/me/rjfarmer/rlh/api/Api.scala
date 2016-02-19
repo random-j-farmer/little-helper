@@ -60,6 +60,8 @@ final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMon
  */
 trait CachableResponse[+T] extends Serializable {
 
+  def timestamp: Long
+
   def cacheKey: Option[String]
 
   def copyWithCacheKey(key: String): T
@@ -138,6 +140,7 @@ final case class ListCharactersResponse(message: Option[String],
                                         cacheKey: Option[String],
                                         // may be present if IGB
                                         solarSystem: Option[String],
+                                        timestamp: Long,
                                         charinfos: Vector[CharInfo])
   extends CachableResponse[ListCharactersResponse] {
 
@@ -163,6 +166,7 @@ final case class DScanParseResponse(message: Option[String],
                                     cacheKey: Option[String],
                                     // my be present if IGB
                                     solarSystem: Option[String],
+                                    timestamp: Long,
                                     lines: Vector[DScanLine])
   extends CachableResponse[DScanParseResponse] {
 

@@ -16,7 +16,7 @@ class DScanRequestHandler(val cache: ResponseCache[DScanParseResponse])
   extends CachingRequestHandler[DScanParseRequest, DScanParseResponse, DScanParseResponse] {
 
   override def clientVersionError(req: DScanParseRequest): DScanParseResponse = {
-    DScanParseResponse(Some(Server.clientVersionError), None, req.solarSystem, Vector())
+    DScanParseResponse(Some(Server.clientVersionError), None, req.solarSystem, System.currentTimeMillis(), Vector())
   }
 
   override def handleUncached(req: DScanParseRequest): Future[DScanParseResponse] = {
@@ -24,11 +24,11 @@ class DScanRequestHandler(val cache: ResponseCache[DScanParseResponse])
       try {
         bootSystem.log.info("<{}> parseDScan: successful response for {} objects",
           req.clientIP, req.lines.size)
-        DScanParseResponse(None, None, req.solarSystem, req.lines.map(DScanParser.parse))
+        DScanParseResponse(None, None, req.solarSystem, System.currentTimeMillis(), req.lines.map(DScanParser.parse))
       } catch {
         case ex: Exception =>
           DScanParseResponse(Some("Error parsing request lines: " + ex),
-            None, req.solarSystem, Vector())
+            None, req.solarSystem, System.currentTimeMillis(), Vector())
       })
   }
 }

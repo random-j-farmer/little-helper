@@ -21,7 +21,7 @@ object DScanDetailsView extends Refreshable {
   val dscanList = tbody().render
 
   def update(resp: DScanParseResponse) = {
-    updateResponseTimestamp()
+    updateResponseTimestamp(resp.timestamp)
     refreshResponseTimeAgo
 
     val lines = resp.lines

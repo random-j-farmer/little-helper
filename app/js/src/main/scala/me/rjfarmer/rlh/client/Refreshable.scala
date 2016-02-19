@@ -29,8 +29,8 @@ trait Refreshable {
     responseTimeAgo
   }
 
-  def updateResponseTimestamp(): Unit = {
-    respTs = System.currentTimeMillis()
+  def updateResponseTimestamp(ts: Long): Unit = {
+    respTs = ts
   }
 
 }

@@ -21,7 +21,7 @@ class ListCharactersRequestHandler(val cache: ResponseCache[ListCharactersRespon
   import scala.concurrent.ExecutionContext.Implicits.global
 
   override def clientVersionError(req: ListCharactersRequest): ListCharactersResponse = {
-    ListCharactersResponse(Some(Server.clientVersionError), None, req.solarSystem, Vector())
+    ListCharactersResponse(Some(Server.clientVersionError), None, req.solarSystem, System.currentTimeMillis(), Vector())
   }
 
   private def listIds(wsr: WebserviceRequest, names: Vector[String]) = {
@@ -52,7 +52,7 @@ class ListCharactersRequestHandler(val cache: ResponseCache[ListCharactersRespon
       req.clientIP, req.names.size,
       cis.filterNot(_.isFresh).length,
       System.currentTimeMillis() - ts)
-    ListCharactersResponse(None, None, req.solarSystem, cis)
+    ListCharactersResponse(None, None, req.solarSystem, System.currentTimeMillis(), cis)
   }
 
   override def handleUncached(req: ListCharactersRequest): Future[ListCharactersResponse] = {
@@ -60,7 +60,8 @@ class ListCharactersRequestHandler(val cache: ResponseCache[ListCharactersRespon
     val idsFuture = listIds(req, req.names)
     idsFuture.flatMap(charinfoAndZkStats(req, ts))
       .map(combineResults(req, ts))
-      .fallbackTo(Future.successful(ListCharactersResponse(Some("Error parsing request lines"), None, req.solarSystem, Vector())))
+      .fallbackTo(Future.successful(ListCharactersResponse(Some("Error parsing request lines"), None, req.solarSystem,
+        System.currentTimeMillis(), Vector())))
   }
 
 }
