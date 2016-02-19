@@ -1,9 +1,8 @@
-(A) dscan grouping: when expanding, close everything on the level below
-(A) float the tab menu
 (A) display nearest celestial for dscan
 (B) button to share cached response (copy to clipboard?)
 (B) client-side routing with push-state https://developer.mozilla.org/en-US/docs/Web/API/History_API
 (B) change location when switching to a tab with a cached response
+(C) float the tab menu
 (C) dscan history +dscan_history
 (C) local history +local_history
 (C) shareable links for local scans +local_history
@@ -16,6 +15,7 @@
 D-Scan
 Shopping list
 
+x (A) dscan grouping: when expanding, close everything on the level below
 x (A) display of cached results shows current timestamp
 x (A) log output for retrieve of cached results
 x (A) client side router +dscan_history

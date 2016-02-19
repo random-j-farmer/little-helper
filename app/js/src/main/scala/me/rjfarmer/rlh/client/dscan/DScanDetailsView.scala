@@ -37,43 +37,63 @@ object DScanDetailsView extends Refreshable {
 
     for ((cat, catItems) <- groupAndSort(resp.lines, _.groupCat.category)) {
       val catClass = cssClass("cat", cat)
-      val groupClasses = "grp " + catClass
-      dscanList.appendChild(tr(`class` := "open cat",
-        data.ctrlclass := catClass,
-        onclick := nonLeafClick _,
-        td(span(`class` := "level1", cat, " (", catItems.length, ")")),
-        td()
-      ).render)
+      val groupParents = Set() + catClass
+      dscanList.appendChild(treeRow(catClass, "", Set(), cat + " (" + catItems.length + ")"))
 
       for ((group, groupItems) <- groupAndSort(catItems, _.groupCat.group)) {
         val groupClass = cssClass("grp", group)
-        val typClasses = (Vector("typ") :+ catClass :+ groupClass).mkString(" ")
-        dscanList.appendChild(tr(`class` := "open " + groupClasses,
-          data.ctrlclass := groupClass,
-          onclick := nonLeafClick _,
-          td(span(`class` := "level2", group, " (", groupItems.length, ")")),
-          td()
-        ).render)
+        val typParents = groupParents + groupClass
+        dscanList.appendChild(treeRow(groupClass, catClass, groupParents, group + " (" + groupItems.length + ")"))
 
         for ((typ, typItems) <- groupAndSort(groupItems, _.typ)) {
           val typClass = cssClass("typ", typ)
-          val lineClasses = (Vector("leaf") :+ catClass :+ groupClass :+ typClass).mkString(" ")
-          dscanList.appendChild(tr(`class` := "open " + typClasses,
-            data.ctrlclass := typClass,
-            onclick := nonLeafClick _,
-            td(span(`class` := "level3", typ, " (", typItems.length, ")")),
-            td()
-          ).render)
+          val leafParents = typParents + typClass
+          dscanList.appendChild(treeRow(typClass, groupClass, typParents, typ + " (" + typItems.length + ")"))
 
           for (item <- typItems.sorted(DScanDistanceOrdering)) {
-            dscanList.appendChild(tr(`class` := lineClasses,
-              td(span(`class` := "level4", item.name)),
-              td(DScanLineCheck.formatDistance(item.distAu))
-            ).render)
+            dscanList.appendChild(leafRow(typClass, leafParents, item.name, DScanLineCheck.formatDistance(item.distAu)))
           }
         }
       }
     }
+  }
+
+  /**
+   * Create a new tree row.
+   *
+   * The row is open by default.
+   *
+   * @param nodeClass the class of this row
+   * @param ctrlClass the class that controls this row, if any
+   * @param parentClasses all classes above this element
+   * @param text the text
+   * @return tree node
+   */
+  def treeRow(nodeClass: String, ctrlClass: String, parentClasses: Set[String], text: String) = {
+    tr(`class` := (parentClasses + "open").mkString(" "),
+      onclick := nonLeafClick _,
+      data.klass := nodeClass, data.ctrl := ctrlClass,
+      td(span(`class` := "level" + (parentClasses.size + 1), text)),
+      td()
+    ).render
+  }
+
+  /**
+   * Create a new leaf tree row.
+   *
+   * @param ctrlClass class that controls this row
+   * @param parentClasses all classes above this element
+   * @param text the text
+   * @param dist distance
+   * @return leaf tree node
+   */
+  def leafRow(ctrlClass: String, parentClasses: Set[String], text: String, dist: String) = {
+    tr(`class` := (parentClasses + "leaf").mkString(" "),
+      data.ctrl := ctrlClass,
+      td(span(`class` := "level" + (parentClasses.size + 1), text)),
+      td(dist)
+    ).render
+
   }
 
   def nonLeafClick(ev: dom.Event): Unit = {
@@ -83,28 +103,28 @@ object DScanDetailsView extends Refreshable {
       elem = elem.parentElement
     }
     if (elem != null) {
-      val ctrlClass = elem.getAttribute("data-ctrlclass")
+      val nodeClass = elem.getAttribute("data-klass")
       val isOpen = elem.toggleClass("open")
       val rows = dscanList.rows
 
-      for (i <- 0 until rows.length) {
-        val row = rows.item(i)
-        if (row.hasClass(ctrlClass)) {
-          val isLeaf = row.hasClass("leaf")
-          if (isOpen) {
+      if (isOpen) {
+        for (i <- 0 until rows.length; row = rows(i)) {
+          // open only the nodes that are controlled immediately!
+          val ctrlClass = row.getAttribute("data-ctrl")
+          if (ctrlClass == nodeClass) {
             row.removeAttribute("hidden")
-            if (! isLeaf) {
-              row.addClass("open")
-            }
-          } else {
+          }
+        }
+      } else {
+        for (i <- 0 until rows.length; row = rows(i)) {
+          // close all the nodes below this one!
+          if (row.hasClass(nodeClass)) {
             row.setAttribute("hidden", "hidden")
-            if (! isLeaf) {
-              row.removeClass("open")
-            }
+            // leafs don't have open/closed!
+            row.removeClass("open")
           }
         }
       }
-
     }
   }
 
