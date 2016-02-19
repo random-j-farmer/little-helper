@@ -3,7 +3,8 @@ package me.rjfarmer.rlh.server
 import java.io.{ByteArrayOutputStream, ObjectOutputStream}
 import java.security.MessageDigest
 
-import me.rjfarmer.rlh.api.{CachableResponse, VersionedRequest}
+import me.rjfarmer.rlh.api.{CachedRequest, CachableResponse, VersionedRequest}
+import me.rjfarmer.rlh.server.Boot._
 import org.ehcache.Cache
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -54,6 +55,8 @@ trait CachingRequestHandler[Q <: VersionedRequest, T, C <: CachableResponse[T]]
       val key = cacheKey(resp)
       val value = resp.copyWithCacheKey(key).asInstanceOf[C]
       cache.put(cacheKey(resp), value)
+      bootSystem.log.info("<{}> caching result {}",
+        req.clientIP, key)
       value
     }
   }
@@ -71,8 +74,11 @@ trait CachingRequestHandler[Q <: VersionedRequest, T, C <: CachableResponse[T]]
     bout.toByteArray
   }
 
-  def cachedResponse(key: String): Future[Option[C]] = {
-    Future.successful(cache.get(key))
+  // Q is needed for the copyWithKey operation, not for retrieval
+  def cachedResponse(req: CachedRequest): Future[Option[C]] = {
+    bootSystem.log.info("<{}> cached response {}",
+      req.clientIP, req.cacheKey)
+    Future.successful(cache.get(req.cacheKey))
   }
 
 }

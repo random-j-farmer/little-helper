@@ -1,5 +1,4 @@
 (A) display of cached results shows current timestamp
-(A) log output for retrieve of cached results
 (C) display nearest celestial for dscan
 (C) dscan history +dscan_history
 (C) local history +local_history
@@ -13,6 +12,7 @@
 D-Scan
 Shopping list
 
+x (A) log output for retrieve of cached results
 x (A) client side router +dscan_history
 x (E) clean up main server api
 x (A) group dscan results

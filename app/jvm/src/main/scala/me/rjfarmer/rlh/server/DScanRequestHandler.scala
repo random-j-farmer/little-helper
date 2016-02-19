@@ -2,6 +2,7 @@ package me.rjfarmer.rlh.server
 
 import me.rjfarmer.rlh.api.{DScanParseRequest, DScanParseResponse}
 import me.rjfarmer.rlh.eve.DScanParser
+import me.rjfarmer.rlh.server.Boot._
 import org.ehcache.Cache
 
 import scala.concurrent.Future
@@ -21,6 +22,8 @@ class DScanRequestHandler(val cache: ResponseCache[DScanParseResponse])
   override def handleUncached(req: DScanParseRequest): Future[DScanParseResponse] = {
     Future.successful(
       try {
+        bootSystem.log.info("<{}> parseDScan: successful response for {} objects",
+          req.clientIP, req.lines.size)
         DScanParseResponse(None, None, req.solarSystem, req.lines.map(DScanParser.parse))
       } catch {
         case ex: Exception =>

@@ -67,9 +67,16 @@ trait CachableResponse[+T] extends Serializable {
 }
 
 /** has version information that can be checked */
-trait VersionedRequest {
+trait VersionedRequest extends WebserviceRequest {
 
   def version: String
+
+}
+
+/** retrieves a cached prior request */
+trait CachedRequest extends VersionedRequest {
+
+  def cacheKey: String
 
 }
 
@@ -120,12 +127,12 @@ final case class ListCharactersRequest(version: String, names: Vector[String],
                                        // these three are not currently filled in by the client
                                        // but by the server when reading request headers
                                        clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends WebserviceRequest with VersionedRequest
+  extends VersionedRequest
 
 final case class CachedCharactersRequest(version: String, cacheKey: String,
-                                       // filled in on the server
-                                       clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends WebserviceRequest with VersionedRequest
+                                         // filled in on the server
+                                         clientIP: String, pilot: Option[String], solarSystem: Option[String])
+  extends CachedRequest
 
 final case class ListCharactersResponse(message: Option[String],
                                         cacheKey: Option[String],
@@ -150,7 +157,7 @@ final case class DScanLine(name: String, typ: String, groupCat: CategoryAndGroup
 final case class DScanParseRequest(version: String, lines: Vector[String],
                                    // again, filled in by server from request headers
                                    clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends WebserviceRequest with VersionedRequest
+  extends VersionedRequest
 
 final case class DScanParseResponse(message: Option[String],
                                     cacheKey: Option[String],
@@ -165,7 +172,7 @@ final case class DScanParseResponse(message: Option[String],
 
 final case class CachedDScanRequest(version: String, cacheKey: String,
                                     clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends WebserviceRequest with VersionedRequest
+  extends CachedRequest
 
 
 trait Api {
