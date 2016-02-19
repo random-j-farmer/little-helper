@@ -18,6 +18,7 @@ object DScanLineCheck {
     dist.split(' ') match {
       case Array(num, typ) =>
         val divBy = typ match {
+          case "m" => kmToAU*1000.0d
           case "km" => kmToAU
           case "AU" => 1.0d
           case _ => throw new IllegalArgumentException("can not parse distance type: " + dist)

@@ -1,3 +1,4 @@
+(B) switch between local and d-scan tabs depending on input
 (C) float the tab menu
 (C) dscan history +dscan_history
 (C) local history +local_history
@@ -10,6 +11,7 @@
 D-Scan
 Shopping list
 
+x (A) d-scan: allow distance in meters
 x (A) prompt-button does not work in IGB, just display input with url pre-selected
 x (B) button to share cached response (copy to clipboard?)
 x (B) change location when switching to a tab with a cached response
