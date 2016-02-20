@@ -1,0 +1,26 @@
+Force Field	Force Field	-
+Mobile Medium Warp Disruptor I	Mobile Medium Warp Disruptor I	-
+Pandora's Box	Ship Maintenance Array	-
+Scanner Probe	Sisters Core Scanner Probe	-
+Scanner Probe	Sisters Core Scanner Probe	-
+Scanner Probe	Sisters Core Scanner Probe	-
+Scanner Probe	Sisters Core Scanner Probe	-
+Scanner Probe	Sisters Core Scanner Probe	-
+TARDIS	Ship Maintenance Array	-
+We Have Spare Fuel...Right?	Domination Control Tower	-
+ƒ(MC) IDGAF	Svipul	-
+J121507 VI - Moon 2	Moon	3.5 AU
+J121507 VI	Planet (Oceanic)	3.6 AU
+J121507 VI - Moon 1	Moon	3.6 AU
+J121507 II - Moon 1	Moon	8.1 AU
+J121507 II	Planet (Temperate)	8.1 AU
+J121507 III	Planet (Gas)	8.8 AU
+J121507 III - Moon 1	Moon	8.8 AU
+J121507 III - Moon 3	Moon	8.8 AU
+J121507 III - Moon 2	Moon	8.8 AU
+J121507 III - Moon 4	Moon	8.8 AU
+J121507 III - Moon 5	Moon	8.8 AU
+J121507 I	Planet (Barren)	9.1 AU
+J121507 I - Moon 1	Moon	9.1 AU
+J121507 - Star	Sun K5 (Orange Bright)	9.4 AU
+J121507 IV	Planet (Oceanic)	12.0 AU

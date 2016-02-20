@@ -1,4 +1,13 @@
+(B) Sisters Core Scanner Probe: unknown item type
 (B) switch between local and d-scan tabs depending on input
+(B) fixed main order: ships first, celestials last, everything else in between
+(C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
+(C) WebserviceResult: rename to HasTimestamp, isFresh should become a function +great_trait_cleanup_of_2016
+(C) CachableResponse must go, copy operation by function +great_trait_cleanup_of_2016
+(C) VersionedRequest: rename to HasVersion  +great_trait_cleanup_of_2016
+(C) CachedResponse: rename to HasCacheKey +great_trait_cleanup_of_2016
+(C) Unify RetrieveCache with ResponseCache trait +great_trait_cleanup_of_2016
+(C) BodyParser: make a function  +great_trait_cleanup_of_2016
 (C) float the tab menu
 (C) dscan history +dscan_history
 (C) local history +local_history
@@ -11,6 +20,7 @@
 D-Scan
 Shopping list
 
+x (A) unknown item type will throw an error, no dscan data shown at all
 x (A) d-scan: allow distance in meters
 x (A) prompt-button does not work in IGB, just display input with url pre-selected
 x (B) button to share cached response (copy to clipboard?)

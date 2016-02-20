@@ -16,9 +16,11 @@ object DScanParser {
     }
   }
 
+  private[this] val unknown = CategoryAndGroup("Unknown", "Unknown")
+
   def parse(line: String): DScanLine = {
     val (name, typ, dist) = DScanLineCheck.parseDScanLine(line)
-    DScanLine(name, typ, groupByType(typ), dist)
+    DScanLine(name, typ, groupByType.getOrElse(typ, unknown), dist)
   }
 
 }
