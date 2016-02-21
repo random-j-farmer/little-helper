@@ -56,7 +56,7 @@ object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
     val validLines = dscanLines.filter(DScanLineCheck.isValidDScanLine).toVector
 
     log.debug("calling parseDScan with " + validLines.length + " lines")
-    val req = DScanParseRequest(SharedConfig.client.clientSoftwareVersion, validLines, "", None, None)
+    val req = DScanParseRequest(SharedConfig.client.clientSoftwareVersion, validLines)
     val future = Ajaxer[Api].parseDScan(req).call()
 
     future.onComplete {
@@ -88,7 +88,7 @@ object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
   override def route(args: Seq[String]): Unit = {
     args match {
       case Seq(cachedKey) =>
-        val req = CachedDScanRequest(SharedConfig.client.clientSoftwareVersion, cachedKey, "", None, None)
+        val req = CachedDScanRequest(SharedConfig.client.clientSoftwareVersion, cachedKey)
         Ajaxer[Api].cachedDScan(req).call().onSuccess {
           case None =>
             log.info("route: cached result does not exist: " + cachedKey)

@@ -15,16 +15,16 @@ import scala.concurrent.{Future, Promise}
 trait VersionRequestHandler[Q <: HasVersion, T] {
 
   /** error response (usually not exception!) for client-version mismatch */
-  def clientVersionError(req: Q): T
+  def clientVersionError(headerData: RequestHeaderData, req: Q): T
 
   /** handle a request with correct version */
-  def handleVersion(req: Q): Future[T]
+  def handleVersion(headerData: RequestHeaderData, req: Q): Future[T]
 
-  def handleRequest(req: Q): Future[T] = {
+  def handleRequest(headerData: RequestHeaderData, req: Q): Future[T] = {
     if (req.version != BuildInfo.version) {
-      Promise.successful(clientVersionError(req)).future
+      Promise.successful(clientVersionError(headerData, req)).future
     } else {
-      handleVersion(req)
+      handleVersion(headerData, req)
     }
   }
 
@@ -38,19 +38,19 @@ trait CachingRequestHandler[Q <: HasVersion, T <: Serializable]
   def cache: EhcCache[String, T]
 
   /** abstract method that will produce the uncached response */
-  def handleUncached(req: Q): Future[T]
+  def handleUncached(headerData: RequestHeaderData, req: Q): Future[T]
 
   /** abstract method that will produce a response with cachekey added */
   def copyWithCacheKey(key: String, resp: T): T
 
-  def handleVersion(req: Q): Future[T] = {
-    val future = handleUncached(req)
+  def handleVersion(headerData: RequestHeaderData, req: Q): Future[T] = {
+    val future = handleUncached(headerData, req)
     future.map { resp =>
       val key = cacheKey(resp)
       val value = copyWithCacheKey(key, resp)
       cache.put(cacheKey(resp), value)
       bootSystem.log.info("<{}> caching result {}",
-        req.clientIP, key)
+        headerData.clientIP, key)
       value
     }
   }
@@ -69,9 +69,9 @@ trait CachingRequestHandler[Q <: HasVersion, T <: Serializable]
   }
 
   // Q is needed for the copyWithKey operation, not for retrieval
-  def cachedResponse(req: HasCacheKeyAndVersion): Future[Option[T]] = {
+  def cachedResponse(headerData: RequestHeaderData, req: HasCacheKeyAndVersion): Future[Option[T]] = {
     bootSystem.log.info("<{}> cached response {}",
-      req.clientIP, req.cacheKey)
+      headerData.clientIP, req.cacheKey)
     Future.successful(cache.get(req.cacheKey))
   }
 

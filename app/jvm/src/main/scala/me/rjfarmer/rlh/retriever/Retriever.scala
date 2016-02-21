@@ -2,9 +2,9 @@ package me.rjfarmer.rlh.retriever
 
 import akka.actor._
 import akka.io.IO
-import me.rjfarmer.rlh.api.{WebserviceRequest, HasTimestamp}
+import me.rjfarmer.rlh.api.HasTimestamp
 import me.rjfarmer.rlh.cache.EhcCache
-import me.rjfarmer.rlh.server.Boot
+import me.rjfarmer.rlh.server.{Boot, RequestHeaderData}
 import spray.can.Http
 import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
 import spray.http.HttpHeaders.RawHeader
@@ -44,9 +44,9 @@ trait Retrievable[K] {
  */
 trait RetriGroup[K] {
 
-  def items: Vector[K]
+  def headerData: RequestHeaderData
 
-  def wsr: WebserviceRequest
+  def items: Vector[K]
 
   def replyTo: Option[ActorRef]
 
@@ -262,7 +262,7 @@ class Retriever[K, V <: HasTimestamp](cache: EhcCache[K, V],
     val stalePrioItems = stale.drop(numPromoted)
     val stalePrio = Math.max(highPrio, prioConf.priority(stalePrioItems.length)) + prioConf.stalePriorityOffset
 
-    log.info(s"<${group.wsr.clientIP}> grouped request: ${group.items.size} total / " +
+    log.info(s"<${group.headerData.clientIP}> grouped request: ${group.items.size} total / " +
       s"${uncached.size} unknown/ ${cached.size} cached (${stale.size} stale) " +
       s"/ p$highPrio:${uncached.length + numPromoted} p$stalePrio:${stalePrioItems.length}")
 

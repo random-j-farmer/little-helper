@@ -1,4 +1,3 @@
-(C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
 (C) crest login and api to determine current system for browser other than IGB +local_history
 (C) diffs between scans in same system +local_history
 (C) dscan history +dscan_history
@@ -12,6 +11,8 @@
 D-Scan
 Shopping list
 
+x (C) split Server, Boot, ApiRequestHandler
+x (C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
 x (C) Submittable => better name +great_trait_cleanup_of_2016
 x (C) Refreshable => HasResponseTimestamp +great_trait_cleanup_of_2016
 x (C) WebserviceResult: rename to HasTimestamp, isFresh should become a function +great_trait_cleanup_of_2016

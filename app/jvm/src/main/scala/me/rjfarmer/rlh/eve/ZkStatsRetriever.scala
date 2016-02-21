@@ -8,7 +8,7 @@ import akka.util.Timeout
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.cache.EhcLongCache
 import me.rjfarmer.rlh.retriever._
-import me.rjfarmer.rlh.server.Boot
+import me.rjfarmer.rlh.server.{RequestHeaderData, Boot}
 import org.ehcache.CacheManager
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -31,9 +31,9 @@ object ZkStatsRetriever {
       priorityConfig, ZkStatsBodyParser.parseBody, retrieveTimeout, hostConnectorSetup)
   }
 
-  def zkStats(zkStatsRetriever: ActorRef, wsr: WebserviceRequest, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, ZkStats]] = {
+  def zkStats(zkStatsRetriever: ActorRef, headerData: RequestHeaderData, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, ZkStats]] = {
 
-    ask(zkStatsRetriever, ZkStatsRetriGroup(wsr, ids, None))(askTimeout)
+    ask(zkStatsRetriever, ZkStatsRetriGroup(headerData, ids, None))(askTimeout)
       .asInstanceOf[Future[Map[Long, ZkStats]]]
 
   }
@@ -48,7 +48,7 @@ final case class ZkStatsRetrievable(key: Long, priority: Int, replyTo: ActorRef)
 
 }
 
-final case class ZkStatsRetriGroup (wsr: WebserviceRequest, items: Vector[Long], replyTo: Option[ActorRef]) extends RetriGroup[Long] {
+final case class ZkStatsRetriGroup (headerData: RequestHeaderData, items: Vector[Long], replyTo: Option[ActorRef]) extends RetriGroup[Long] {
 
   override def retrievable(k: Long, priority: Int, replyTo: ActorRef): Retrievable[Long] = {
     ZkStatsRetrievable(k, priority, replyTo)

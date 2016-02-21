@@ -1,16 +1,8 @@
 package me.rjfarmer.rlh.server
 
-import akka.actor.ActorSystem
 import akka.routing.FromConfig
-import akka.util.Timeout
-import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve._
-import me.rjfarmer.rlh.retriever.PriorityConfig
-import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
-import org.ehcache.CacheManagerBuilder
-import org.ehcache.config.xml.XmlConfiguration
-import spray.can.Http
 import spray.http.{HttpEntity, HttpHeader, MediaTypes}
 import spray.httpx.encoding.{Deflate, Gzip, NoEncoding}
 import spray.routing.{RequestContext, SimpleRoutingApp}
@@ -27,28 +19,33 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 
 }
 
-case class ServerWithRequestData(clientIP: String, requestData: String, solarSystem: Option[String], pilot: Option[String])
-  extends Api with WebserviceRequest {
+/** holds additional information from the request headers (IGB!) */
+final case class RequestHeaderData(clientIP: String, solarSystem: Option[String], pilot: Option[String])
+
+
+/** handles the client server api on the server side */
+class ApiRequesthandler(listCharactersCache: ListCharactersResponseCache,
+                        dscanResponseCache: DScanResponseCache,
+                        rhd: RequestHeaderData) extends Api {
 
   override def listCharacters(request: ListCharactersRequest): Future[ListCharactersResponse] = {
-    Server.listCharacters(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
+    ListCharactersRequestHandler(listCharactersCache).handleRequest(rhd, request)
   }
 
   override def cachedCharacters(request: CachedCharactersRequest): Future[Option[ListCharactersResponse]] = {
-    Server.cachedCharacters(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
+    ListCharactersRequestHandler(listCharactersCache).cachedResponse(rhd, request)
   }
 
-  override def parseDScan(request: DScanParseRequest): Future[DScanParseResponse] = {
-    Server.parseDScan(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
+  override def parseDScan(req: DScanParseRequest): Future[DScanParseResponse] = {
+    DScanRequestHandler(dscanResponseCache).handleRequest(rhd, req)
   }
 
   override def cachedDScan(request: CachedDScanRequest): Future[Option[DScanParseResponse]] = {
-    Server.cachedDScan(request.copy(clientIP = clientIP, pilot = pilot, solarSystem = solarSystem))
+    DScanRequestHandler(dscanResponseCache).cachedResponse(rhd, request)
   }
-
 }
 
-object Server extends SimpleRoutingApp with Api with RequestTimeout with ShutdownIfNotBound {
+object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBound {
 
   import Boot._
 
@@ -60,8 +57,8 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   val zkStatsRetriever = bootSystem.actorOf(FromConfig.props(ZkStatsRetriever.props(cacheManager,
     restTimeout.duration)), "zkStatsRetrievers")
 
-  val dscanResultsCache = cacheManager.getCache("dscanResultsCache", classOf[java.lang.String], classOf[DScanParseResponse])
-  val listCharactersCache = cacheManager.getCache("listCharactersCache", classOf[java.lang.String], classOf[ListCharactersResponse])
+  val dscanResultsCache = new DScanResponseCache(cacheManager.getCache("dscanResultsCache", classOf[String], classOf[DScanParseResponse]))
+  val listCharactersCache = new ListCharactersResponseCache(cacheManager.getCache("listCharactersCache", classOf[String], classOf[ListCharactersResponse]))
 
 
   def main(args: Array[String]): Unit = {
@@ -83,8 +80,10 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
           } ~
           post {
             path("ajax" / Segments) { s =>
-              extract(extractRequestData) { srd =>
-                complete(Router.route[Api](srd)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](srd.requestData))))
+              extract(extractRequestData) { pair =>
+                val (rhd, body) = pair
+                val apiHandler = new ApiRequesthandler(listCharactersCache, dscanResultsCache, rhd)
+                complete(Router.route[Api](apiHandler)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](body))))
               }
             }
           }
@@ -97,13 +96,13 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
     shutdownIfNotBound(response)
   }
 
-  private def extractRequestData(ctx: RequestContext): ServerWithRequestData = {
+  private def extractRequestData(ctx: RequestContext): (RequestHeaderData, String) = {
 
     import spray.util._
 
     def optionalValue(lowerCaseName: String): HttpHeader => Option[String] = {
-      case HttpHeader(`lowerCaseName`, value) ⇒ Some(value)
-      case _                                  ⇒ None
+      case HttpHeader(`lowerCaseName`, value) => Some(value)
+      case _ => None
     }
     def f(headerName: String) = optionalValue(headerName.toLowerCase)
 
@@ -111,116 +110,10 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
 
     val forwarded = headers.mapFind(f("X-Forwarded-For"))
     val remoteAddress = headers.mapFind(f("Remote-Address"))
-    ServerWithRequestData(forwarded.getOrElse(remoteAddress.get), ctx.request.entity.asString,
-      headers.mapFind(f("EVE_SOLARSYSTEMNAME")), headers.mapFind(f("EVE_CHARNAME")))
-  }
+    Pair(RequestHeaderData(forwarded.getOrElse(remoteAddress.get),
+      headers.mapFind(f("EVE_SOLARSYSTEMNAME")), headers.mapFind(f("EVE_CHARNAME"))),
+      ctx.request.entity.asString)
 
-  override def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
-    ListCharactersRequestHandler(new ListCharactersResponseCache(listCharactersCache)).handleRequest(req)
-  }
-
-  override def cachedCharacters(request: CachedCharactersRequest): Future[Option[ListCharactersResponse]] = {
-    ListCharactersRequestHandler(new ListCharactersResponseCache(listCharactersCache)).cachedResponse(request)
-  }
-
-  override def parseDScan(req: DScanParseRequest): Future[DScanParseResponse] = {
-    DScanRequestHandler(new DScanResponseCache(dscanResultsCache)).handleRequest(req)
-  }
-
-  override def cachedDScan(request: CachedDScanRequest): Future[Option[DScanParseResponse]] = {
-    DScanRequestHandler(new DScanResponseCache(dscanResultsCache)).cachedResponse(request)
   }
 
 }
-
-
-object BootLoader {
-
-  var testEnvironment: Boolean = false
-
-  def cacheManagerConfiguration = {
-    val fn = if (testEnvironment) "little-cache-test.xml" else "little-cache.xml"
-    new XmlConfiguration(getClass.getClassLoader.getResource(fn))
-  }
-
-}
-
-object Boot extends RequestTimeout {
-
-  val bootConfig = ConfigFactory.load()
-  val bootHost = bootConfig.getString("http.host")
-  val bootPort = bootConfig.getInt("http.port")
-
-  val cacheManager = CacheManagerBuilder.newCacheManager(BootLoader.cacheManagerConfiguration)
-
-  import collection.JavaConversions._
-
-  val priorityConfig = PriorityConfig(
-    bootConfig.getIntList("little-helper.priorities-by-size").toVector.map(_.toInt),
-    bootConfig.getIntList("little-helper.promote-stales").toVector.map(_.toInt),
-    bootConfig.getInt("little-helper.stale-priority-offset")
-  )
-
-  cacheManager.init()
-
-  implicit val bootSystem = ActorSystem("little-helper", bootConfig)
-  implicit val ajaxFutureTimeout = requestTimeout(bootConfig, "little-helper.ajax-future-timeout")
-  val restTimeout = requestTimeout(bootConfig, "little-helper.rest-timeout")
-  val staleIfOlderThan = requestTimeout(bootConfig, "little-helper.stale-if-older-than")
-  SharedConfig.client = ClientConfig(BuildInfo.version, staleIfOlderThan.duration.toMillis)
-
-  object CacheManagerShutdownHook extends Thread {
-
-    override def run(): Unit = {
-      println("Shutting down actor system")
-      bootSystem.shutdown()
-      println("Shutting down cache manager")
-      cacheManager.close()
-    }
-
-  }
-}
-
-object ByDestroyed extends Ordering[CharInfo] {
-  override def compare(x: CharInfo, y: CharInfo): Int = {
-    val yi = y.recentKills.getOrElse(0)
-    val xi = x.recentKills.getOrElse(0)
-    val ya = y.characterAge.getOrElse(-1.0d)
-    val xa = x.characterAge.getOrElse(-1.0d)
-    val compKilled = yi.compareTo(xi)
-    if (compKilled != 0) compKilled else ya.compareTo(xa)
-  }
-}
-
-trait RequestTimeout {
-  import scala.concurrent.duration._
-
-  def requestTimeout(config: Config, configKey: String): Timeout = {
-    val t = config.getString(configKey)
-    val d = Duration(t)
-    FiniteDuration(d.length, d.unit)
-  }
-}
-
-trait ShutdownIfNotBound {
-  import scala.concurrent.{ExecutionContext, Future}
-
-  def shutdownIfNotBound(f: Future[Any])
-                        (implicit system: ActorSystem, ec: ExecutionContext) = {
-    f.mapTo[Http.Event].map {
-      case Http.Bound(address) =>
-        println(s"Interface bound to $address")
-
-      case Http.CommandFailed(cmd) =>
-        println(s"nterface could not bind: ${cmd.failureMessage}, shutting down.")
-        system.shutdown()
-    }.recover {
-      case e: Throwable =>
-        println(s"Unexpexted error binding to HTTP: ${e.getMessage}, shutting down.")
-        system.shutdown()
-    }
-  }
-}
-
-
-

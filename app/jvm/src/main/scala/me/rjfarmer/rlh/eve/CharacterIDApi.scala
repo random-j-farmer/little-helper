@@ -1,8 +1,9 @@
 package me.rjfarmer.rlh.eve
 
 import akka.actor._
-import me.rjfarmer.rlh.api.{WebserviceRequest, CharacterIDAndName}
+import me.rjfarmer.rlh.api.CharacterIDAndName
 import me.rjfarmer.rlh.eve.CharacterIDApi.{CharacterIDRequest, CharacterIDResponse}
+import me.rjfarmer.rlh.server.RequestHeaderData
 import org.ehcache.{Cache, CacheManager}
 import spray.http.Uri
 
@@ -67,7 +68,7 @@ object CharacterIDApi {
     Props(new CharacterIDApi(cache))
   }
 
-  final case class CharacterIDRequest(webserviceRequest: WebserviceRequest,
+  final case class CharacterIDRequest(headerData: RequestHeaderData,
                                       names: Vector[String],
                                       cached: Map[String, CharacterIDAndName],
                                       replyTo: Option[ActorRef])
@@ -133,7 +134,7 @@ class CharacterIDApi(cache: Cache[String, CharacterIDAndName])
         val ian = p._2
         ian.characterID == 0 && !ian.isFresh
       }
-      log.info(s"<${request.webserviceRequest.clientIP}> character id request: ${names.size} total/ " +
+      log.info(s"<${request.headerData.clientIP}> character id request: ${names.size} total/ " +
         s"${undefinedNames.size} unknown/ ${defined.size} cached (${staleUnknown.size} stale unknown)")
 
       val need = undefinedNames ++ staleUnknown.keys
@@ -169,7 +170,6 @@ class CharacterIDApi(cache: Cache[String, CharacterIDAndName])
     val groupedFutures = grouped.map { pairs =>
       val future = complete(httpGetUri(Uri.Query(pairs: _*)))
       future.onSuccess { case vec =>
-        val m = Map[String, CharacterIDAndName]() ++ vec.map(ian => (ian.characterName, ian))
         vec.foreach { ian => cache.put(ian.characterName, ian) }
       }
       future

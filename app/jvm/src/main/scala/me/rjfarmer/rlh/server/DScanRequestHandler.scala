@@ -16,20 +16,20 @@ import scala.concurrent.Future
 class DScanRequestHandler(val cache: EhcCache[String, DScanParseResponse])
   extends CachingRequestHandler[DScanParseRequest, DScanParseResponse] {
 
-  override def clientVersionError(req: DScanParseRequest): DScanParseResponse = {
-    DScanParseResponse(Some(Server.clientVersionError), None, req.solarSystem, System.currentTimeMillis(), Vector())
+  override def clientVersionError(headerData: RequestHeaderData, req: DScanParseRequest): DScanParseResponse = {
+    DScanParseResponse(Some(Server.clientVersionError), None, headerData.solarSystem, System.currentTimeMillis(), Vector())
   }
 
-  override def handleUncached(req: DScanParseRequest): Future[DScanParseResponse] = {
+  override def handleUncached(headerData: RequestHeaderData, req: DScanParseRequest): Future[DScanParseResponse] = {
     Future.successful(
       try {
         bootSystem.log.info("<{}> parseDScan: successful response for {} objects",
-          req.clientIP, req.lines.size)
-        DScanParseResponse(None, None, req.solarSystem, System.currentTimeMillis(), req.lines.map(DScanParser.parse))
+          headerData.clientIP, req.lines.size)
+        DScanParseResponse(None, None, headerData.solarSystem, System.currentTimeMillis(), req.lines.map(DScanParser.parse))
       } catch {
         case ex: Exception =>
           DScanParseResponse(Some("Error parsing request lines: " + ex),
-            None, req.solarSystem, System.currentTimeMillis(), Vector())
+            None, headerData.solarSystem, System.currentTimeMillis(), Vector())
       })
   }
 

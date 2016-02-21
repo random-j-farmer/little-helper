@@ -5,17 +5,6 @@ import me.rjfarmer.rlh.shared.SharedConfig
 import scala.concurrent.Future
 
 
-/** all web service requests provide these, but they are filled in on the server in the IGB case */
-trait WebserviceRequest {
-
-  def clientIP: String
-
-  def pilot: Option[String]
-
-  def solarSystem: Option[String]
-
-}
-
 sealed trait HasTimestamp {
 
   def timestamp: Long
@@ -54,7 +43,7 @@ final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMon
 
 
 /** has version information that can be checked */
-trait HasVersion extends WebserviceRequest {
+trait HasVersion {
 
   def version: String
 
@@ -110,15 +99,10 @@ object CharInfo {
   }
 }
 
-final case class ListCharactersRequest(version: String, names: Vector[String],
-                                       // these three are not currently filled in by the client
-                                       // but by the server when reading request headers
-                                       clientIP: String, pilot: Option[String], solarSystem: Option[String])
+final case class ListCharactersRequest(version: String, names: Vector[String])
   extends HasVersion
 
-final case class CachedCharactersRequest(version: String, cacheKey: String,
-                                         // filled in on the server
-                                         clientIP: String, pilot: Option[String], solarSystem: Option[String])
+final case class CachedCharactersRequest(version: String, cacheKey: String)
   extends HasCacheKeyAndVersion
 
 final case class ListCharactersResponse(message: Option[String],
@@ -127,6 +111,7 @@ final case class ListCharactersResponse(message: Option[String],
                                         solarSystem: Option[String],
                                         timestamp: Long,
                                         charinfos: Vector[CharInfo])
+  extends HasTimestamp
 
 
 //
@@ -137,9 +122,7 @@ final case class CategoryAndGroup(category: String, group: String)
 
 final case class DScanLine(name: String, typ: String, groupCat: CategoryAndGroup, distAu: Option[Double])
 
-final case class DScanParseRequest(version: String, lines: Vector[String],
-                                   // again, filled in by server from request headers
-                                   clientIP: String, pilot: Option[String], solarSystem: Option[String])
+final case class DScanParseRequest(version: String, lines: Vector[String])
   extends HasVersion
 
 final case class DScanParseResponse(message: Option[String],
@@ -148,9 +131,9 @@ final case class DScanParseResponse(message: Option[String],
                                     solarSystem: Option[String],
                                     timestamp: Long,
                                     lines: Vector[DScanLine])
+  extends HasTimestamp
 
-final case class CachedDScanRequest(version: String, cacheKey: String,
-                                    clientIP: String, pilot: Option[String], solarSystem: Option[String])
+final case class CachedDScanRequest(version: String, cacheKey: String)
   extends HasCacheKeyAndVersion
 
 

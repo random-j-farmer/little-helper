@@ -72,7 +72,7 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
     val validNames = pilotNames.filter(EveCharacterName.isValidCharacterName).toVector
 
     log.debug("calling listCharacters with " + validNames.length + " pilots")
-    val req = ListCharactersRequest(SharedConfig.client.clientSoftwareVersion, validNames, "", None, None)
+    val req = ListCharactersRequest(SharedConfig.client.clientSoftwareVersion, validNames)
     val future = Ajaxer[Api].listCharacters(req).call()
     future.onComplete {
       case Failure(ex) =>
@@ -101,7 +101,7 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
   override def route(args: Seq[String]): Unit = {
     args match {
       case Seq(cachedKey) =>
-        val req = CachedCharactersRequest(SharedConfig.client.clientSoftwareVersion, cachedKey, "", None, None)
+        val req = CachedCharactersRequest(SharedConfig.client.clientSoftwareVersion, cachedKey)
         Ajaxer[Api].cachedCharacters(req).call().onSuccess {
           case None =>
             log.info("route: cached result does not exist: " + cachedKey)

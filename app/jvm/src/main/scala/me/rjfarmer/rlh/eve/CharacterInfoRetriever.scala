@@ -6,10 +6,10 @@ import java.util.{TimeZone, Date}
 import akka.actor.{ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
-import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory, WebserviceRequest}
+import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory}
 import me.rjfarmer.rlh.cache.EhcLongCache
 import me.rjfarmer.rlh.retriever._
-import me.rjfarmer.rlh.server.Boot
+import me.rjfarmer.rlh.server.{RequestHeaderData, Boot}
 import org.ehcache.CacheManager
 import spray.can.Http
 import spray.http.Uri
@@ -32,9 +32,9 @@ object CharacterInfoRetriever {
       priorityConfig, CharacterInfoBodyParser.parseBody, retrieveTimeout, hostConnectorSetup)
   }
 
-  def characterInfo(characterInfoRetriever: ActorRef, wsr: WebserviceRequest, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, CharacterInfo]] = {
+  def characterInfo(characterInfoRetriever: ActorRef, headerData: RequestHeaderData, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, CharacterInfo]] = {
 
-    ask(characterInfoRetriever, CharacterInfoRetriGroup(wsr, ids, None))(askTimeout)
+    ask(characterInfoRetriever, CharacterInfoRetriGroup(headerData, ids, None))(askTimeout)
       .asInstanceOf[Future[Map[Long, CharacterInfo]]]
   }
 
@@ -48,7 +48,7 @@ final case class CharacterInfoRetrievable(key: Long, priority: Int, replyTo: Act
 
 }
 
-final case class CharacterInfoRetriGroup (wsr: WebserviceRequest, items: Vector[Long], replyTo: Option[ActorRef]) extends RetriGroup[Long] {
+final case class CharacterInfoRetriGroup (headerData: RequestHeaderData, items: Vector[Long], replyTo: Option[ActorRef]) extends RetriGroup[Long] {
 
   override def retrievable(k: Long, priority: Int, replyTo: ActorRef): Retrievable[Long] = {
     CharacterInfoRetrievable(k, priority, replyTo)
