@@ -6,6 +6,7 @@ import akka.actor.{ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import me.rjfarmer.rlh.api._
+import me.rjfarmer.rlh.cache.EhcLongCache
 import me.rjfarmer.rlh.retriever._
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.CacheManager
@@ -26,8 +27,8 @@ object ZkStatsRetriever {
 
   def props(cacheManager: CacheManager, retrieveTimeout: FiniteDuration): Props = {
     val ehCache = cacheManager.getCache("zkStatsCache", classOf[java.lang.Long], classOf[ZkStats])
-    Retriever.props[Long, ZkStats](new EhcRetrieveLongCache[ZkStats](ehCache), retrieveQueue,
-      priorityConfig, ZkStatsBodyParser, retrieveTimeout, hostConnectorSetup)
+    Retriever.props[Long, ZkStats](new EhcLongCache[ZkStats](ehCache), retrieveQueue,
+      priorityConfig, ZkStatsBodyParser.parseBody, retrieveTimeout, hostConnectorSetup)
   }
 
   def zkStats(zkStatsRetriever: ActorRef, wsr: WebserviceRequest, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, ZkStats]] = {
@@ -55,7 +56,7 @@ final case class ZkStatsRetriGroup (wsr: WebserviceRequest, items: Vector[Long],
 
 }
 
-object ZkStatsBodyParser extends BodyParser[Long, ZkStats] {
+object ZkStatsBodyParser {
 
   object YearAndMonth extends Ordering[ZkMonthStats] {
     override def compare(x: ZkMonthStats, y: ZkMonthStats): Int = {
@@ -67,7 +68,7 @@ object ZkStatsBodyParser extends BodyParser[Long, ZkStats] {
     }
   }
 
-  override def parseBody(characterID: Long, json: String): ZkStats = {
+  def parseBody(characterID: Long, json: String): ZkStats = {
 
     val tree = parse(json)
 

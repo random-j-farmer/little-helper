@@ -13,7 +13,7 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
-object DScanTab extends TabbedPanel with Submitable {
+object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 

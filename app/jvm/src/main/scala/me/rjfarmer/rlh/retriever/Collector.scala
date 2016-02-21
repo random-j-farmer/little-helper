@@ -1,7 +1,8 @@
 package me.rjfarmer.rlh.retriever
 
 import akka.actor._
-import me.rjfarmer.rlh.api.WebserviceResult
+import me.rjfarmer.rlh.api.HasTimestamp
+import me.rjfarmer.rlh.cache.EhcCache
 import scala.concurrent.duration._
 
 import scala.util.{Failure, Success, Try}
@@ -9,7 +10,7 @@ import scala.util.{Failure, Success, Try}
 
 object Collector {
 
-  def props[K, V <: WebserviceResult](cache: RetrieveCache[K,V], cached: Map[K,V], numItems: Int, replyTo: ActorRef, timeout: FiniteDuration): Props = {
+  def props[K, V <: HasTimestamp](cache: EhcCache[K,V], cached: Map[K,V], numItems: Int, replyTo: ActorRef, timeout: FiniteDuration): Props = {
     Props(new Collector(cache, cached, numItems, replyTo, timeout))
   }
 
@@ -23,7 +24,7 @@ object Collector {
 }
 
 /** Collect a number of results or return incomplete result after timeout */
-class Collector[K,V <: WebserviceResult] (cache: RetrieveCache[K,V], cached: Map[K,V], numResults: Int, replyTo: ActorRef, timeout: FiniteDuration)
+class Collector[K,V <: HasTimestamp] (cache: EhcCache[K,V], cached: Map[K,V], numResults: Int, replyTo: ActorRef, timeout: FiniteDuration)
   extends Actor with ActorLogging {
 
   type TResult = Collector.Result[K,V]

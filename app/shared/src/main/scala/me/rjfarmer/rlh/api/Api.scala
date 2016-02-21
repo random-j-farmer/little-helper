@@ -16,12 +16,12 @@ trait WebserviceRequest {
 
 }
 
-sealed trait WebserviceResult {
+sealed trait HasTimestamp {
 
-  def receivedTimestamp: Long
+  def timestamp: Long
 
   def isFresh: Boolean = {
-    receivedTimestamp + SharedConfig.client.staleOlderThanMillis > System.currentTimeMillis()
+    timestamp + SharedConfig.client.staleOlderThanMillis > System.currentTimeMillis()
   }
 
 }
@@ -33,12 +33,12 @@ final case class CharacterInfo(characterID: Long, characterName: String,
                                corporationID: Long, corporation: String, corporationDate: String,
                                allianceID: Option[Long], alliance: Option[String], allianceDate: Option[String],
                                securityStatus: Double, characterAge: Double, employmentHistory: Seq[EmploymentHistory],
-                               receivedTimestamp: Long)
-  extends WebserviceResult
+                               timestamp: Long)
+  extends HasTimestamp
 
 
-final case class CharacterIDAndName(characterID: Long, characterName: String, receivedTimestamp: Long)
-  extends WebserviceResult
+final case class CharacterIDAndName(characterID: Long, characterName: String, timestamp: Long)
+  extends HasTimestamp
 
 
 final case class ZkActivePvP(kills: Int, regions: Int, ships: Int, systems: Int)
@@ -49,34 +49,19 @@ final case class ZkInfo(allianceID: Long, corporationID: Long, factionID: Long, 
 final case class ZkMonthStats(year: Int, month: Int, shipsLost: Int, pointsLost: Double, iskLost: Double,
                               shipsDestroyed: Int, pointsDestroyed: Double, iskDestroyed: Double)
 
-final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMonthStats, receivedTimestamp: Long)
-  extends WebserviceResult
+final case class ZkStats(info: ZkInfo, activepvp: ZkActivePvP, lastMonths: ZkMonthStats, timestamp: Long)
+  extends HasTimestamp
 
-
-/**
- * Can be cached for sharing of results.
- *
- * @tparam T cached response type
- */
-trait CachableResponse[+T] extends Serializable {
-
-  def timestamp: Long
-
-  def cacheKey: Option[String]
-
-  def copyWithCacheKey(key: String): T
-
-}
 
 /** has version information that can be checked */
-trait VersionedRequest extends WebserviceRequest {
+trait HasVersion extends WebserviceRequest {
 
   def version: String
 
 }
 
-/** retrieves a cached prior request */
-trait CachedRequest extends VersionedRequest {
+/** has a cache key */
+trait HasCacheKeyAndVersion extends HasVersion {
 
   def cacheKey: String
 
@@ -93,7 +78,7 @@ trait CachedRequest extends VersionedRequest {
  * @param name character name.  its in the input, will always be there.
  * @param characterID character ID. will usually be present
  * @param complete complete response with all info present (although it may be stale)
- * @param receivedTimestamp oldest timestamp of involved result objects
+ * @param timestamp oldest timestamp of involved result objects
  * @param characterAge character age.  character info may not be there for large requests
  * @param corporation corporation name.  character info may not be there for large requests
  * @param alliance alliance name.  character info may not be there for large requests
@@ -103,7 +88,7 @@ trait CachedRequest extends VersionedRequest {
 final case class CharInfo(name: String,
                           characterID: Option[Long],
                           complete: Boolean,
-                          receivedTimestamp: Long,
+                          timestamp: Long,
 
                           characterAge: Option[Double],
                           corporation: Option[String],
@@ -111,13 +96,13 @@ final case class CharInfo(name: String,
 
                           recentKills: Option[Int],
                           recentLosses: Option[Int])
-  extends WebserviceResult
+  extends HasTimestamp
 
 object CharInfo {
 
   def apply(name: String, id: Option[Long], oci: Option[CharacterInfo], ozk: Option[ZkStats]): CharInfo = {
     val complete = oci.isDefined && ozk.isDefined
-    val oldest = math.min(oci.fold(0L)(ci => ci.receivedTimestamp), ozk.fold(0L)(zk => zk.receivedTimestamp))
+    val oldest = math.min(oci.fold(0L)(ci => ci.timestamp), ozk.fold(0L)(zk => zk.timestamp))
     new CharInfo(oci.fold(name)(_.characterName),
       id, complete = complete, oldest,
       oci.map(_.characterAge), oci.map(_.corporation), oci.flatMap(_.alliance),
@@ -129,12 +114,12 @@ final case class ListCharactersRequest(version: String, names: Vector[String],
                                        // these three are not currently filled in by the client
                                        // but by the server when reading request headers
                                        clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends VersionedRequest
+  extends HasVersion
 
 final case class CachedCharactersRequest(version: String, cacheKey: String,
                                          // filled in on the server
                                          clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends CachedRequest
+  extends HasCacheKeyAndVersion
 
 final case class ListCharactersResponse(message: Option[String],
                                         cacheKey: Option[String],
@@ -142,11 +127,6 @@ final case class ListCharactersResponse(message: Option[String],
                                         solarSystem: Option[String],
                                         timestamp: Long,
                                         charinfos: Vector[CharInfo])
-  extends CachableResponse[ListCharactersResponse] {
-
-  override def copyWithCacheKey(key: String): ListCharactersResponse = copy(cacheKey = Some(key))
-
-}
 
 
 //
@@ -160,7 +140,7 @@ final case class DScanLine(name: String, typ: String, groupCat: CategoryAndGroup
 final case class DScanParseRequest(version: String, lines: Vector[String],
                                    // again, filled in by server from request headers
                                    clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends VersionedRequest
+  extends HasVersion
 
 final case class DScanParseResponse(message: Option[String],
                                     cacheKey: Option[String],
@@ -168,15 +148,10 @@ final case class DScanParseResponse(message: Option[String],
                                     solarSystem: Option[String],
                                     timestamp: Long,
                                     lines: Vector[DScanLine])
-  extends CachableResponse[DScanParseResponse] {
-
-  override def copyWithCacheKey(key: String): DScanParseResponse = copy(cacheKey = Some(key))
-
-}
 
 final case class CachedDScanRequest(version: String, cacheKey: String,
                                     clientIP: String, pilot: Option[String], solarSystem: Option[String])
-  extends CachedRequest
+  extends HasCacheKeyAndVersion
 
 
 trait Api {

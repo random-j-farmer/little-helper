@@ -7,6 +7,7 @@ import akka.actor.{ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import me.rjfarmer.rlh.api.{CharacterInfo, EmploymentHistory, WebserviceRequest}
+import me.rjfarmer.rlh.cache.EhcLongCache
 import me.rjfarmer.rlh.retriever._
 import me.rjfarmer.rlh.server.Boot
 import org.ehcache.CacheManager
@@ -27,15 +28,14 @@ object CharacterInfoRetriever {
 
   def props(cacheManager: CacheManager, retrieveTimeout: FiniteDuration): Props = {
     val ehCache = cacheManager.getCache("characterInfoCache", classOf[java.lang.Long], classOf[CharacterInfo])
-    Retriever.props[Long, CharacterInfo](new EhcRetrieveLongCache[CharacterInfo](ehCache), retrieveQueue,
-      priorityConfig, CharacterInfoBodyParser, retrieveTimeout, hostConnectorSetup)
+    Retriever.props[Long, CharacterInfo](new EhcLongCache[CharacterInfo](ehCache), retrieveQueue,
+      priorityConfig, CharacterInfoBodyParser.parseBody, retrieveTimeout, hostConnectorSetup)
   }
 
   def characterInfo(characterInfoRetriever: ActorRef, wsr: WebserviceRequest, ids: Vector[Long], askTimeout: Timeout): Future[Map[Long, CharacterInfo]] = {
 
     ask(characterInfoRetriever, CharacterInfoRetriGroup(wsr, ids, None))(askTimeout)
       .asInstanceOf[Future[Map[Long, CharacterInfo]]]
-
   }
 
 }
@@ -80,9 +80,9 @@ trait EveXmlParser {
 
 }
 
-object CharacterInfoBodyParser extends BodyParser[Long, CharacterInfo] with EveXmlParser {
+object CharacterInfoBodyParser extends EveXmlParser {
 
-  override def parseBody(key: Long, xml: String): CharacterInfo = {
+  def parseBody(key: Long, xml: String): CharacterInfo = {
     // log.debug("xml: {}", xml)
     val elem = (XML.loadString(xml) \\ "result")(0)
 

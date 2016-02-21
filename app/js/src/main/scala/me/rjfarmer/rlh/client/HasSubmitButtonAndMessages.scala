@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
  * Also an area for messages!
  *
  */
-trait Submitable {
+trait HasSubmitButtonAndMessages {
 
   /**
    * Logger to use in common methods.

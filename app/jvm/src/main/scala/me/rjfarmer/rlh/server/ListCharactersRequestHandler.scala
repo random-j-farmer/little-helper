@@ -2,6 +2,7 @@ package me.rjfarmer.rlh.server
 
 import akka.pattern.ask
 import me.rjfarmer.rlh.api._
+import me.rjfarmer.rlh.cache.{EhcCache, EhcStringCache}
 import me.rjfarmer.rlh.eve.CharacterIDApi.{CharacterIDRequest, CharacterIDResponse}
 import me.rjfarmer.rlh.eve.{CharacterInfoRetriever, ZkStatsRetriever}
 import org.ehcache.Cache
@@ -13,8 +14,8 @@ import scala.concurrent.Future
  *
  * @param cache response cache
  */
-class ListCharactersRequestHandler(val cache: ResponseCache[ListCharactersResponse])
-  extends CachingRequestHandler[ListCharactersRequest, ListCharactersResponse, ListCharactersResponse] {
+class ListCharactersRequestHandler(val cache: EhcCache[String, ListCharactersResponse])
+  extends CachingRequestHandler[ListCharactersRequest, ListCharactersResponse] {
 
   import Boot._
 
@@ -64,13 +65,15 @@ class ListCharactersRequestHandler(val cache: ResponseCache[ListCharactersRespon
         System.currentTimeMillis(), Vector())))
   }
 
+  /** abstract method that will produce a response with cachekey added */
+  override def copyWithCacheKey(key: String, resp: ListCharactersResponse): ListCharactersResponse = resp.copy(cacheKey = Some(key))
 }
 
 object ListCharactersRequestHandler {
 
-  def apply(cache: ResponseCache[ListCharactersResponse]): ListCharactersRequestHandler = new ListCharactersRequestHandler(cache)
+  def apply(cache: EhcCache[String, ListCharactersResponse]): ListCharactersRequestHandler = new ListCharactersRequestHandler(cache)
 
 }
 
 // list characters response cache helper
-final case class ListCharactersResponseCache(cache: Cache[String, ListCharactersResponse]) extends ResponseCache[ListCharactersResponse]
+class ListCharactersResponseCache(cache: Cache[String, ListCharactersResponse]) extends EhcStringCache[ListCharactersResponse](cache)

@@ -1,7 +1,7 @@
 package me.rjfarmer.rlh.client.local
 
-import me.rjfarmer.rlh.api.{CharInfo, ListCharactersResponse, WebserviceResult}
-import me.rjfarmer.rlh.client.{LittleHelper, Refreshable}
+import me.rjfarmer.rlh.api.{CharInfo, ListCharactersResponse, HasTimestamp}
+import me.rjfarmer.rlh.client.{LittleHelper, HasResponseTimeAgo}
 import me.rjfarmer.rlh.shared.SharedConfig
 import org.scalajs.dom
 import org.scalajs.dom.raw.HTMLElement
@@ -11,7 +11,7 @@ import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 
-object LocalDetailsView extends Refreshable {
+object LocalDetailsView extends HasResponseTimeAgo {
 
   val pilotCount = span("0 pilots, ").render
   val solarSystem = span().render
@@ -28,8 +28,8 @@ object LocalDetailsView extends Refreshable {
     js.timers.setTimeout(50.0d)(resultUrlBox.select())
   }
 
-  def freshnessKlass(nowMillis: Long, wsr: WebserviceResult): String = {
-    val relativeAge = (nowMillis - wsr.receivedTimestamp) / SharedConfig.client.staleOlderThanMillis.toDouble
+  def freshnessKlass(nowMillis: Long, wsr: HasTimestamp): String = {
+    val relativeAge = (nowMillis - wsr.timestamp) / SharedConfig.client.staleOlderThanMillis.toDouble
     if (relativeAge < 0.5d) {
       "fresh"
     } else if (relativeAge < 1.0d) {

@@ -1,7 +1,7 @@
 package me.rjfarmer.rlh.client.dscan
 
 import me.rjfarmer.rlh.api.{DScanLine, DScanParseResponse}
-import me.rjfarmer.rlh.client.{LittleHelper, Refreshable}
+import me.rjfarmer.rlh.client.{LittleHelper, HasResponseTimeAgo}
 import me.rjfarmer.rlh.shared.DScanLineCheck
 import org.scalajs.dom
 import org.scalajs.dom.html
@@ -9,7 +9,7 @@ import org.scalajs.dom.html
 import scala.scalajs.js
 import scalatags.JsDom.all._
 
-object DScanDetailsView extends Refreshable {
+object DScanDetailsView extends HasResponseTimeAgo {
 
   import me.rjfarmer.rlh.client.PimpedDomElement._
 

@@ -16,7 +16,7 @@ import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
 
-object LocalTab extends TabbedPanel with Submitable {
+object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
 
   private val pilotBox = textarea(cols := 20, rows := 10,
     placeholder := "Paste EVE Local").render

@@ -2,9 +2,9 @@ package me.rjfarmer.rlh.retriever
 
 import akka.actor._
 import akka.io.IO
-import me.rjfarmer.rlh.api.{WebserviceRequest, WebserviceResult}
+import me.rjfarmer.rlh.api.{WebserviceRequest, HasTimestamp}
+import me.rjfarmer.rlh.cache.EhcCache
 import me.rjfarmer.rlh.server.Boot
-import org.ehcache.Cache
 import spray.can.Http
 import spray.can.Http.{HostConnectorInfo, HostConnectorSetup}
 import spray.http.HttpHeaders.RawHeader
@@ -54,46 +54,6 @@ trait RetriGroup[K] {
 
 }
 
-/**
- * Scala wrapped API for EHC Cache
- *
- * Necessary because the key values for long need to be java.lang.Long
- * which is different from Long.
- *
- * Also, working with options is nicer
- *
- * @tparam K key type
- * @tparam V value type
- */
-trait RetrieveCache[K, V <: WebserviceResult] {
-
-  def get(k: K): Option[V]
-
-  def put(k: K, v: V): Unit
-
-}
-
-/** ehc cache with long keys */
-class EhcRetrieveLongCache[V <: WebserviceResult](cache: Cache[java.lang.Long, V]) extends RetrieveCache[Long, V] {
-
-  def get(k: Long): Option[V] = Option(cache.get(k))
-
-  def put(k: Long, v: V): Unit = cache.put(k, v)
-
-}
-
-
-/**
- * Parses response bodies for retriever.
- *
- * @tparam K key type
- * @tparam V value type
- */
-trait BodyParser[K, V] {
-
-  def parseBody(key: K, body: String): V
-
-}
 
 /** Helper trait for response body decoding */
 trait ResponseBodyDecoder {
@@ -114,10 +74,10 @@ trait ResponseBodyDecoder {
 
 object Retriever {
 
-  def props[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
+  def props[K, V <: HasTimestamp](cache: EhcCache[K, V],
                                       queue: RetrieveQueue[K],
                                       prioConf: PriorityConfig,
-                                      parser: BodyParser[K, V],
+                                      parser: (K, String) => V,
                                       timeout: FiniteDuration,
                                       hostConnectorSetup: HostConnectorSetup): Props =
     Props(new Retriever[K, V](cache, queue, prioConf, parser, timeout, hostConnectorSetup))
@@ -156,10 +116,10 @@ object Retriever {
  * @tparam K key type, ususually Long (characterID)
  * @tparam V value type, e.g. CharacterInfo or ZkStats
  */
-class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
+class Retriever[K, V <: HasTimestamp](cache: EhcCache[K, V],
                                           queue: RetrieveQueue[K],
                                           prioConf: PriorityConfig,
-                                          parser: BodyParser[K, V],
+                                          parser: (K, String) => V,
                                           timeout: FiniteDuration,
                                           hostConnectorSetup: HostConnectorSetup)
   extends Actor with ActorLogging with ResponseBodyDecoder {
@@ -209,7 +169,7 @@ class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
     val item = activeRequest.get
     if (status.isSuccess) {
       try {
-        val result = parser.parseBody(item.key, decodeResponseBody(resp))
+        val result = parser(item.key, decodeResponseBody(resp))
         cache.put(item.key, result)
         log.debug("http get p{}: {} ===> {} in {}ms", item.priority, item.httpGetUri, status.intValue,
           System.currentTimeMillis - activeRequestStarted)
@@ -292,7 +252,7 @@ class Retriever[K, V <: WebserviceResult](cache: RetrieveCache[K, V],
     val stale = cached
       .filterNot(_._2.isFresh)
       .toVector
-      .sortWith((p1, p2) => p1._2.receivedTimestamp < p2._2.receivedTimestamp)
+      .sortWith((p1, p2) => p1._2.timestamp < p2._2.timestamp)
       .map(_._1)
 
     val highPrio = prioConf.priority(uncached.length)

@@ -116,19 +116,19 @@ object Server extends SimpleRoutingApp with Api with RequestTimeout with Shutdow
   }
 
   override def listCharacters(req: ListCharactersRequest): Future[ListCharactersResponse] = {
-    ListCharactersRequestHandler(ListCharactersResponseCache(listCharactersCache)).handleRequest(req)
+    ListCharactersRequestHandler(new ListCharactersResponseCache(listCharactersCache)).handleRequest(req)
   }
 
   override def cachedCharacters(request: CachedCharactersRequest): Future[Option[ListCharactersResponse]] = {
-    ListCharactersRequestHandler(ListCharactersResponseCache(listCharactersCache)).cachedResponse(request)
+    ListCharactersRequestHandler(new ListCharactersResponseCache(listCharactersCache)).cachedResponse(request)
   }
 
   override def parseDScan(req: DScanParseRequest): Future[DScanParseResponse] = {
-    DScanRequestHandler(DScanResponseCache(dscanResultsCache)).handleRequest(req)
+    DScanRequestHandler(new DScanResponseCache(dscanResultsCache)).handleRequest(req)
   }
 
   override def cachedDScan(request: CachedDScanRequest): Future[Option[DScanParseResponse]] = {
-    DScanRequestHandler(DScanResponseCache(dscanResultsCache)).cachedResponse(request)
+    DScanRequestHandler(new DScanResponseCache(dscanResultsCache)).cachedResponse(request)
   }
 
 }
