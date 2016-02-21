@@ -1,25 +1,25 @@
-(B) Sisters Core Scanner Probe: unknown item type
-(B) switch between local and d-scan tabs depending on input
 (B) fixed main order: ships first, celestials last, everything else in between
-(C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
-(C) WebserviceResult: rename to HasTimestamp, isFresh should become a function +great_trait_cleanup_of_2016
+(C) BodyParser: make a function  +great_trait_cleanup_of_2016
 (C) CachableResponse must go, copy operation by function +great_trait_cleanup_of_2016
-(C) VersionedRequest: rename to HasVersion  +great_trait_cleanup_of_2016
 (C) CachedResponse: rename to HasCacheKey +great_trait_cleanup_of_2016
 (C) Unify RetrieveCache with ResponseCache trait +great_trait_cleanup_of_2016
-(C) BodyParser: make a function  +great_trait_cleanup_of_2016
-(C) float the tab menu
+(C) VersionedRequest: rename to HasVersion  +great_trait_cleanup_of_2016
+(C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
+(C) WebserviceResult: rename to HasTimestamp, isFresh should become a function +great_trait_cleanup_of_2016
+(C) crest login and api to determine current system for browser other than IGB +local_history
+(C) diffs between scans in same system +local_history
 (C) dscan history +dscan_history
 (C) local history +local_history
-(C) diffs between scans in same system +local_history
-(C) crest login and api to determine current system for browser other than IGB +local_history
-(E) one chunk of disk space shared between all caches
-(E) error message when started multiple times
+(C) switch between local and d-scan tabs depending on input
+(D) float the tab menu
 (E) clean up json parsing code, use jawn ast
 (E) client-side routing with push-state https://developer.mozilla.org/en-US/docs/Web/API/History_API
+(E) error message when started multiple times
+(E) one chunk of disk space shared between all caches
 D-Scan
 Shopping list
 
+x (B) unkown item types: Sisters Core Scanner Probe
 x (A) unknown item type will throw an error, no dscan data shown at all
 x (A) d-scan: allow distance in meters
 x (A) prompt-button does not work in IGB, just display input with url pre-selected

@@ -2229,6 +2229,947 @@ Apostle|Force Auxiliary|6|Ship
 Minokawa|Force Auxiliary|6|Ship
 Lif|Force Auxiliary|6|Ship
 Sekhmet|Force Auxiliary|6|Ship
+Carbonized Lead S|Projectile Ammo|8|Charge
+Nuclear S|Projectile Ammo|8|Charge
+Proton S|Projectile Ammo|8|Charge
+Depleted Uranium S|Projectile Ammo|8|Charge
+Titanium Sabot S|Projectile Ammo|8|Charge
+Fusion S|Projectile Ammo|8|Charge
+Phased Plasma S|Projectile Ammo|8|Charge
+EMP S|Projectile Ammo|8|Charge
+Carbonized Lead M|Projectile Ammo|8|Charge
+Nuclear M|Projectile Ammo|8|Charge
+Proton M|Projectile Ammo|8|Charge
+Depleted Uranium M|Projectile Ammo|8|Charge
+Titanium Sabot M|Projectile Ammo|8|Charge
+Fusion M|Projectile Ammo|8|Charge
+Phased Plasma M|Projectile Ammo|8|Charge
+EMP M|Projectile Ammo|8|Charge
+Carbonized Lead L|Projectile Ammo|8|Charge
+Nuclear L|Projectile Ammo|8|Charge
+Proton L|Projectile Ammo|8|Charge
+Depleted Uranium L|Projectile Ammo|8|Charge
+Titanium Sabot L|Projectile Ammo|8|Charge
+Fusion L|Projectile Ammo|8|Charge
+Phased Plasma L|Projectile Ammo|8|Charge
+EMP L|Projectile Ammo|8|Charge
+Carbonized Lead XL|Projectile Ammo|8|Charge
+Depleted Uranium XL|Projectile Ammo|8|Charge
+EMP XL|Projectile Ammo|8|Charge
+Fusion XL|Projectile Ammo|8|Charge
+Nuclear XL|Projectile Ammo|8|Charge
+Phased Plasma XL|Projectile Ammo|8|Charge
+Proton XL|Projectile Ammo|8|Charge
+Titanium Sabot XL|Projectile Ammo|8|Charge
+Arch Angel Carbonized Lead S|Projectile Ammo|8|Charge
+Arch Angel Nuclear S|Projectile Ammo|8|Charge
+Arch Angel Proton S|Projectile Ammo|8|Charge
+Arch Angel Depleted Uranium S|Projectile Ammo|8|Charge
+Arch Angel Titanium Sabot S|Projectile Ammo|8|Charge
+Arch Angel Fusion S|Projectile Ammo|8|Charge
+Arch Angel Phased Plasma S|Projectile Ammo|8|Charge
+Arch Angel EMP S|Projectile Ammo|8|Charge
+Arch Angel Carbonized Lead M|Projectile Ammo|8|Charge
+Arch Angel Nuclear M|Projectile Ammo|8|Charge
+Arch Angel Proton M|Projectile Ammo|8|Charge
+Arch Angel Depleted Uranium M|Projectile Ammo|8|Charge
+Arch Angel Titanium Sabot M|Projectile Ammo|8|Charge
+Arch Angel Fusion M|Projectile Ammo|8|Charge
+Arch Angel Phased Plasma M|Projectile Ammo|8|Charge
+Arch Angel EMP M|Projectile Ammo|8|Charge
+Arch Angel Carbonized Lead L|Projectile Ammo|8|Charge
+Arch Angel Nuclear L|Projectile Ammo|8|Charge
+Arch Angel Proton L|Projectile Ammo|8|Charge
+Arch Angel Depleted Uranium L|Projectile Ammo|8|Charge
+Arch Angel Titanium Sabot L|Projectile Ammo|8|Charge
+Arch Angel Fusion L|Projectile Ammo|8|Charge
+Arch Angel Phased Plasma L|Projectile Ammo|8|Charge
+Arch Angel EMP L|Projectile Ammo|8|Charge
+Arch Angel Carbonized Lead XL|Projectile Ammo|8|Charge
+Arch Angel Depleted Uranium XL|Projectile Ammo|8|Charge
+Arch Angel EMP XL|Projectile Ammo|8|Charge
+Arch Angel Fusion XL|Projectile Ammo|8|Charge
+Arch Angel Nuclear XL|Projectile Ammo|8|Charge
+Arch Angel Phased Plasma XL|Projectile Ammo|8|Charge
+Arch Angel Proton XL|Projectile Ammo|8|Charge
+Arch Angel Titanium Sabot XL|Projectile Ammo|8|Charge
+Domination Carbonized Lead S|Projectile Ammo|8|Charge
+Domination Nuclear S|Projectile Ammo|8|Charge
+Domination Proton S|Projectile Ammo|8|Charge
+Domination Depleted Uranium S|Projectile Ammo|8|Charge
+Domination Titanium Sabot S|Projectile Ammo|8|Charge
+Domination Fusion S|Projectile Ammo|8|Charge
+Domination Phased Plasma S|Projectile Ammo|8|Charge
+Domination EMP S|Projectile Ammo|8|Charge
+Domination Carbonized Lead M|Projectile Ammo|8|Charge
+Domination Nuclear M|Projectile Ammo|8|Charge
+Domination Proton M|Projectile Ammo|8|Charge
+Domination Depleted Uranium M|Projectile Ammo|8|Charge
+Domination Titanium Sabot M|Projectile Ammo|8|Charge
+Domination Fusion M|Projectile Ammo|8|Charge
+Domination Phased Plasma M|Projectile Ammo|8|Charge
+Domination EMP M|Projectile Ammo|8|Charge
+Domination Carbonized Lead L|Projectile Ammo|8|Charge
+Domination Nuclear L|Projectile Ammo|8|Charge
+Domination Proton L|Projectile Ammo|8|Charge
+Domination Depleted Uranium L|Projectile Ammo|8|Charge
+Domination Titanium Sabot L|Projectile Ammo|8|Charge
+Domination Fusion L|Projectile Ammo|8|Charge
+Domination Phased Plasma L|Projectile Ammo|8|Charge
+Domination EMP L|Projectile Ammo|8|Charge
+Domination Carbonized Lead XL|Projectile Ammo|8|Charge
+Domination Depleted Uranium XL|Projectile Ammo|8|Charge
+Domination EMP XL|Projectile Ammo|8|Charge
+Domination Fusion XL|Projectile Ammo|8|Charge
+Domination Nuclear XL|Projectile Ammo|8|Charge
+Domination Phased Plasma XL|Projectile Ammo|8|Charge
+Domination Proton XL|Projectile Ammo|8|Charge
+Domination Titanium Sabot XL|Projectile Ammo|8|Charge
+Republic Fleet EMP L|Projectile Ammo|8|Charge
+Republic Fleet EMP M|Projectile Ammo|8|Charge
+Republic Fleet EMP S|Projectile Ammo|8|Charge
+Republic Fleet EMP XL|Projectile Ammo|8|Charge
+Republic Fleet Fusion L|Projectile Ammo|8|Charge
+Republic Fleet Fusion M|Projectile Ammo|8|Charge
+Republic Fleet Fusion S|Projectile Ammo|8|Charge
+Republic Fleet Fusion XL|Projectile Ammo|8|Charge
+Republic Fleet Nuclear L|Projectile Ammo|8|Charge
+Republic Fleet Nuclear M|Projectile Ammo|8|Charge
+Republic Fleet Nuclear S|Projectile Ammo|8|Charge
+Republic Fleet Nuclear XL|Projectile Ammo|8|Charge
+Republic Fleet Phased Plasma L|Projectile Ammo|8|Charge
+Republic Fleet Phased Plasma XL|Projectile Ammo|8|Charge
+Republic Fleet Phased Plasma M|Projectile Ammo|8|Charge
+Republic Fleet Phased Plasma S|Projectile Ammo|8|Charge
+Republic Fleet Proton L|Projectile Ammo|8|Charge
+Republic Fleet Proton M|Projectile Ammo|8|Charge
+Republic Fleet Proton S|Projectile Ammo|8|Charge
+Republic Fleet Proton XL|Projectile Ammo|8|Charge
+Republic Fleet Titanium Sabot L|Projectile Ammo|8|Charge
+Republic Fleet Titanium Sabot M|Projectile Ammo|8|Charge
+Republic Fleet Titanium Sabot S|Projectile Ammo|8|Charge
+Republic Fleet Titanium Sabot XL|Projectile Ammo|8|Charge
+Republic Fleet Carbonized Lead L|Projectile Ammo|8|Charge
+Republic Fleet Carbonized Lead M|Projectile Ammo|8|Charge
+Republic Fleet Carbonized Lead S|Projectile Ammo|8|Charge
+Republic Fleet Carbonized Lead XL|Projectile Ammo|8|Charge
+Republic Fleet Depleted Uranium L|Projectile Ammo|8|Charge
+Republic Fleet Depleted Uranium M|Projectile Ammo|8|Charge
+Republic Fleet Depleted Uranium S|Projectile Ammo|8|Charge
+Republic Fleet Depleted Uranium XL|Projectile Ammo|8|Charge
+Orbital EMP S|Projectile Ammo|8|Charge
+Iron Charge S|Hybrid Charge|8|Charge
+Tungsten Charge S|Hybrid Charge|8|Charge
+Iridium Charge S|Hybrid Charge|8|Charge
+Lead Charge S|Hybrid Charge|8|Charge
+Thorium Charge S|Hybrid Charge|8|Charge
+Uranium Charge S|Hybrid Charge|8|Charge
+Plutonium Charge S|Hybrid Charge|8|Charge
+Antimatter Charge S|Hybrid Charge|8|Charge
+Iron Charge M|Hybrid Charge|8|Charge
+Tungsten Charge M|Hybrid Charge|8|Charge
+Iridium Charge M|Hybrid Charge|8|Charge
+Lead Charge M|Hybrid Charge|8|Charge
+Thorium Charge M|Hybrid Charge|8|Charge
+Uranium Charge M|Hybrid Charge|8|Charge
+Plutonium Charge M|Hybrid Charge|8|Charge
+Antimatter Charge M|Hybrid Charge|8|Charge
+Iron Charge L|Hybrid Charge|8|Charge
+Tungsten Charge L|Hybrid Charge|8|Charge
+Iridium Charge L|Hybrid Charge|8|Charge
+Lead Charge L|Hybrid Charge|8|Charge
+Thorium Charge L|Hybrid Charge|8|Charge
+Uranium Charge L|Hybrid Charge|8|Charge
+Plutonium Charge L|Hybrid Charge|8|Charge
+Antimatter Charge L|Hybrid Charge|8|Charge
+Antimatter Charge XL|Hybrid Charge|8|Charge
+Iridium Charge XL|Hybrid Charge|8|Charge
+Iron Charge XL|Hybrid Charge|8|Charge
+Lead Charge XL|Hybrid Charge|8|Charge
+Plutonium Charge XL|Hybrid Charge|8|Charge
+Thorium Charge XL|Hybrid Charge|8|Charge
+Tungsten Charge XL|Hybrid Charge|8|Charge
+Uranium Charge XL|Hybrid Charge|8|Charge
+Shadow Iron Charge S|Hybrid Charge|8|Charge
+Shadow Tungsten Charge S|Hybrid Charge|8|Charge
+Shadow Iridium Charge S|Hybrid Charge|8|Charge
+Shadow Lead Charge S|Hybrid Charge|8|Charge
+Shadow Thorium Charge S|Hybrid Charge|8|Charge
+Shadow Uranium Charge S|Hybrid Charge|8|Charge
+Shadow Plutonium Charge S|Hybrid Charge|8|Charge
+Shadow Antimatter Charge S|Hybrid Charge|8|Charge
+Shadow Iron Charge M|Hybrid Charge|8|Charge
+Shadow Tungsten Charge M|Hybrid Charge|8|Charge
+Shadow Iridium Charge M|Hybrid Charge|8|Charge
+Shadow Lead Charge M|Hybrid Charge|8|Charge
+Shadow Thorium Charge M|Hybrid Charge|8|Charge
+Shadow Uranium Charge M|Hybrid Charge|8|Charge
+Shadow Plutonium Charge M|Hybrid Charge|8|Charge
+Shadow Antimatter Charge M|Hybrid Charge|8|Charge
+Shadow Iron Charge L|Hybrid Charge|8|Charge
+Shadow Tungsten Charge L|Hybrid Charge|8|Charge
+Shadow Iridium Charge L|Hybrid Charge|8|Charge
+Shadow Lead Charge L|Hybrid Charge|8|Charge
+Shadow Thorium Charge L|Hybrid Charge|8|Charge
+Shadow Uranium Charge L|Hybrid Charge|8|Charge
+Shadow Plutonium Charge L|Hybrid Charge|8|Charge
+Shadow Antimatter Charge L|Hybrid Charge|8|Charge
+Shadow Antimatter Charge XL|Hybrid Charge|8|Charge
+Shadow Iridium Charge XL|Hybrid Charge|8|Charge
+Shadow Iron Charge XL|Hybrid Charge|8|Charge
+Shadow Lead Charge XL|Hybrid Charge|8|Charge
+Shadow Plutonium Charge XL|Hybrid Charge|8|Charge
+Shadow Thorium Charge XL|Hybrid Charge|8|Charge
+Shadow Tungsten Charge XL|Hybrid Charge|8|Charge
+Shadow Uranium Charge XL|Hybrid Charge|8|Charge
+Guardian Iron Charge S|Hybrid Charge|8|Charge
+Guardian Tungsten Charge S|Hybrid Charge|8|Charge
+Guardian Iridium Charge S|Hybrid Charge|8|Charge
+Guardian Lead Charge S|Hybrid Charge|8|Charge
+Guardian Thorium Charge S|Hybrid Charge|8|Charge
+Guardian Uranium Charge S|Hybrid Charge|8|Charge
+Guardian Plutonium Charge S|Hybrid Charge|8|Charge
+Guardian Antimatter Charge S|Hybrid Charge|8|Charge
+Guardian Iron Charge M|Hybrid Charge|8|Charge
+Guardian Tungsten Charge M|Hybrid Charge|8|Charge
+Guardian Iridium Charge M|Hybrid Charge|8|Charge
+Guardian Lead Charge M|Hybrid Charge|8|Charge
+Guardian Thorium Charge M|Hybrid Charge|8|Charge
+Guardian Uranium Charge M|Hybrid Charge|8|Charge
+Guardian Plutonium Charge M|Hybrid Charge|8|Charge
+Guardian Antimatter Charge M|Hybrid Charge|8|Charge
+Guardian Iron Charge L|Hybrid Charge|8|Charge
+Guardian Tungsten Charge L|Hybrid Charge|8|Charge
+Guardian Iridium Charge L|Hybrid Charge|8|Charge
+Guardian Lead Charge L|Hybrid Charge|8|Charge
+Guardian Thorium Charge L|Hybrid Charge|8|Charge
+Guardian Uranium Charge L|Hybrid Charge|8|Charge
+Guardian Plutonium Charge L|Hybrid Charge|8|Charge
+Guardian Antimatter Charge L|Hybrid Charge|8|Charge
+Guardian Antimatter Charge XL|Hybrid Charge|8|Charge
+Guardian Iridium Charge XL|Hybrid Charge|8|Charge
+Guardian Iron Charge XL|Hybrid Charge|8|Charge
+Guardian Lead Charge XL|Hybrid Charge|8|Charge
+Guardian Plutonium Charge XL|Hybrid Charge|8|Charge
+Guardian Thorium Charge XL|Hybrid Charge|8|Charge
+Guardian Tungsten Charge XL|Hybrid Charge|8|Charge
+Guardian Uranium Charge XL|Hybrid Charge|8|Charge
+Guristas Iron Charge S|Hybrid Charge|8|Charge
+Guristas Tungsten Charge S|Hybrid Charge|8|Charge
+Guristas Iridium Charge S|Hybrid Charge|8|Charge
+Guristas Lead Charge S|Hybrid Charge|8|Charge
+Guristas Thorium Charge S|Hybrid Charge|8|Charge
+Guristas Uranium Charge S|Hybrid Charge|8|Charge
+Guristas Plutonium Charge S|Hybrid Charge|8|Charge
+Guristas Antimatter Charge S|Hybrid Charge|8|Charge
+Guristas Iron Charge M|Hybrid Charge|8|Charge
+Guristas Tungsten Charge M|Hybrid Charge|8|Charge
+Guristas Iridium Charge M|Hybrid Charge|8|Charge
+Guristas Lead Charge M|Hybrid Charge|8|Charge
+Guristas Thorium Charge M|Hybrid Charge|8|Charge
+Guristas Uranium Charge M|Hybrid Charge|8|Charge
+Guristas Plutonium Charge M|Hybrid Charge|8|Charge
+Guristas Antimatter Charge M|Hybrid Charge|8|Charge
+Guristas Iron Charge L|Hybrid Charge|8|Charge
+Guristas Tungsten Charge L|Hybrid Charge|8|Charge
+Guristas Iridium Charge L|Hybrid Charge|8|Charge
+Guristas Lead Charge L|Hybrid Charge|8|Charge
+Guristas Thorium Charge L|Hybrid Charge|8|Charge
+Guristas Uranium Charge L|Hybrid Charge|8|Charge
+Guristas Plutonium Charge L|Hybrid Charge|8|Charge
+Guristas Antimatter Charge L|Hybrid Charge|8|Charge
+Guristas Antimatter Charge XL|Hybrid Charge|8|Charge
+Guristas Iridium Charge XL|Hybrid Charge|8|Charge
+Guristas Iron Charge XL|Hybrid Charge|8|Charge
+Guristas Lead Charge XL|Hybrid Charge|8|Charge
+Guristas Plutonium Charge XL|Hybrid Charge|8|Charge
+Guristas Thorium Charge XL|Hybrid Charge|8|Charge
+Guristas Tungsten Charge XL|Hybrid Charge|8|Charge
+Guristas Uranium Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Iron Charge S|Hybrid Charge|8|Charge
+Dread Guristas Tungsten Charge S|Hybrid Charge|8|Charge
+Dread Guristas Iridium Charge S|Hybrid Charge|8|Charge
+Dread Guristas Lead Charge S|Hybrid Charge|8|Charge
+Dread Guristas Thorium Charge S|Hybrid Charge|8|Charge
+Dread Guristas Uranium Charge S|Hybrid Charge|8|Charge
+Dread Guristas Plutonium Charge S|Hybrid Charge|8|Charge
+Dread Guristas Antimatter Charge S|Hybrid Charge|8|Charge
+Dread Guristas Iron Charge M|Hybrid Charge|8|Charge
+Dread Guristas Tungsten Charge M|Hybrid Charge|8|Charge
+Dread Guristas Iridium Charge M|Hybrid Charge|8|Charge
+Dread Guristas Lead Charge M|Hybrid Charge|8|Charge
+Dread Guristas Thorium Charge M|Hybrid Charge|8|Charge
+Dread Guristas Uranium Charge M|Hybrid Charge|8|Charge
+Dread Guristas Plutonium Charge M|Hybrid Charge|8|Charge
+Dread Guristas Antimatter Charge M|Hybrid Charge|8|Charge
+Dread Guristas Iron Charge L|Hybrid Charge|8|Charge
+Dread Guristas Tungsten Charge L|Hybrid Charge|8|Charge
+Dread Guristas Iridium Charge L|Hybrid Charge|8|Charge
+Dread Guristas Lead Charge L|Hybrid Charge|8|Charge
+Dread Guristas Thorium Charge L|Hybrid Charge|8|Charge
+Dread Guristas Uranium Charge L|Hybrid Charge|8|Charge
+Dread Guristas Plutonium Charge L|Hybrid Charge|8|Charge
+Dread Guristas Antimatter Charge L|Hybrid Charge|8|Charge
+Dread Guristas Antimatter Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Iridium Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Iron Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Lead Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Plutonium Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Thorium Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Tungsten Charge XL|Hybrid Charge|8|Charge
+Dread Guristas Uranium Charge XL|Hybrid Charge|8|Charge
+Caldari Navy Antimatter Charge L|Hybrid Charge|8|Charge
+Federation Navy Antimatter Charge S|Hybrid Charge|8|Charge
+Federation Navy Plutonium Charge S|Hybrid Charge|8|Charge
+Federation Navy Uranium Charge S|Hybrid Charge|8|Charge
+Federation Navy Thorium Charge S|Hybrid Charge|8|Charge
+Federation Navy Lead Charge S|Hybrid Charge|8|Charge
+Federation Navy Iridium Charge S|Hybrid Charge|8|Charge
+Federation Navy Tungsten Charge S|Hybrid Charge|8|Charge
+Federation Navy Iron Charge S|Hybrid Charge|8|Charge
+Federation Navy Antimatter Charge M|Hybrid Charge|8|Charge
+Federation Navy Plutonium Charge M|Hybrid Charge|8|Charge
+Federation Navy Uranium Charge M|Hybrid Charge|8|Charge
+Federation Navy Thorium Charge M|Hybrid Charge|8|Charge
+Federation Navy Lead Charge M|Hybrid Charge|8|Charge
+Federation Navy Iridium Charge M|Hybrid Charge|8|Charge
+Federation Navy Tungsten Charge M|Hybrid Charge|8|Charge
+Federation Navy Iron Charge M|Hybrid Charge|8|Charge
+Federation Navy Antimatter Charge L|Hybrid Charge|8|Charge
+Federation Navy Plutonium Charge L|Hybrid Charge|8|Charge
+Federation Navy Uranium Charge L|Hybrid Charge|8|Charge
+Federation Navy Thorium Charge L|Hybrid Charge|8|Charge
+Federation Navy Lead Charge L|Hybrid Charge|8|Charge
+Federation Navy Iridium Charge L|Hybrid Charge|8|Charge
+Federation Navy Tungsten Charge L|Hybrid Charge|8|Charge
+Federation Navy Iron Charge L|Hybrid Charge|8|Charge
+Caldari Navy Antimatter Charge S|Hybrid Charge|8|Charge
+Caldari Navy Plutonium Charge S|Hybrid Charge|8|Charge
+Caldari Navy Uranium Charge S|Hybrid Charge|8|Charge
+Caldari Navy Thorium Charge S|Hybrid Charge|8|Charge
+Caldari Navy Lead Charge S|Hybrid Charge|8|Charge
+Caldari Navy Iridium Charge S|Hybrid Charge|8|Charge
+Caldari Navy Tungsten Charge S|Hybrid Charge|8|Charge
+Caldari Navy Iron Charge S|Hybrid Charge|8|Charge
+Caldari Navy Antimatter Charge M|Hybrid Charge|8|Charge
+Caldari Navy Plutonium Charge M|Hybrid Charge|8|Charge
+Caldari Navy Uranium Charge M|Hybrid Charge|8|Charge
+Caldari Navy Thorium Charge M|Hybrid Charge|8|Charge
+Caldari Navy Lead Charge M|Hybrid Charge|8|Charge
+Caldari Navy Iridium Charge M|Hybrid Charge|8|Charge
+Caldari Navy Tungsten Charge M|Hybrid Charge|8|Charge
+Caldari Navy Iron Charge M|Hybrid Charge|8|Charge
+Caldari Navy Plutonium Charge L|Hybrid Charge|8|Charge
+Caldari Navy Uranium Charge L|Hybrid Charge|8|Charge
+Caldari Navy Thorium Charge L|Hybrid Charge|8|Charge
+Caldari Navy Lead Charge L|Hybrid Charge|8|Charge
+Caldari Navy Iridium Charge L|Hybrid Charge|8|Charge
+Caldari Navy Tungsten Charge L|Hybrid Charge|8|Charge
+Caldari Navy Iron Charge L|Hybrid Charge|8|Charge
+Orbital Hybrid S|Hybrid Charge|8|Charge
+Radio S|Frequency Crystal|8|Charge
+Microwave S|Frequency Crystal|8|Charge
+Infrared S|Frequency Crystal|8|Charge
+Standard S|Frequency Crystal|8|Charge
+Ultraviolet S|Frequency Crystal|8|Charge
+Xray S|Frequency Crystal|8|Charge
+Gamma S|Frequency Crystal|8|Charge
+Multifrequency S|Frequency Crystal|8|Charge
+Radio M|Frequency Crystal|8|Charge
+Microwave M|Frequency Crystal|8|Charge
+Infrared M|Frequency Crystal|8|Charge
+Standard M|Frequency Crystal|8|Charge
+Ultraviolet M|Frequency Crystal|8|Charge
+Xray M|Frequency Crystal|8|Charge
+Gamma M|Frequency Crystal|8|Charge
+Multifrequency M|Frequency Crystal|8|Charge
+Radio L|Frequency Crystal|8|Charge
+Microwave L|Frequency Crystal|8|Charge
+Infrared L|Frequency Crystal|8|Charge
+Standard L|Frequency Crystal|8|Charge
+Ultraviolet L|Frequency Crystal|8|Charge
+Xray L|Frequency Crystal|8|Charge
+Gamma L|Frequency Crystal|8|Charge
+Multifrequency L|Frequency Crystal|8|Charge
+Gamma XL|Frequency Crystal|8|Charge
+Infrared XL|Frequency Crystal|8|Charge
+Microwave XL|Frequency Crystal|8|Charge
+Multifrequency XL|Frequency Crystal|8|Charge
+Radio XL|Frequency Crystal|8|Charge
+Standard XL|Frequency Crystal|8|Charge
+Ultraviolet XL|Frequency Crystal|8|Charge
+Xray XL|Frequency Crystal|8|Charge
+Sanshas Radio S|Frequency Crystal|8|Charge
+Sanshas Microwave S|Frequency Crystal|8|Charge
+Sanshas Infrared S|Frequency Crystal|8|Charge
+Sanshas Standard S|Frequency Crystal|8|Charge
+Sanshas Radio M|Frequency Crystal|8|Charge
+Sanshas Microwave M|Frequency Crystal|8|Charge
+Sanshas Infrared M|Frequency Crystal|8|Charge
+Sanshas Standard M|Frequency Crystal|8|Charge
+Sanshas Radio L|Frequency Crystal|8|Charge
+Sanshas Microwave L|Frequency Crystal|8|Charge
+Sanshas Infrared L|Frequency Crystal|8|Charge
+Sanshas Standard L|Frequency Crystal|8|Charge
+Sanshas Radio XL|Frequency Crystal|8|Charge
+Sanshas Microwave XL|Frequency Crystal|8|Charge
+Sanshas Infrared XL|Frequency Crystal|8|Charge
+Sanshas Standard XL|Frequency Crystal|8|Charge
+Civilian Pulse Crystal|Frequency Crystal|8|Charge
+Civilian Autocannon Ammo|Frequency Crystal|8|Charge
+Civilian Railgun Charge|Frequency Crystal|8|Charge
+Civilian Blaster Charge|Frequency Crystal|8|Charge
+Sanshas Ultraviolet S|Frequency Crystal|8|Charge
+Sanshas Xray S|Frequency Crystal|8|Charge
+Sanshas Gamma S|Frequency Crystal|8|Charge
+Sanshas Multifrequency S|Frequency Crystal|8|Charge
+Sanshas Ultraviolet M|Frequency Crystal|8|Charge
+Sanshas Xray M|Frequency Crystal|8|Charge
+Sanshas Gamma M|Frequency Crystal|8|Charge
+Sanshas Multifrequency M|Frequency Crystal|8|Charge
+Sanshas Ultraviolet L|Frequency Crystal|8|Charge
+Sanshas Xray L|Frequency Crystal|8|Charge
+Sanshas Gamma L|Frequency Crystal|8|Charge
+Sanshas Multifrequency L|Frequency Crystal|8|Charge
+Sanshas Ultraviolet XL|Frequency Crystal|8|Charge
+Sanshas Xray XL|Frequency Crystal|8|Charge
+Sanshas Gamma XL|Frequency Crystal|8|Charge
+Sanshas Multifrequency XL|Frequency Crystal|8|Charge
+True Sanshas Radio S|Frequency Crystal|8|Charge
+True Sanshas Microwave S|Frequency Crystal|8|Charge
+True Sanshas Infrared S|Frequency Crystal|8|Charge
+True Sanshas Standard S|Frequency Crystal|8|Charge
+True Sanshas Ultraviolet S|Frequency Crystal|8|Charge
+True Sanshas Xray S|Frequency Crystal|8|Charge
+True Sanshas Gamma S|Frequency Crystal|8|Charge
+True Sanshas Multifrequency S|Frequency Crystal|8|Charge
+True Sanshas Radio M|Frequency Crystal|8|Charge
+True Sanshas Microwave M|Frequency Crystal|8|Charge
+True Sanshas Infrared M|Frequency Crystal|8|Charge
+True Sanshas Standard M|Frequency Crystal|8|Charge
+True Sanshas Ultraviolet M|Frequency Crystal|8|Charge
+True Sanshas Xray M|Frequency Crystal|8|Charge
+True Sanshas Gamma M|Frequency Crystal|8|Charge
+True Sanshas Multifrequency M|Frequency Crystal|8|Charge
+True Sanshas Radio L|Frequency Crystal|8|Charge
+True Sanshas Microwave L|Frequency Crystal|8|Charge
+True Sanshas Infrared L|Frequency Crystal|8|Charge
+True Sanshas Standard L|Frequency Crystal|8|Charge
+True Sanshas Ultraviolet L|Frequency Crystal|8|Charge
+True Sanshas Xray L|Frequency Crystal|8|Charge
+True Sanshas Gamma L|Frequency Crystal|8|Charge
+True Sanshas Multifrequency L|Frequency Crystal|8|Charge
+True Sanshas Radio XL|Frequency Crystal|8|Charge
+True Sanshas Microwave XL|Frequency Crystal|8|Charge
+True Sanshas Infrared XL|Frequency Crystal|8|Charge
+True Sanshas Standard XL|Frequency Crystal|8|Charge
+True Sanshas Ultraviolet XL|Frequency Crystal|8|Charge
+True Sanshas Xray XL|Frequency Crystal|8|Charge
+True Sanshas Gamma XL|Frequency Crystal|8|Charge
+True Sanshas Multifrequency XL|Frequency Crystal|8|Charge
+Blood Radio S|Frequency Crystal|8|Charge
+Blood Microwave S|Frequency Crystal|8|Charge
+Blood Infrared S|Frequency Crystal|8|Charge
+Blood Standard S|Frequency Crystal|8|Charge
+Blood Ultraviolet S|Frequency Crystal|8|Charge
+Blood Xray S|Frequency Crystal|8|Charge
+Blood Gamma S|Frequency Crystal|8|Charge
+Blood Multifrequency S|Frequency Crystal|8|Charge
+Blood Microwave M|Frequency Crystal|8|Charge
+Blood Infrared M|Frequency Crystal|8|Charge
+Blood Standard M|Frequency Crystal|8|Charge
+Blood Ultraviolet M|Frequency Crystal|8|Charge
+Blood Xray M|Frequency Crystal|8|Charge
+Blood Gamma M|Frequency Crystal|8|Charge
+Blood Multifrequency M|Frequency Crystal|8|Charge
+Blood Radio L|Frequency Crystal|8|Charge
+Blood Microwave L|Frequency Crystal|8|Charge
+Blood Infrared L|Frequency Crystal|8|Charge
+Blood Standard L|Frequency Crystal|8|Charge
+Blood Ultraviolet L|Frequency Crystal|8|Charge
+Blood Xray L|Frequency Crystal|8|Charge
+Blood Gamma L|Frequency Crystal|8|Charge
+Blood Multifrequency L|Frequency Crystal|8|Charge
+Blood Radio XL|Frequency Crystal|8|Charge
+Blood Microwave XL|Frequency Crystal|8|Charge
+Blood Infrared XL|Frequency Crystal|8|Charge
+Blood Standard XL|Frequency Crystal|8|Charge
+Blood Ultraviolet XL|Frequency Crystal|8|Charge
+Blood Xray XL|Frequency Crystal|8|Charge
+Blood Gamma XL|Frequency Crystal|8|Charge
+Blood Multifrequency XL|Frequency Crystal|8|Charge
+Dark Blood Radio S|Frequency Crystal|8|Charge
+Dark Blood Microwave S|Frequency Crystal|8|Charge
+Dark Blood Infrared S|Frequency Crystal|8|Charge
+Dark Blood Standard S|Frequency Crystal|8|Charge
+Dark Blood Ultraviolet S|Frequency Crystal|8|Charge
+Dark Blood Xray S|Frequency Crystal|8|Charge
+Dark Blood Gamma S|Frequency Crystal|8|Charge
+Dark Blood Multifrequency S|Frequency Crystal|8|Charge
+Dark Blood Radio M|Frequency Crystal|8|Charge
+Dark Blood Microwave M|Frequency Crystal|8|Charge
+Dark Blood Infrared M|Frequency Crystal|8|Charge
+Dark Blood Standard M|Frequency Crystal|8|Charge
+Dark Blood Ultraviolet M|Frequency Crystal|8|Charge
+Dark Blood Xray M|Frequency Crystal|8|Charge
+Dark Blood Gamma M|Frequency Crystal|8|Charge
+Dark Blood Multifrequency M|Frequency Crystal|8|Charge
+Dark Blood Radio L|Frequency Crystal|8|Charge
+Dark Blood Microwave L|Frequency Crystal|8|Charge
+Dark Blood Infrared L|Frequency Crystal|8|Charge
+Dark Blood Standard L|Frequency Crystal|8|Charge
+Dark Blood Ultraviolet L|Frequency Crystal|8|Charge
+Dark Blood Xray L|Frequency Crystal|8|Charge
+Dark Blood Gamma L|Frequency Crystal|8|Charge
+Dark Blood Multifrequency L|Frequency Crystal|8|Charge
+Dark Blood Radio XL|Frequency Crystal|8|Charge
+Dark Blood Microwave XL|Frequency Crystal|8|Charge
+Dark Blood Infrared XL|Frequency Crystal|8|Charge
+Dark Blood Standard XL|Frequency Crystal|8|Charge
+Dark Blood Ultraviolet XL|Frequency Crystal|8|Charge
+Dark Blood Xray XL|Frequency Crystal|8|Charge
+Dark Blood Gamma XL|Frequency Crystal|8|Charge
+Dark Blood Multifrequency XL|Frequency Crystal|8|Charge
+Blood Radio M|Frequency Crystal|8|Charge
+Imperial Navy Multifrequency S|Frequency Crystal|8|Charge
+Imperial Navy Gamma S|Frequency Crystal|8|Charge
+Imperial Navy Xray S|Frequency Crystal|8|Charge
+Imperial Navy Ultraviolet S|Frequency Crystal|8|Charge
+Imperial Navy Standard S|Frequency Crystal|8|Charge
+Imperial Navy Infrared S|Frequency Crystal|8|Charge
+Imperial Navy Microwave S|Frequency Crystal|8|Charge
+Imperial Navy Radio S|Frequency Crystal|8|Charge
+Imperial Navy Multifrequency M|Frequency Crystal|8|Charge
+Imperial Navy Gamma M|Frequency Crystal|8|Charge
+Imperial Navy Xray M|Frequency Crystal|8|Charge
+Imperial Navy Ultraviolet M|Frequency Crystal|8|Charge
+Imperial Navy Standard M|Frequency Crystal|8|Charge
+Imperial Navy Infrared M|Frequency Crystal|8|Charge
+Imperial Navy Microwave M|Frequency Crystal|8|Charge
+Imperial Navy Radio M|Frequency Crystal|8|Charge
+Imperial Navy Multifrequency L|Frequency Crystal|8|Charge
+Imperial Navy Gamma L|Frequency Crystal|8|Charge
+Imperial Navy Xray L|Frequency Crystal|8|Charge
+Imperial Navy Ultraviolet L|Frequency Crystal|8|Charge
+Imperial Navy Standard L|Frequency Crystal|8|Charge
+Imperial Navy Infrared L|Frequency Crystal|8|Charge
+Imperial Navy Microwave L|Frequency Crystal|8|Charge
+Imperial Navy Radio L|Frequency Crystal|8|Charge
+Orbital Laser S|Frequency Crystal|8|Charge
+Cap Booster 25|Capacitor Booster Charge|8|Charge
+Cap Booster 50|Capacitor Booster Charge|8|Charge
+Cap Booster 75|Capacitor Booster Charge|8|Charge
+Cap Booster 100|Capacitor Booster Charge|8|Charge
+Cap Booster 150|Capacitor Booster Charge|8|Charge
+Cap Booster 200|Capacitor Booster Charge|8|Charge
+Cap Booster 400|Capacitor Booster Charge|8|Charge
+Cap Booster 800|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 100|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 150|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 200|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 400|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 800|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 25|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 50|Capacitor Booster Charge|8|Charge
+Navy Cap Booster 75|Capacitor Booster Charge|8|Charge
+Light Defender Missile I|Light Defender Missile|8|Charge
+Scourge Torpedo|Torpedo|8|Charge
+Banshee Torpedo|Torpedo|8|Charge
+Mjolnir Torpedo|Torpedo|8|Charge
+Nova Torpedo|Torpedo|8|Charge
+Inferno Torpedo|Torpedo|8|Charge
+Guristas Mjolnir Torpedo|Torpedo|8|Charge
+Caldari Navy Mjolnir Torpedo|Torpedo|8|Charge
+Dread Guristas Mjolnir Torpedo|Torpedo|8|Charge
+Guristas Scourge Torpedo|Torpedo|8|Charge
+Caldari Navy Scourge Torpedo|Torpedo|8|Charge
+Dread Guristas Scourge Torpedo|Torpedo|8|Charge
+Guristas Inferno Torpedo|Torpedo|8|Charge
+Caldari Navy Inferno Torpedo|Torpedo|8|Charge
+Dread Guristas Inferno Torpedo|Torpedo|8|Charge
+Guristas Nova Torpedo|Torpedo|8|Charge
+Caldari Navy Nova Torpedo|Torpedo|8|Charge
+Dread Guristas Nova Torpedo|Torpedo|8|Charge
+Sansha Mjolnir Torpedo|Torpedo|8|Charge
+True Sansha Mjolnir Torpedo|Torpedo|8|Charge
+Concussion Bomb|Bomb|8|Charge
+Scorch Bomb|Bomb|8|Charge
+Shrapnel Bomb|Bomb|8|Charge
+Electron Bomb|Bomb|8|Charge
+Python Mine|Mine|8|Charge
+Cobra Mine|Mine|8|Charge
+Anaconda Mine|Mine|8|Charge
+Asp Mine|Mine|8|Charge
+Hail S|Advanced Autocannon Ammo|8|Charge
+Barrage S|Advanced Autocannon Ammo|8|Charge
+Storm S|Advanced Autocannon Ammo|8|Charge
+Barrage M|Advanced Autocannon Ammo|8|Charge
+Barrage L|Advanced Autocannon Ammo|8|Charge
+Hail M|Advanced Autocannon Ammo|8|Charge
+Hail L|Advanced Autocannon Ammo|8|Charge
+Storm M|Advanced Autocannon Ammo|8|Charge
+Storm L|Advanced Autocannon Ammo|8|Charge
+Bolt S|Advanced Railgun Charge|8|Charge
+Spike S|Advanced Railgun Charge|8|Charge
+Javelin S|Advanced Railgun Charge|8|Charge
+Bolt M|Advanced Railgun Charge|8|Charge
+Bolt L|Advanced Railgun Charge|8|Charge
+Javelin M|Advanced Railgun Charge|8|Charge
+Javelin L|Advanced Railgun Charge|8|Charge
+Spike M|Advanced Railgun Charge|8|Charge
+Spike L|Advanced Railgun Charge|8|Charge
+Lux S|Advanced Beam Laser Crystal|8|Charge
+Gleam S|Advanced Beam Laser Crystal|8|Charge
+Aurora S|Advanced Beam Laser Crystal|8|Charge
+Aurora M|Advanced Beam Laser Crystal|8|Charge
+Aurora L|Advanced Beam Laser Crystal|8|Charge
+Gleam M|Advanced Beam Laser Crystal|8|Charge
+Gleam L|Advanced Beam Laser Crystal|8|Charge
+Lux M|Advanced Beam Laser Crystal|8|Charge
+Lux L|Advanced Beam Laser Crystal|8|Charge
+Blaze S|Advanced Pulse Laser Crystal|8|Charge
+Scorch S|Advanced Pulse Laser Crystal|8|Charge
+Conflagration S|Advanced Pulse Laser Crystal|8|Charge
+Blaze M|Advanced Pulse Laser Crystal|8|Charge
+Blaze L|Advanced Pulse Laser Crystal|8|Charge
+Conflagration M|Advanced Pulse Laser Crystal|8|Charge
+Conflagration L|Advanced Pulse Laser Crystal|8|Charge
+Scorch M|Advanced Pulse Laser Crystal|8|Charge
+Scorch L|Advanced Pulse Laser Crystal|8|Charge
+Shock S|Advanced Artillery Ammo|8|Charge
+Quake S|Advanced Artillery Ammo|8|Charge
+Tremor S|Advanced Artillery Ammo|8|Charge
+Quake L|Advanced Artillery Ammo|8|Charge
+Shock L|Advanced Artillery Ammo|8|Charge
+Tremor L|Advanced Artillery Ammo|8|Charge
+Quake M|Advanced Artillery Ammo|8|Charge
+Shock M|Advanced Artillery Ammo|8|Charge
+Tremor M|Advanced Artillery Ammo|8|Charge
+Desolation S|Advanced Blaster Charge|8|Charge
+Void S|Advanced Blaster Charge|8|Charge
+Null S|Advanced Blaster Charge|8|Charge
+Null M|Advanced Blaster Charge|8|Charge
+Null L|Advanced Blaster Charge|8|Charge
+Void M|Advanced Blaster Charge|8|Charge
+Void L|Advanced Blaster Charge|8|Charge
+Desolation M|Advanced Blaster Charge|8|Charge
+Desolation L|Advanced Blaster Charge|8|Charge
+Scourge Light Missile|Light Missile|8|Charge
+Inferno Light Missile|Light Missile|8|Charge
+Mjolnir Light Missile|Light Missile|8|Charge
+Nova Light Missile|Light Missile|8|Charge
+Decapitator Light Missile|Light Missile|8|Charge
+Guristas Scourge Light Missile|Light Missile|8|Charge
+Caldari Navy Scourge Light Missile|Light Missile|8|Charge
+Dread Guristas Scourge Light Missile|Light Missile|8|Charge
+Guristas Inferno Light Missile|Light Missile|8|Charge
+Dread Guristas Inferno Light Missile|Light Missile|8|Charge
+Caldari Navy Inferno Light Missile|Light Missile|8|Charge
+Dread Guristas Nova Light Missile|Light Missile|8|Charge
+Guristas Nova Light Missile|Light Missile|8|Charge
+Caldari Navy Nova Light Missile|Light Missile|8|Charge
+Guristas Mjolnir Light Missile|Light Missile|8|Charge
+Dread Guristas Mjolnir Light Missile|Light Missile|8|Charge
+Caldari Navy Mjolnir Light Missile|Light Missile|8|Charge
+Sansha Sabretooth Light Missile|Light Missile|8|Charge
+True Sansha Sabretooth Light Missile|Light Missile|8|Charge
+Oneiric Missile|Light Missile|8|Charge
+Civilian Scourge Light Missile|Light Missile|8|Charge
+Nova Heavy Missile|Heavy Missile|8|Charge
+Mjolnir Heavy Missile|Heavy Missile|8|Charge
+Inferno Heavy Missile|Heavy Missile|8|Charge
+Scourge Heavy Missile|Heavy Missile|8|Charge
+Ghost Heavy Missile|Heavy Missile|8|Charge
+Guristas Mjolnir Heavy Missile|Heavy Missile|8|Charge
+Caldari Navy Mjolnir Heavy Missile|Heavy Missile|8|Charge
+Dread Guristas Mjolnir Heavy Missile|Heavy Missile|8|Charge
+Guristas Scourge Heavy Missile|Heavy Missile|8|Charge
+Caldari Navy Scourge Heavy Missile|Heavy Missile|8|Charge
+Dread Guristas Scourge Heavy Missile|Heavy Missile|8|Charge
+Guristas Inferno Heavy Missile|Heavy Missile|8|Charge
+Caldari Navy Inferno Heavy Missile|Heavy Missile|8|Charge
+Dread Guristas Inferno Heavy Missile|Heavy Missile|8|Charge
+Guristas Nova Heavy Missile|Heavy Missile|8|Charge
+Caldari Navy Nova Heavy Missile|Heavy Missile|8|Charge
+Dread Guristas Nova Heavy Missile|Heavy Missile|8|Charge
+Sansha Thunderbolt Heavy Missile|Heavy Missile|8|Charge
+True Sansha Thunderbolt Heavy Missile|Heavy Missile|8|Charge
+Praedormitan Missile|Heavy Missile|8|Charge
+Mjolnir Cruise Missile|Cruise Missile|8|Charge
+Scourge Cruise Missile|Cruise Missile|8|Charge
+Inferno Cruise Missile|Cruise Missile|8|Charge
+Nova Cruise Missile|Cruise Missile|8|Charge
+Haunter Cruise Missile|Cruise Missile|8|Charge
+QA Cruise Missile|Cruise Missile|8|Charge
+Guristas Mjolnir Cruise Missile|Cruise Missile|8|Charge
+Caldari Navy Mjolnir Cruise Missile|Cruise Missile|8|Charge
+Dread Guristas Mjolnir Cruise Missile|Cruise Missile|8|Charge
+Guristas Scourge Cruise Missile|Cruise Missile|8|Charge
+Caldari Navy Scourge Cruise Missile|Cruise Missile|8|Charge
+Dread Guristas Scourge Cruise Missile|Cruise Missile|8|Charge
+Guristas Inferno Cruise Missile|Cruise Missile|8|Charge
+Caldari Navy Inferno Cruise Missile|Cruise Missile|8|Charge
+Dread Guristas Inferno Cruise Missile|Cruise Missile|8|Charge
+Guristas Nova Cruise Missile|Cruise Missile|8|Charge
+Caldari Navy Nova Cruise Missile|Cruise Missile|8|Charge
+Dread Guristas Nova Cruise Missile|Cruise Missile|8|Charge
+Sansha Paradise Cruise Missile|Cruise Missile|8|Charge
+True Sansha Paradise Cruise Missile|Cruise Missile|8|Charge
+Phantasmata Missile|Cruise Missile|8|Charge
+Scourge Rocket|Rocket|8|Charge
+Mjolnir Rocket|Rocket|8|Charge
+Inferno Rocket|Rocket|8|Charge
+Nova Rocket|Rocket|8|Charge
+Guristas Inferno Rocket|Rocket|8|Charge
+Caldari Navy Inferno Rocket|Rocket|8|Charge
+Dread Guristas Inferno Rocket|Rocket|8|Charge
+Guristas Mjolnir Rocket|Rocket|8|Charge
+Caldari Navy Mjolnir Rocket|Rocket|8|Charge
+Dread Guristas Mjolnir Rocket|Rocket|8|Charge
+Guristas Nova Rocket|Rocket|8|Charge
+Caldari Navy Nova Rocket|Rocket|8|Charge
+Dread Guristas Nova Rocket|Rocket|8|Charge
+Guristas Scourge Rocket|Rocket|8|Charge
+Caldari Navy Scourge Rocket|Rocket|8|Charge
+Dread Guristas Scourge Rocket|Rocket|8|Charge
+Sansha Mjolnir Rocket|Rocket|8|Charge
+True Sansha Mjolnir Rocket|Rocket|8|Charge
+Mjolnir Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Scourge Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Nova Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Inferno Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Blood Mjolnir F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Imperial Navy Mjolnir Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Dark Blood Mjolnir F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Guristas Scourge F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Caldari Navy Scourge Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Dread Guristas Scourge F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Shadow Inferno F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Federation Navy Inferno Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Guardian Inferno F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Arch Angel Nova F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Republic Fleet Nova Auto-Targeting Light Missile I|FoF Light Missile|8|Charge
+Domination Nova F.O.F. Light Missile I|FoF Light Missile|8|Charge
+Scourge Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Mjolnir Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Nova Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Inferno Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Blood Mjolnir F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Imperial Navy Mjolnir Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Dark Blood Mjolnir F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Guristas Scourge F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Caldari Navy Scourge Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Dread Guristas Scourge F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Shadow Inferno F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Federation Navy Inferno Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Guardian Inferno F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Arch Angel Nova F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Republic Fleet Nova Auto-Targeting Heavy Missile I|FoF Heavy Missile|8|Charge
+Domination Nova F.O.F. Heavy Missile I|FoF Heavy Missile|8|Charge
+Scourge Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Mjolnir Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Nova Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Inferno Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Blood Mjolnir F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Imperial Navy Mjolnir Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Dark Blood Mjolnir F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Guristas Scourge F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Caldari Navy Scourge Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Dread Guristas Scourge F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Shadow Inferno F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Federation Navy Inferno Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Guardian Inferno F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Arch Angel Nova F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Republic Fleet Nova Auto-Targeting Cruise Missile I|FoF Cruise Missile|8|Charge
+Domination Nova F.O.F. Cruise Missile I|FoF Cruise Missile|8|Charge
+Low Cost Mercenary Assault Unit|Orbital Assault Unit|8|Charge
+Mjolnir Citadel Torpedo|Citadel Torpedo|8|Charge
+Scourge Citadel Torpedo|Citadel Torpedo|8|Charge
+Inferno Citadel Torpedo|Citadel Torpedo|8|Charge
+Nova Citadel Torpedo|Citadel Torpedo|8|Charge
+Guristas Nova Citadel Torpedo|Citadel Torpedo|8|Charge
+Guristas Inferno Citadel Torpedo|Citadel Torpedo|8|Charge
+Guristas Scourge Citadel Torpedo|Citadel Torpedo|8|Charge
+Guristas Mjolnir Citadel Torpedo|Citadel Torpedo|8|Charge
+Core Scanner Probe I|Scanner Probe|8|Charge
+Combat Scanner Probe I|Scanner Probe|8|Charge
+Sisters Combat Scanner Probe|Scanner Probe|8|Charge
+Sisters Core Scanner Probe|Scanner Probe|8|Charge
+RSS Core Scanner Probe|Scanner Probe|8|Charge
+Arkonor Mining Crystal I|Mining Crystal|8|Charge
+Bistot Mining Crystal I|Mining Crystal|8|Charge
+Crokite Mining Crystal I|Mining Crystal|8|Charge
+Dark Ochre Mining Crystal I|Mining Crystal|8|Charge
+Gneiss Mining Crystal I|Mining Crystal|8|Charge
+Hedbergite Mining Crystal I|Mining Crystal|8|Charge
+Hemorphite Mining Crystal I|Mining Crystal|8|Charge
+Jaspet Mining Crystal I|Mining Crystal|8|Charge
+Kernite Mining Crystal I|Mining Crystal|8|Charge
+Omber Mining Crystal I|Mining Crystal|8|Charge
+Plagioclase Mining Crystal I|Mining Crystal|8|Charge
+Pyroxeres Mining Crystal I|Mining Crystal|8|Charge
+Scordite Mining Crystal I|Mining Crystal|8|Charge
+Spodumain Mining Crystal I|Mining Crystal|8|Charge
+Veldspar Mining Crystal I|Mining Crystal|8|Charge
+Arkonor Mining Crystal II|Mining Crystal|8|Charge
+Bistot Mining Crystal II|Mining Crystal|8|Charge
+Crokite Mining Crystal II|Mining Crystal|8|Charge
+Dark Ochre Mining Crystal II|Mining Crystal|8|Charge
+Gneiss Mining Crystal II|Mining Crystal|8|Charge
+Hedbergite Mining Crystal II|Mining Crystal|8|Charge
+Hemorphite Mining Crystal II|Mining Crystal|8|Charge
+Jaspet Mining Crystal II|Mining Crystal|8|Charge
+Kernite Mining Crystal II|Mining Crystal|8|Charge
+Omber Mining Crystal II|Mining Crystal|8|Charge
+Plagioclase Mining Crystal II|Mining Crystal|8|Charge
+Pyroxeres Mining Crystal II|Mining Crystal|8|Charge
+Scordite Mining Crystal II|Mining Crystal|8|Charge
+Veldspar Mining Crystal II|Mining Crystal|8|Charge
+Spodumain Mining Crystal II|Mining Crystal|8|Charge
+Quest Survey Probe I|Survey Probe|8|Charge
+Discovery Survey Probe I|Survey Probe|8|Charge
+Gaze Survey Probe I|Survey Probe|8|Charge
+'Phase' Servitor|Modifications|8|Charge
+Regular Mercenary Navigator|Modifications|8|Charge
+'Longbow' Servitor|Modifications|8|Charge
+Regular Mercenary Scout|Modifications|8|Charge
+'Dart' Servitor|Modifications|8|Charge
+Independent Shielding|Modifications|8|Charge
+SnowballNewEffect|Festival Charges|8|Charge
+Snowball CXIV|Festival Charges|8|Charge
+Sodium Firework CXIV|Festival Charges|8|Charge
+Barium Firework CXIV|Festival Charges|8|Charge
+Copper Firework CXIV|Festival Charges|8|Charge
+Snowball|Festival Charges|8|Charge
+Sodium Firework|Festival Charges|8|Charge
+Barium Firework|Festival Charges|8|Charge
+Copper Firework|Festival Charges|8|Charge
+Warp Disrupt Probe|Interdiction Probe|8|Charge
+Surgical Warp Disrupt Probe|Interdiction Probe|8|Charge
+Mjolnir Rage Rocket|Advanced Rocket|8|Charge
+Mjolnir Javelin Rocket|Advanced Rocket|8|Charge
+Scourge Rage Rocket|Advanced Rocket|8|Charge
+Nova Rage Rocket|Advanced Rocket|8|Charge
+Inferno Rage Rocket|Advanced Rocket|8|Charge
+Scourge Javelin Rocket|Advanced Rocket|8|Charge
+Nova Javelin Rocket|Advanced Rocket|8|Charge
+Inferno Javelin Rocket|Advanced Rocket|8|Charge
+Mjolnir Fury Light Missile|Advanced Light Missile|8|Charge
+Inferno Precision Light Missile|Advanced Light Missile|8|Charge
+Scourge Fury Light Missile|Advanced Light Missile|8|Charge
+Nova Fury Light Missile|Advanced Light Missile|8|Charge
+Inferno Fury Light Missile|Advanced Light Missile|8|Charge
+Scourge Precision Light Missile|Advanced Light Missile|8|Charge
+Nova Precision Light Missile|Advanced Light Missile|8|Charge
+Mjolnir Precision Light Missile|Advanced Light Missile|8|Charge
+Scourge Rage Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Nova Javelin Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Inferno Rage Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Nova Rage Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Mjolnir Rage Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Scourge Javelin Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Mjolnir Javelin Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Inferno Javelin Heavy Assault Missile|Advanced Heavy Assault Missile|8|Charge
+Scourge Fury Heavy Missile|Advanced Heavy Missile|8|Charge
+Nova Precision Heavy Missile|Advanced Heavy Missile|8|Charge
+Nova Fury Heavy Missile|Advanced Heavy Missile|8|Charge
+Mjolnir Fury Heavy Missile|Advanced Heavy Missile|8|Charge
+Inferno Fury Heavy Missile|Advanced Heavy Missile|8|Charge
+Scourge Precision Heavy Missile|Advanced Heavy Missile|8|Charge
+Inferno Precision Heavy Missile|Advanced Heavy Missile|8|Charge
+Mjolnir Precision Heavy Missile|Advanced Heavy Missile|8|Charge
+Inferno Fury Cruise Missile|Advanced Cruise Missile|8|Charge
+Inferno Precision Cruise Missile|Advanced Cruise Missile|8|Charge
+Nova Fury Cruise Missile|Advanced Cruise Missile|8|Charge
+Scourge Fury Cruise Missile|Advanced Cruise Missile|8|Charge
+Mjolnir Fury Cruise Missile|Advanced Cruise Missile|8|Charge
+Nova Precision Cruise Missile|Advanced Cruise Missile|8|Charge
+Mjolnir Precision Cruise Missile|Advanced Cruise Missile|8|Charge
+Scourge Precision Cruise Missile|Advanced Cruise Missile|8|Charge
+Nova Javelin Torpedo|Advanced Torpedo|8|Charge
+Inferno Rage Torpedo|Advanced Torpedo|8|Charge
+Nova Rage Torpedo|Advanced Torpedo|8|Charge
+Scourge Rage Torpedo|Advanced Torpedo|8|Charge
+Mjolnir Rage Torpedo|Advanced Torpedo|8|Charge
+Inferno Javelin Torpedo|Advanced Torpedo|8|Charge
+Mjolnir Javelin Torpedo|Advanced Torpedo|8|Charge
+Scourge Javelin Torpedo|Advanced Torpedo|8|Charge
+Mercoxit Mining Crystal I|Mercoxit Mining Crystal|8|Charge
+Mercoxit Mining Crystal II|Mercoxit Mining Crystal|8|Charge
+Mjolnir Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Scourge Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Inferno Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Nova Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Guristas Nova Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Dread Guristas Nova Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Caldari Navy Nova Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Guristas Inferno Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Caldari Navy Inferno Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Dread Guristas Inferno Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Guristas Scourge Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Caldari Navy Scourge Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Dread Guristas Scourge Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Guristas Mjolnir Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Caldari Navy Mjolnir Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Dread Guristas Mjolnir Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Sansha Mjolnir Assault Missile|Heavy Assault Missile|8|Charge
+True Sansha Mjolnir Heavy Assault Missile|Heavy Assault Missile|8|Charge
+Lockbreaker Bomb|Bomb ECM|8|Charge
+Void Bomb|Bomb Energy|8|Charge
+Focused Void Bomb|Bomb Energy|8|Charge
+Planet Satellite|Planet Satellites|8|Charge
+Optimal Range Script|Tracking Script|8|Charge
+Tracking Speed Script|Tracking Script|8|Charge
+Focused Warp Disruption Script|Warp Disruption Script|8|Charge
+Optimal Range Disruption Script|Tracking Disruption Script|8|Charge
+Tracking Speed Disruption Script|Tracking Disruption Script|8|Charge
+Targeting Range Script|Sensor Booster Script|8|Charge
+Scan Resolution Script|Sensor Booster Script|8|Charge
+Scan Resolution Dampening Script|Sensor Dampener Script|8|Charge
+Targeting Range Dampening Script|Sensor Dampener Script|8|Charge
+Nanite Repair Paste|Nanite Repair Paste|8|Charge
+Observator Deep Space Probe I|Obsolete Probes|8|Charge
+Radar Quest Probe|Obsolete Probes|8|Charge
+Sisters Observator Deep Space Probe|Obsolete Probes|8|Charge
+Sisters Radar Quest Probe|Obsolete Probes|8|Charge
+Compact Shade Torpedo|Compact Citadel Torpedo|8|Charge
+Compact Doom Torpedo I|Compact Citadel Torpedo|8|Charge
+Compact Purgatory Torpedo I|Compact Citadel Torpedo|8|Charge
+Compact Rift Torpedo I|Compact Citadel Torpedo|8|Charge
+Compact Thor Torpedo I|Compact Citadel Torpedo|8|Charge
+Guristas Nova Citadel Cruise Missile|Citadel Cruise|8|Charge
+Guristas Scourge Citadel Cruise Missile|Citadel Cruise|8|Charge
+Guristas Inferno Citadel Cruise Missile|Citadel Cruise|8|Charge
+Guristas Mjolnir Citadel Cruise Missile|Citadel Cruise|8|Charge
+Scourge Citadel Cruise Missile|Citadel Cruise|8|Charge
+Nova Citadel Cruise Missile|Citadel Cruise|8|Charge
+Inferno Citadel Cruise Missile|Citadel Cruise|8|Charge
+Mjolnir Citadel Cruise Missile|Citadel Cruise|8|Charge
+Shield Booster Fuel Allocation Script|Shield Booster Script|8|Charge
+Heavy Defender Missile I|Heavy Defender Missile|8|Charge
+Missile Range Script|Missile Guidance Script|8|Charge
+Missile Precision Script|Missile Guidance Script|8|Charge
+Structure Long Range Anti-Ship Missile|Structure Anti-Ship Missile|8|Charge
+Structure Medium Range Anti-Ship Missile|Structure Anti-Ship Missile|8|Charge
+Structure Short Range Anti-Ship Missile|Structure Anti-Ship Missile|8|Charge
+Structure Long Range Flak Missile|Structure Flak Missile|8|Charge
+Structure Medium Range Flak Missile|Structure Flak Missile|8|Charge
+Structure Short Range Flak Missile|Structure Flak Missile|8|Charge
+Structure Long Range AoE Missile|Structure AoE Missile|8|Charge
+Structure Short Range AoE Missile|Structure AoE Missile|8|Charge
+Structure Capacitor AoE Missile|Structure AoE Missile|8|Charge
+Structure Gravimetric ECM script|Structure ECM script|8|Charge
+Structure Ladar ECM Script|Structure ECM script|8|Charge
+Structure Magnetometric ECM Script|Structure ECM script|8|Charge
+Structure Radar ECM Script|Structure ECM script|8|Charge
+Structure Long Range Stasis Webifier Script|Structure Stasis Webifier Script|8|Charge
+Structure Short Range Stasis Webifier Script|Structure Stasis Webifier Script|8|Charge
+Structure Explosive Hardener Script|Structure Resistance Switcher Script|8|Charge
+Structure EM Hardener Script|Structure Resistance Switcher Script|8|Charge
+Structure Kinetic Resistance Script|Structure Resistance Switcher Script|8|Charge
+Structure Thermal Resistance Script|Structure Resistance Switcher Script|8|Charge
+Missile Range Disruption Script|Guidance Disruption Script|8|Charge
+Missile Precision Disruption Script|Guidance Disruption Script|8|Charge
 Wasp I|Combat Drone|18|Drone
 Infiltrator I|Combat Drone|18|Drone
 Infiltrator II|Combat Drone|18|Drone
