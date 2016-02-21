@@ -23,10 +23,18 @@ object DScanDetailsView extends Refreshable {
 
   val dscanList = tbody().render
 
-  /** current result cache key, if any*/
+  /** current result cache key, if any */
   var resultCacheKey: Option[String] = None
   val resultUrlBox = input(cls := "pure-input-2-3", `type` := "text", readonly).render
   resultUrlBox.onfocus = selectAllOnFocus _
+
+  // priorities for category sorting.  higher value => bigger priority.
+  private[this] val categoryPriorities: Map[String, Int] = Map(
+    "Ship" -> 10,
+    "Deployable" -> 9,
+    "Celestial" -> -10
+  )
+  private[this] val noPriorities: Map[String, Int] = Map()
 
   def selectAllOnFocus(ev: dom.Event) = {
     js.timers.setTimeout(50.0d)(resultUrlBox.select())
@@ -55,17 +63,17 @@ object DScanDetailsView extends Refreshable {
 
     dscanList.innerHTML = ""
 
-    for ((cat, catItems) <- groupAndSort(resp.lines, _.groupCat.category)) {
+    for ((cat, catItems) <- groupAndSort(resp.lines, categoryPriorities, _.groupCat.category)) {
       val catClass = cssClass("cat", cat)
       val groupParents = Set() + catClass
       dscanList.appendChild(treeRow(catClass, "", Set(), cat + " (" + catItems.length + ")"))
 
-      for ((group, groupItems) <- groupAndSort(catItems, _.groupCat.group)) {
+      for ((group, groupItems) <- groupAndSort(catItems, noPriorities, _.groupCat.group)) {
         val groupClass = cssClass("grp", group)
         val typParents = groupParents + groupClass
         dscanList.appendChild(treeRow(groupClass, catClass, groupParents, group + " (" + groupItems.length + ")"))
 
-        for ((typ, typItems) <- groupAndSort(groupItems, _.typ)) {
+        for ((typ, typItems) <- groupAndSort(groupItems, noPriorities, _.typ)) {
           val typClass = cssClass("typ", typ)
           val leafParents = typParents + typClass
           dscanList.appendChild(treeRow(typClass, groupClass, typParents, typ + " (" + typItems.length + ")"))
@@ -161,12 +169,17 @@ object DScanDetailsView extends Refreshable {
 
   def cssClass(prefix: String, typGroupCat: String): String = {
     prefix + "_" + typGroupCat.replace(" ", "_")
-      .replace("""[()]""".r.regex, "")
+      .replace( """[()]""".r.regex, "")
       .trim.toLowerCase
   }
 
-  def groupAndSort(seq: Seq[DScanLine], groupFn: DScanLine => String): Seq[(String, Seq[DScanLine])] = {
-    seq.groupBy(groupFn).toSeq.sortWith(dscanGroupSorter)
+  def groupAndSort(seq: Seq[DScanLine], priorityMap: Map[String, Int], groupFn: DScanLine => String): Seq[(String, Seq[DScanLine])] = {
+    // we just use the implicit ordering for tuples, but this means we can't have the seq[scaline] in there
+    val grouped = seq.groupBy(groupFn)
+    grouped.toSeq
+      .map(pair => (-priorityMap.getOrElse(pair._1, 0), -pair._2.length, pair._1))
+      .sorted
+      .map(tup => tup._3 -> grouped(tup._3))
   }
 
   // sort by distance
@@ -180,16 +193,5 @@ object DScanDetailsView extends Refreshable {
       }
     }
   }
-
-  // sort by the size of the group, or otherwise the string extracted by fn
-  def dscanGroupSorter(x: (String, Seq[DScanLine]), y: (String, Seq[DScanLine])) = {
-    if (x._2.length == y._2.length) {
-      x._1 < y._1
-    } else {
-      // reverse order!
-      x._2.length > y._2.length
-    }
-  }
-
 
 }

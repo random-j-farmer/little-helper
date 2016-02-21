@@ -1,9 +1,10 @@
-(B) fixed main order: ships first, celestials last, everything else in between
 (C) BodyParser: make a function  +great_trait_cleanup_of_2016
 (C) CachableResponse must go, copy operation by function +great_trait_cleanup_of_2016
 (C) CachedResponse: rename to HasCacheKey +great_trait_cleanup_of_2016
 (C) Unify RetrieveCache with ResponseCache trait +great_trait_cleanup_of_2016
 (C) VersionedRequest: rename to HasVersion  +great_trait_cleanup_of_2016
+(C) Refreshable => HasResponseTimestamp +great_trait_cleanup_of_2016
+(C) Submittable => better name +great_trait_cleanup_of_2016
 (C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
 (C) WebserviceResult: rename to HasTimestamp, isFresh should become a function +great_trait_cleanup_of_2016
 (C) crest login and api to determine current system for browser other than IGB +local_history
@@ -19,6 +20,7 @@
 D-Scan
 Shopping list
 
+x (B) fixed main order: ships and deployables first, celestials last, everything else in between
 x (B) unkown item types: Sisters Core Scanner Probe
 x (A) unknown item type will throw an error, no dscan data shown at all
 x (A) d-scan: allow distance in meters
