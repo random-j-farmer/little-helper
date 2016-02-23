@@ -13,7 +13,7 @@ import spray.http._
 import spray.httpx.encoding.{Deflate, Gzip}
 
 import scala.concurrent.duration._
-import scala.util.Try
+import scala.util.{Failure, Try}
 
 
 /**
@@ -156,6 +156,14 @@ class Retriever[K, V <: HasTimestamp](cache: EhcCache[K, V],
       if (item.replyTo != context.system.deadLetters) {
         item.replyTo ! Collector.Result(item, result)
       }
+      activeRequest = None
+      activeRequestStarted = 0L
+      retrieveOrAskForHostConnector()
+
+    case Failure(ex: Exception) =>
+      // most likely a timeout, collector will have timed out already
+      log.warning("retriever received error: {}", ex)
+      // have to get back into processing the queue, otherwise items will get stuck
       activeRequest = None
       activeRequestStarted = 0L
       retrieveOrAskForHostConnector()

@@ -1,16 +1,17 @@
-(C) crest login and api to determine current system for browser other than IGB +local_history
-(C) diffs between scans in same system +local_history
 (C) dscan history +dscan_history
 (C) local history +local_history
 (C) switch between local and d-scan tabs depending on input
-(D) float the tab menu
+(D) crest login and api to determine current system for browser other than IGB +local_history
+(E) float the tab menu?
+(E) diffs between scans in same system +local_history
 (E) clean up json parsing code, use jawn ast
 (E) client-side routing with push-state https://developer.mozilla.org/en-US/docs/Web/API/History_API
 (E) error message when started multiple times
 (E) one chunk of disk space shared between all caches
-D-Scan
+(E) display militia information http https://api.eveonline.com/eve/CharacterAffiliation.xml.aspx?ids=95538430 +may_not_be_good_idea
 Shopping list
 
+x (A) sometimes queued entries seem to hang in the queue
 x (C) split Server, Boot, ApiRequestHandler
 x (C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
 x (C) Submittable => better name +great_trait_cleanup_of_2016
