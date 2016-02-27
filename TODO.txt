@@ -1,5 +1,3 @@
-(C) dscan history +dscan_history
-(C) local history +local_history
 (C) switch between local and d-scan tabs depending on input
 (D) crest login and api to determine current system for browser other than IGB +local_history
 (E) float the tab menu?
@@ -11,6 +9,8 @@
 (E) display militia information http https://api.eveonline.com/eve/CharacterAffiliation.xml.aspx?ids=95538430 +may_not_be_good_idea
 Shopping list
 
+x (C) dscan history +dscan_history
+x (C) local history +local_history
 x (A) sometimes queued entries seem to hang in the queue
 x (C) split Server, Boot, ApiRequestHandler
 x (C) WebserviceRequest: make HasUsername, other fields in wrapper ServerInfo +great_trait_cleanup_of_2016
