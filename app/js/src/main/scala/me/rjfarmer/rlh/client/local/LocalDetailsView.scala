@@ -62,6 +62,7 @@ object LocalDetailsView extends HasResponseTimeAgo {
     updateResponseTimestamp(resp.timestamp)
     refreshResponseTimeAgo()
 
+    solarSystem.innerHTML = ""
     resp.solarSystem match {
       case None =>
       case Some(ssn) => solarSystem.appendChild(span(ssn, ", ").render)

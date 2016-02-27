@@ -128,7 +128,7 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with H
         href := s"#dscanTab/${hi.item.cacheKey.get}",
         onclick := onHistoryClick(hi) _,
         span(s"${hi.item.lines.length} objects, "),
-        span(hi.item.solarSystem.fold("")(ss => s"$ss ,")),
+        span(hi.item.solarSystem.fold("")(ss => s"$ss, ")),
         hi.respTimeAgo
       )).render
   }
@@ -136,7 +136,6 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with H
   override def updateDetailsView(resp: DScanParseResponse): Unit = {
     DScanDetailsView.update(resp)
   }
-
 
 
 }

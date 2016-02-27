@@ -128,7 +128,6 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
   override def urlFragment: String = (Vector("#localTab") ++ LocalDetailsView.resultCacheKey).mkString("/")
 
 
-
   //
   // history panel
   //
@@ -139,7 +138,7 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
         href := s"#dscanTab/${hi.item.cacheKey.get}",
         onclick := onHistoryClick(hi) _,
         span(s"${hi.item.charinfos.length} pilots, "),
-        span(hi.item.solarSystem.fold("")(ss => s"$ss ,")),
+        span(hi.item.solarSystem.fold("")(ss => s"$ss, ")),
         hi.respTimeAgo
       )).render
   }

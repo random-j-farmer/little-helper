@@ -1,3 +1,4 @@
+(C) use non-existing target fragments in menu
 (C) switch between local and d-scan tabs depending on input
 (D) crest login and api to determine current system for browser other than IGB +local_history
 (E) float the tab menu?
@@ -9,6 +10,8 @@
 (E) display militia information http https://api.eveonline.com/eve/CharacterAffiliation.xml.aspx?ids=95538430 +may_not_be_good_idea
 Shopping list
 
+x (C) IGB: history format: X pilots, Ishomilken ,0m ago
+x (C) IGB: solar system span is not reset before adding new one (local & dscan)
 x (C) dscan history +dscan_history
 x (C) local history +local_history
 x (A) sometimes queued entries seem to hang in the queue

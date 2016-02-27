@@ -53,6 +53,7 @@ object DScanDetailsView extends HasResponseTimeAgo {
 
     dscanItemCount.innerHTML = s"${lines.size} objects, "
 
+    solarSystem.innerHTML = ""
     resp.solarSystem match {
       case None =>
       case Some(ssn) => solarSystem.appendChild(span(ssn, ", ").render)
