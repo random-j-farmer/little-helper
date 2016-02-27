@@ -8,12 +8,16 @@ import me.rjfarmer.rlh.client._
 import me.rjfarmer.rlh.client.logging.LoggerRLH
 import me.rjfarmer.rlh.shared.{EveCharacterName, SharedConfig}
 import org.scalajs.dom
+import org.scalajs.dom.html
 import org.scalajs.dom.html.Div
+import org.scalajs.dom.raw.HTMLLIElement
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
+
+import PimpedDomElement._
 
 
 object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
@@ -22,14 +26,24 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
     placeholder := "Paste EVE Local").render
   pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
 
+  private val localHistory = new History[ListCharactersResponse]()
+  private val localHistoryBox = ul(cls := "pure-menu-list").render
+
   override val panelName: String = "Local"
 
   override val panelView: Div = div(id := "localTab",
     cls := "pure-g",
-    form(cls := "pure-u-1-3 pure-form pure-form-stacked",
-      onsubmit := formSubmit _,
-      pilotBox,
-      submitButton),
+    div(cls := "pure-u-1-3",
+
+      form(cls := "pure-form pure-form-stacked",
+        onsubmit := formSubmit _,
+        pilotBox,
+        submitButton),
+
+      div(cls := "pure-menu restricted-width",
+        localHistoryBox
+      )
+    ),
     div(cls := "pure-u-2-3",
       messageBox,
       h1(LocalDetailsView.pilotCount, LocalDetailsView.solarSystem, LocalDetailsView.respTimeAgo),
@@ -37,11 +51,13 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Alliance/Corp"), th("# Pilots"))),
         LocalDetailsView.corpList),
+
       h2("Pilots by kills in the last 2 months"),
       table(cls := "pure-table pure-table-striped",
         thead(tr(th("Name"), th("Alliance/Corp"), th("Kills/Deaths"), th("Age"))),
         LocalDetailsView.pilotList),
       p(),
+
       form(cls := "pure-form",
         fieldset(
           legend("Share result URL"),
@@ -59,7 +75,38 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
       (now - started) + "ms")
 
     LocalDetailsView.update(resp)
+    addResultToHistory(resp)
     submitFinished(started, messages(resp))
+  }
+
+  private def addResultToHistory(resp: ListCharactersResponse): Unit = {
+    localHistory.add(resp)
+    localHistoryBox.innerHTML = ""
+    for (item <- localHistory.history) {
+      localHistoryBox.appendChild(historyResult(item))
+    }
+
+    log.debug("addResultToHistory " + localHistoryBox.lastElementChild)
+    log.debug("addResultToHistory " + localHistoryBox.lastElementChild.firstElementChild)
+
+    localHistoryBox.lastElementChild.firstElementChild.addClass("pure-menu-selected")
+  }
+
+  private def historyResult(hi: HistoryItem[ListCharactersResponse]): HTMLLIElement = {
+    li(cls := "pure-menu-item reset-menu-height",
+      a(cls := "pure-menu-link",
+        href := s"#localTab/${hi.item.cacheKey.get}",
+      onclick := onHistoryClick(hi) _,
+      span(s"${hi.item.charinfos.length} pilots, "),
+      span(hi.item.solarSystem.fold("")(ss => s"$ss ,")),
+      hi.respTimeAgo
+    )).render
+  }
+
+  def refreshResponseTimeAgo(): Unit = {
+    localHistory.history.foreach { h =>
+      h.refreshResponseTimeAgo()
+    }
   }
 
   override def formSubmitAction(ev: dom.Event, tsStarted: Long): Unit = {
@@ -97,6 +144,19 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
     Seq() ++ resp.message.map(Message.error) ++ incompleteMsg ++ staleMsg
   }
 
+  def onHistoryClick(hi: HistoryItem[ListCharactersResponse])(ev: dom.Event): Unit = {
+    ev.stopPropagation()
+    ev.preventDefault()
+
+    val nodeList = localHistoryBox.getElementsByTagName("A")
+    for (i <- 0 until nodeList.length) {
+      nodeList.item(i).asInstanceOf[html.Anchor].removeClass("pure-menu-selected")
+    }
+    val myA = ev.findParent("pure-menu-link").asInstanceOf[html.Anchor]
+    myA.addClass("pure-menu-selected")
+
+    LocalDetailsView.update(hi.item)
+  }
 
   override def route(args: Seq[String]): Unit = {
     args match {

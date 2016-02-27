@@ -47,7 +47,7 @@ object DScanDetailsView extends HasResponseTimeAgo {
     resultUrlBox.value = LittleHelper.getLocationUrl
 
     updateResponseTimestamp(resp.timestamp)
-    refreshResponseTimeAgo
+    refreshResponseTimeAgo()
 
     val lines = resp.lines
 

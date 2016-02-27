@@ -60,7 +60,7 @@ object LocalDetailsView extends HasResponseTimeAgo {
 
     pilotCount.innerHTML = s"${resp.charinfos.size} pilots, "
     updateResponseTimestamp(resp.timestamp)
-    refreshResponseTimeAgo
+    refreshResponseTimeAgo()
 
     resp.solarSystem match {
       case None =>

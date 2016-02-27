@@ -24,6 +24,14 @@
     float: right;
 }
 
+.restricted-width {
+    display: inline-block;
+}
+
+.reset-menu-height {
+    height: 2em;
+}
+
 
 .dscan-tree {
     table-layout: fixed;

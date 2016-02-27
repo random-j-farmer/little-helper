@@ -10,7 +10,7 @@ trait HasResponseTimeAgo {
 
   val respTimeAgo = span(responseTimeAgo).render
   private[this] var respTs = System.currentTimeMillis()
-  refreshResponseTimeAgo
+  refreshResponseTimeAgo()
 
   def responseTimeAgo: String = {
     val totalSeconds = (System.currentTimeMillis() - respTs) / 1000L
@@ -24,10 +24,11 @@ trait HasResponseTimeAgo {
     }
   }
 
-  def refreshResponseTimeAgo = {
+  def refreshResponseTimeAgo(): Unit = {
     respTimeAgo.innerHTML = responseTimeAgo
-    responseTimeAgo
   }
+
+  def timestamp: Long = respTs
 
   def updateResponseTimestamp(ts: Long): Unit = {
     respTs = ts

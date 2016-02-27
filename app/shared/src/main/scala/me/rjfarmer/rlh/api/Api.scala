@@ -49,11 +49,17 @@ trait HasVersion {
 
 }
 
-/** has a cache key */
-trait HasCacheKeyAndVersion extends HasVersion {
+/** has cache key information */
+trait HasCacheKey {
 
   def cacheKey: String
 
+}
+
+// for easy use in type parameters
+trait HasCacheKeyAndVersion extends HasVersion with HasCacheKey
+trait HasTimestampAndOptionalCacheKey extends HasTimestamp {
+  def cacheKey: Option[String]
 }
 
 
@@ -111,7 +117,7 @@ final case class ListCharactersResponse(message: Option[String],
                                         solarSystem: Option[String],
                                         timestamp: Long,
                                         charinfos: Vector[CharInfo])
-  extends HasTimestamp
+  extends HasTimestampAndOptionalCacheKey
 
 
 //
@@ -131,7 +137,7 @@ final case class DScanParseResponse(message: Option[String],
                                     solarSystem: Option[String],
                                     timestamp: Long,
                                     lines: Vector[DScanLine])
-  extends HasTimestamp
+  extends HasTimestampAndOptionalCacheKey
 
 final case class CachedDScanRequest(version: String, cacheKey: String)
   extends HasCacheKeyAndVersion
