@@ -51,7 +51,11 @@ class PimpedDomElement(val elem: dom.Element) {
 
     def rec(pimp: PimpedDomElement): dom.Element = {
       val parent = Option(pimp.elem.parentNode.asInstanceOf[dom.Element])
-      if (pimp.hasClass(klass)) elem.asInstanceOf[dom.Element] else rec(parent.get)
+      if (pimp.hasClass(klass)) {
+        pimp.elem.asInstanceOf[dom.Element]
+      } else {
+        rec(parent.get)
+      }
     }
 
     rec(this)

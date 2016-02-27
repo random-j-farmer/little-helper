@@ -1,9 +1,7 @@
 package me.rjfarmer.rlh.client
 
-import me.rjfarmer.rlh.api.{ListCharactersResponse, HasTimestampAndOptionalCacheKey}
+import me.rjfarmer.rlh.api.HasTimestampAndOptionalCacheKey
 import me.rjfarmer.rlh.client.PimpedDomElement._
-import me.rjfarmer.rlh.client.local.LocalDetailsView
-import me.rjfarmer.rlh.client.local.LocalTab._
 import org.scalajs.dom
 import org.scalajs.dom.html
 import org.scalajs.dom.raw.HTMLLIElement
@@ -31,12 +29,11 @@ trait HistoryPanel[T <: HasTimestampAndOptionalCacheKey] {
   def addResultToHistory(resp: T): Unit = {
     val hView = historyItemView(history.add(resp))
     historyView.insertChild(hView)
-    val hViewLink = hView.getElementsByTagName("A").item(0).asInstanceOf[html.Anchor]
-    makeHistoryLinkActive(hViewLink)
+    makeHistoryLinkActive(hView)
   }
 
-  def makeHistoryLinkActive(link: html.Anchor): Unit = {
-    val nodeList = historyView.getElementsByTagName("A")
+  def makeHistoryLinkActive(link: HTMLLIElement): Unit = {
+    val nodeList = historyView.getElementsByTagName("LI")
     for (i <- 0 until nodeList.length) {
       nodeList.item(i).asInstanceOf[html.Anchor].removeClass("pure-menu-selected")
     }
@@ -47,8 +44,9 @@ trait HistoryPanel[T <: HasTimestampAndOptionalCacheKey] {
     ev.stopPropagation()
     ev.preventDefault()
 
-    val myA = ev.findParent("pure-menu-link").asInstanceOf[html.Anchor]
-    makeHistoryLinkActive(myA)
+    val listElem = ev.findParent("pure-menu-item").asInstanceOf[HTMLLIElement]
+
+    makeHistoryLinkActive(listElem)
 
     updateDetailsView(hi.item)
   }
