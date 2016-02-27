@@ -25,13 +25,17 @@ class History [T <: HasTimestampAndOptionalCacheKey] (_vector: Vector[HistoryIte
     this(Vector())
   }
 
-  def add(item: T): Unit = {
+  def add(item: T): HistoryItem[T] = {
     val hItem = new HistoryItem(item)
     val already = items.find(x => x.item.cacheKey == item.cacheKey)
-    if (already.isEmpty) {
-      items = (items :+ hItem)
-        .sorted(ByTimestamp)
-        .take(maxEntries)
+    already match {
+      case None =>
+        items = (items :+ hItem)
+          .sorted(ByTimestamp)
+          .take(maxEntries)
+        hItem
+      case Some(hItem) =>
+        hItem
     }
   }
 

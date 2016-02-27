@@ -50,17 +50,21 @@ class PimpedDomElement(val elem: dom.Element) {
   def findParent(klass: String): dom.Element = {
 
     def rec(pimp: PimpedDomElement): dom.Element = {
-      if (pimp == null) {
-        throw new IllegalArgumentException("pimp.null")
-      } else if (pimp.hasClass(klass)) {
-        pimp.elem
-      } else {
-        val parent = pimp.elem.parentNode
-        rec(new PimpedDomElement(parent.asInstanceOf[dom.Element]))
-      }
+      val parent = Option(pimp.elem.parentNode.asInstanceOf[dom.Element])
+      if (pimp.hasClass(klass)) elem.asInstanceOf[dom.Element] else rec(parent.get)
     }
 
     rec(this)
+  }
+
+  /** insert thew new child as the first element */
+  def insertChild(child: dom.Element): Unit = {
+    if (elem.childElementCount == 0) {
+      elem.appendChild(child)
+    } else {
+      val firstChild = elem.children.item(0)
+      elem.insertBefore(child, firstChild)
+    }
   }
 
 }
@@ -75,7 +79,7 @@ object PimpedDomElement {
     new PimpedDomElement(elem)
   }
 
-  implicit def eventTarget(ev: dom.Event): PimpedDomElement = {
+  implicit def pimpEventTarget(ev: dom.Event): PimpedDomElement = {
     new PimpedDomElement(ev.target.asInstanceOf[dom.Element])
   }
 

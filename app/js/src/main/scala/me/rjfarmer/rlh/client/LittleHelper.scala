@@ -65,6 +65,7 @@ object LittleHelper {
 
 
     dom.window.setInterval(LocalTab.refreshResponseTimeAgo _, 10000d)
+    dom.window.setInterval(DScanTab.refreshResponseTimeAgo _, 10000d)
     dom.window.setInterval(LocalDetailsView.refreshResponseTimeAgo _, 10000d)
     dom.window.setInterval(DScanDetailsView.refreshResponseTimeAgo _, 10000d)
   }

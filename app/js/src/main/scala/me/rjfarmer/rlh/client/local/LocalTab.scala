@@ -80,19 +80,22 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
   }
 
   private def addResultToHistory(resp: ListCharactersResponse): Unit = {
-    localHistory.add(resp)
-    localHistoryBox.innerHTML = ""
-    for (item <- localHistory.history) {
-      localHistoryBox.appendChild(historyResult(item))
-    }
-
-    log.debug("addResultToHistory " + localHistoryBox.lastElementChild)
-    log.debug("addResultToHistory " + localHistoryBox.lastElementChild.firstElementChild)
-
-    localHistoryBox.lastElementChild.firstElementChild.addClass("pure-menu-selected")
+    val hView = historyView(localHistory.add(resp))
+    localHistoryBox.insertChild(hView)
+    val hViewLink = hView.getElementsByTagName("A").item(0).asInstanceOf[html.Anchor]
+    makeHistoryLinkActive(hViewLink)
   }
 
-  private def historyResult(hi: HistoryItem[ListCharactersResponse]): HTMLLIElement = {
+  private def makeHistoryLinkActive(link: html.Anchor): Unit = {
+    val nodeList = localHistoryBox.getElementsByTagName("A")
+    for (i <- 0 until nodeList.length) {
+      nodeList.item(i).asInstanceOf[html.Anchor].removeClass("pure-menu-selected")
+    }
+    link.addClass("pure-menu-selected")
+  }
+
+
+  private def historyView(hi: HistoryItem[ListCharactersResponse]): HTMLLIElement = {
     li(cls := "pure-menu-item reset-menu-height",
       a(cls := "pure-menu-link",
         href := s"#localTab/${hi.item.cacheKey.get}",
@@ -148,12 +151,8 @@ object LocalTab extends TabbedPanel with HasSubmitButtonAndMessages {
     ev.stopPropagation()
     ev.preventDefault()
 
-    val nodeList = localHistoryBox.getElementsByTagName("A")
-    for (i <- 0 until nodeList.length) {
-      nodeList.item(i).asInstanceOf[html.Anchor].removeClass("pure-menu-selected")
-    }
     val myA = ev.findParent("pure-menu-link").asInstanceOf[html.Anchor]
-    myA.addClass("pure-menu-selected")
+    makeHistoryLinkActive(myA)
 
     LocalDetailsView.update(hi.item)
   }
