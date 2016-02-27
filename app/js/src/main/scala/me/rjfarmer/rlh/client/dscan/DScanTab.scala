@@ -4,19 +4,17 @@ package me.rjfarmer.rlh.client.dscan
 
 import autowire._
 import me.rjfarmer.rlh.api._
-import me.rjfarmer.rlh.client.PimpedDomElement._
 import me.rjfarmer.rlh.client._
 import me.rjfarmer.rlh.client.logging.LoggerRLH
 import me.rjfarmer.rlh.shared.{DScanLineCheck, SharedConfig}
 import org.scalajs.dom
-import org.scalajs.dom.html
 import org.scalajs.dom.raw.HTMLLIElement
 
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
-object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
+object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with HasSubmitButtonAndMessages {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -26,8 +24,7 @@ object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
     placeholder := "Paste EVE D-Scan").render
   dscanBox.onfocus = (ev: dom.Event) => dscanBox.value = ""
 
-  private val dscanHistory = new History[DScanParseResponse]()
-  private val dscanHistoryBox = ul(cls := "pure-menu-list").render
+  override val history = new History[DScanParseResponse]()
 
   override val panelView = div(id := "dscanTab",
     cls := "pure-g",
@@ -39,7 +36,7 @@ object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
         submitButton),
 
       div(cls := "pure-menu restricted-width",
-        dscanHistoryBox
+        historyView
       )
     ),
     div(cls := "pure-u-2-3",
@@ -61,38 +58,6 @@ object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
 
   override val log = LoggerRLH("client.dscan.DScanTab")
 
-
-  private def addResultToHistory(resp: DScanParseResponse): Unit = {
-    val hView = historyView(dscanHistory.add(resp))
-    dscanHistoryBox.insertChild(hView)
-    val hViewLink = hView.getElementsByTagName("A").item(0).asInstanceOf[html.Anchor]
-    makeHistoryLinkActive(hViewLink)
-  }
-
-  private def makeHistoryLinkActive(link: html.Anchor): Unit = {
-    val nodeList = dscanHistoryBox.getElementsByTagName("A")
-    for (i <- 0 until nodeList.length) {
-      nodeList.item(i).asInstanceOf[html.Anchor].removeClass("pure-menu-selected")
-    }
-    link.addClass("pure-menu-selected")
-  }
-
-  private def historyView(hi: HistoryItem[DScanParseResponse]): HTMLLIElement = {
-    li(cls := "pure-menu-item reset-menu-height",
-      a(cls := "pure-menu-link",
-        href := s"#dscanTab/${hi.item.cacheKey.get}",
-        onclick := onHistoryClick(hi) _,
-        span(s"${hi.item.lines.length} objects, "),
-        span(hi.item.solarSystem.fold("")(ss => s"$ss ,")),
-        hi.respTimeAgo
-      )).render
-  }
-
-  def refreshResponseTimeAgo(): Unit = {
-    dscanHistory.history.foreach { h =>
-      h.refreshResponseTimeAgo()
-    }
-  }
 
   def submitSuccess(started: Long, resp: DScanParseResponse): Unit = {
     val now = System.currentTimeMillis
@@ -136,18 +101,6 @@ object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
     resp.message.map(Message.error).toSeq
   }
 
-  def onHistoryClick(hi: HistoryItem[DScanParseResponse])(ev: dom.Event): Unit = {
-    ev.stopPropagation()
-    ev.preventDefault()
-
-    val myA = ev.findParent("pure-menu-link").asInstanceOf[html.Anchor]
-    makeHistoryLinkActive(myA)
-
-    DScanDetailsView.update(hi.item)
-  }
-
-
-
   override def route(args: Seq[String]): Unit = {
     args match {
       case Seq(cachedKey) =>
@@ -164,5 +117,26 @@ object DScanTab extends TabbedPanel with HasSubmitButtonAndMessages {
 
   /** get the panels fragment - changed by route! */
   override def urlFragment: String = (Vector("#dscanTab") ++ DScanDetailsView.resultCacheKey).mkString("/")
+
+
+  //
+  // history panel
+  //
+  override def historyItemView(hi: HistoryItem[DScanParseResponse]): HTMLLIElement = {
+    li(cls := "pure-menu-item reset-menu-height",
+      a(cls := "pure-menu-link",
+        href := s"#dscanTab/${hi.item.cacheKey.get}",
+        onclick := onHistoryClick(hi) _,
+        span(s"${hi.item.lines.length} objects, "),
+        span(hi.item.solarSystem.fold("")(ss => s"$ss ,")),
+        hi.respTimeAgo
+      )).render
+  }
+
+  override def updateDetailsView(resp: DScanParseResponse): Unit = {
+    DScanDetailsView.update(resp)
+  }
+
+
 
 }
