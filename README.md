@@ -1,11 +1,19 @@
 Random's Little Helper
 ======================
 
+Local and D-Scan analyzer.  A public instance is running at https://randoms-littlehelper.rhcloud.com/
 
-Analyzes pasted Local, gives quick overview about top corporations/alliances (by player count) and
-recent kill stats.
+Local
+-----
 
-A public instance is running at https://randoms-littlehelper.rhcloud.com/
+Analyzes pasted local.  It presents 2 lists:  notable corporations or alliances (with more than 10% of the total players in local),
+and all the pilots sorted by their kills in the last 2 months (according to zkillboard).  It prioritizes a fast response
+over displaying out-of-date data.
+
+D-Scan
+------
+
+Analyzes D-Scan.  Sorts by number of results per type.
 
 
 How to compile/test
