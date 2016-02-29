@@ -71,7 +71,7 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
       (now - started) + "ms")
 
     LocalDetailsView.update(resp)
-    addResultToHistory(resp)
+    addResultToHistory(resp, pilots.isEmpty)
     submitFinished(started, messages(resp))
   }
 

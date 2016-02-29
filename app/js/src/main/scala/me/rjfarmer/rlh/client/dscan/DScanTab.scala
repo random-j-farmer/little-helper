@@ -67,7 +67,7 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with H
       resp.solarSystem + " in " +
       (now - started) + "ms")
     DScanDetailsView.update(resp)
-    addResultToHistory(resp)
+    addResultToHistory(resp, resp.lines.isEmpty)
     submitFinished(started, messages(resp))
   }
 

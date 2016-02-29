@@ -26,18 +26,24 @@ trait HistoryPanel[T <: HasTimestampAndOptionalCacheKey] {
   /** update the details view with an item selected from the history */
   def updateDetailsView(item: T): Unit
 
-  def addResultToHistory(resp: T): Unit = {
-    val hView = historyItemView(history.add(resp))
-    historyView.insertChild(hView)
-    makeHistoryLinkActive(hView)
+  def addResultToHistory(resp: T, empty: Boolean): Unit = {
+    if (!empty) {
+      val hView = historyItemView(history.add(resp))
+      historyView.insertChild(hView)
+      handleCurrentHistoryLink(Some(hView))
+    } else {
+      handleCurrentHistoryLink(None)
+    }
   }
 
-  def makeHistoryLinkActive(link: HTMLLIElement): Unit = {
+  def handleCurrentHistoryLink(linkOpt: Option[HTMLLIElement]): Unit = {
     val nodeList = historyView.getElementsByTagName("LI")
     for (i <- 0 until nodeList.length) {
       nodeList.item(i).asInstanceOf[html.Anchor].removeClass("pure-menu-selected")
     }
-    link.addClass("pure-menu-selected")
+    if (linkOpt.isDefined) {
+      linkOpt.get.addClass("pure-menu-selected")
+    }
   }
 
   def onHistoryClick(hi: HistoryItem[T])(ev: dom.Event): Unit = {
@@ -46,7 +52,7 @@ trait HistoryPanel[T <: HasTimestampAndOptionalCacheKey] {
 
     val listElem = ev.findParent("pure-menu-item").asInstanceOf[HTMLLIElement]
 
-    makeHistoryLinkActive(listElem)
+    handleCurrentHistoryLink(Some(listElem))
 
     updateDetailsView(hi.item)
   }
@@ -56,9 +62,5 @@ trait HistoryPanel[T <: HasTimestampAndOptionalCacheKey] {
       h.refreshResponseTimeAgo()
     }
   }
-
-
-
-
 
 }
