@@ -25,13 +25,13 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
 
   private val log = LoggerRLH("client.TabPanel")
 
-  private val tabById: Map[String, TabbedPanel] = Map() ++ tabs.map(tab => tab.panelView.getAttribute("id") -> tab)
+  private val tabById: Map[String, TabbedPanel] = Map() ++ tabs.map(tab => tab.panelID -> tab)
 
   private val linkListItems: Seq[HTMLLIElement] = tabs.map { tab =>
-    li(a(href := "#" + tab.panelView.getAttribute("id"), cls := "pure-menu-link", tab.panelName)).render
+    li(a(href := "#" + tab.panelID, cls := "pure-menu-link", tab.panelName)).render
   }
 
-  activatePanel(tabs.head.panelView.getAttribute("id"))
+  activatePanel(tabs.head.panelID)
 
   private def activatePanel(panelID: String, changeBrowserLocation: Boolean = false) = {
     val frag = "#" + panelID

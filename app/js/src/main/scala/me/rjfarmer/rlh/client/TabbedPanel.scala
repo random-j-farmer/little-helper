@@ -18,7 +18,10 @@ trait TabbedPanel {
   /** route the panel */
   def route(args: Seq[String]): Unit = {}
 
+  /** panel id without trailing params */
+  def panelID: String
+
   /** get the panels fragment - changed by route! */
-  def urlFragment: String
+  def urlFragment: String = "#" + panelID
 
 }

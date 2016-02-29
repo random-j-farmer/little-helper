@@ -26,8 +26,7 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with H
 
   override val history = new History[DScanParseResponse]()
 
-  override val panelView = div(id := "dscanTab",
-    cls := "pure-g",
+  override val panelView = div(cls := "pure-g",
     div(cls := "pure-u-1-3",
 
       form(cls := "pure-form pure-form-stacked",
@@ -115,8 +114,10 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with H
     }
   }
 
+  override def panelID: String= "dscanTab"
+
   /** get the panels fragment - changed by route! */
-  override def urlFragment: String = (Vector("#dscanTab") ++ DScanDetailsView.resultCacheKey).mkString("/")
+  override def urlFragment: String = (Vector("#" + panelID) ++ DScanDetailsView.resultCacheKey).mkString("/")
 
 
   //

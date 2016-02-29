@@ -1,6 +1,5 @@
 (A) switch between local and d-scan tabs depending on input
-(A) smaller history limit, depends on scan size?
-(A) use non-existing target fragments in menu
+(A) only remember cache key in history for large responses
 (B) clean up json parsing code, use jawn ast
 (B) upper limit on priority queue size (potiential DOS)
 (B) logging to console in browsers that support it
@@ -15,6 +14,7 @@
 (X) display militia information http https://api.eveonline.com/eve/CharacterAffiliation.xml.aspx?ids=95538430 +may_not_be_good_idea
 Shopping list
 
+x (A) use non-existing target fragments in menu
 x (A) zero-object results not in history
 x (C) IGB: history format: X pilots, Ishomilken ,0m ago
 x (C) IGB: solar system span is not reset before adding new one (local & dscan)

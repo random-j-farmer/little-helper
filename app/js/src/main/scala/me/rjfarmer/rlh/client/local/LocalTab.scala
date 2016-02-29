@@ -27,8 +27,7 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
 
   override val panelName: String = "Local"
 
-  override val panelView: Div = div(id := "localTab",
-    cls := "pure-g",
+  override val panelView: Div = div(cls := "pure-g",
     div(cls := "pure-u-1-3",
 
       form(cls := "pure-form pure-form-stacked",
@@ -124,8 +123,10 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
     }
   }
 
+  override def panelID: String = "localTab"
+
   /** get the panels fragment - changed by route! */
-  override def urlFragment: String = (Vector("#localTab") ++ LocalDetailsView.resultCacheKey).mkString("/")
+  override def urlFragment: String = (Vector("#" + panelID) ++ LocalDetailsView.resultCacheKey).mkString("/")
 
 
   //
