@@ -14,15 +14,11 @@ import scala.scalajs.js
 import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
-object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with HasSubmitButtonAndMessages {
+object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with SmartPasteSubmit {
 
   import scala.concurrent.ExecutionContext.Implicits.global
 
   override val panelName = "D-Scan"
-
-  private val dscanBox = textarea(cols := 20, rows := 10,
-    placeholder := "Paste EVE D-Scan").render
-  dscanBox.onfocus = (ev: dom.Event) => dscanBox.value = ""
 
   override val history = new History[DScanParseResponse]()
 
@@ -31,7 +27,7 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with H
 
       form(cls := "pure-form pure-form-stacked",
         onsubmit := formSubmit _,
-        dscanBox,
+        pasteBox,
         submitButton),
 
       div(cls := "pure-menu restricted-width",
@@ -71,7 +67,7 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with H
   }
 
   override def formSubmitAction(ev: dom.Event, started: Long): Unit = {
-    val dscanLines = dscanBox.value.split( """\n""")
+    val dscanLines = pasteBox.value.split( """\n""")
     val illegalLines = dscanLines.filterNot(DScanLineCheck.isValidDScanLine)
     if (illegalLines.nonEmpty) {
       log.info("illegal dscan lines: " + illegalLines.mkString(", "))

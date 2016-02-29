@@ -17,11 +17,7 @@ import scala.util.{Failure, Success}
 import scalatags.JsDom.all._
 
 
-object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] with HasSubmitButtonAndMessages {
-
-  private val pilotBox = textarea(cols := 20, rows := 10,
-    placeholder := "Paste EVE Local").render
-  pilotBox.onfocus = (ev: dom.Event) => pilotBox.value = ""
+object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] with SmartPasteSubmit {
 
   override val history = new History[ListCharactersResponse]()
 
@@ -32,7 +28,7 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
 
       form(cls := "pure-form pure-form-stacked",
         onsubmit := formSubmit _,
-        pilotBox,
+        pasteBox,
         submitButton),
 
       div(cls := "pure-menu restricted-width",
@@ -75,7 +71,7 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
   }
 
   override def formSubmitAction(ev: dom.Event, tsStarted: Long): Unit = {
-    val pilotNames = pilotBox.value.split( """\n""").map(_.trim)
+    val pilotNames = pasteBox.value.split( """\n""").map(_.trim)
     val illegalNames = pilotNames.filterNot(EveCharacterName.isValidCharacterName)
     if (illegalNames.nonEmpty) {
       log.info("illegal pilot names: " + illegalNames.mkString(", "))

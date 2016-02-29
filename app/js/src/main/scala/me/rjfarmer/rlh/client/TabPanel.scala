@@ -33,7 +33,7 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
 
   activatePanel(tabs.head.panelID)
 
-  private def activatePanel(panelID: String, changeBrowserLocation: Boolean = false) = {
+  def activatePanel(panelID: String, changeBrowserLocation: Boolean = false) = {
     val frag = "#" + panelID
 
     linkListItems.foreach { item =>
