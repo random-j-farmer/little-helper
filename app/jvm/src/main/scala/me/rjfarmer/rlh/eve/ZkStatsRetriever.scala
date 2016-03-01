@@ -5,13 +5,12 @@ import java.util.{Calendar, TimeZone}
 import akka.actor.{ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
+import jawn.ast.{JValue, JParser}
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.cache.EhcLongCache
 import me.rjfarmer.rlh.retriever._
 import me.rjfarmer.rlh.server.{RequestHeaderData, Boot}
 import org.ehcache.CacheManager
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
 import spray.can.Http
 import spray.http.Uri
 
@@ -68,42 +67,44 @@ object ZkStatsBodyParser {
     }
   }
 
+  import PimpedJValue._
+
+
   def parseBody(characterID: Long, json: String): ZkStats = {
 
-    val tree = parse(json)
+    val tree = JParser.parseFromString(json).get
 
-    val activeNode = tree \ "activepvp"
+    val activeNode = tree.get("activepvp")
 
-    val activePvP = ZkActivePvP(int(activeNode \ "kills" \ "count") getOrElse 0,
-      int(activeNode \ "regions" \ "count") getOrElse 0,
-      int(activeNode \ "ships" \ "count") getOrElse 0,
-      int(activeNode \ "systems" \ "count") getOrElse 0)
+    val activePvP = ZkActivePvP(int(activeNode.recget("kills", "count")),
+      int(activeNode.recget("regions", "count")),
+      int(activeNode.recget("ships", "count")),
+      int(activeNode.recget("systems", "count")))
 
-    val months = tree \ "months"
+    val months = tree.get("months")
 
     val zkMonths = (for {
-      Pair(name, value) <- obj(months).getOrElse(Seq())
-      vmap = value.asInstanceOf[Map[String, Any]]
+      Pair(name, value) <- months.asMapOrEmpty
     } yield {
-        ZkMonthStats(doubleOrZero(vmap, "year").toInt,
-          doubleOrZero(vmap, "month").toInt,
-          doubleOrZero(vmap, "shipsLost").toInt,
-          doubleOrZero(vmap, "pointsLost"),
-          doubleOrZero(vmap, "iskLost"),
-          doubleOrZero(vmap, "shipsDestroyed").toInt,
-          doubleOrZero(vmap, "pointsDestroyed"),
-          doubleOrZero(vmap, "iskDestroyed")
+        ZkMonthStats(int(value.get("year")),
+          int(value.get("month")),
+          int(value.get("shipsLost")),
+          double(value.get("pointsLost")),
+          double(value.get("iskLost")),
+          int(value.get("shipsDestroyed")),
+          double(value.get("pointsDestroyed")),
+          double(value.get("iskDestroyed"))
         )
       }).toSeq
 
 
-    val info = tree \ "info"
-    val zkInfo = ZkInfo(long(info \ "allianceID").getOrElse(0L),
-      long(info \ "corporationID").getOrElse(0L),
-      long(info \ "factionID").getOrElse(0),
-      long(info \ "id").getOrElse(characterID),
-      long(info \ "killID").getOrElse(0L),
-      str(info \ "name").getOrElse(""))
+    val info = tree.get("info")
+    val zkInfo = ZkInfo(long(info.get("allianceID")),
+      long(info.get("corporationID")),
+      long(info.get("factionID")),
+      info.get("id").getLong.getOrElse(characterID),
+      long(info.get("killID")),
+      info.get("name").getString.getOrElse(""))
 
     ZkStats(zkInfo, activePvP, lastMonths(zkMonths), System.currentTimeMillis())
 
@@ -133,69 +134,10 @@ object ZkStatsBodyParser {
   }
 
 
-
-  //
-  // helper methods because unapply does not seem to work for json4s/jackson
-  //
-  def str(elem: JValue): Option[String] = {
-    elem match {
-      case s:JString => Option(s.values)
-      case _ => None
-    }
-  }
-
-  def int(elem: JValue): Option[Int] = {
-    long(elem).map(_.toInt)
-  }
-
-  def long(elem: JValue): Option[Long] = {
-    elem match {
-      case s:JInt => Option(s.values.toLong)
-      case s:JLong => Option(s.values)
-      case _ => None
-    }
-  }
-
-  def double(elem: JValue): Option[Double] = {
-    elem match {
-      case s:JDouble => Option(s.values)
-      case s:JDecimal => Option(s.values.toDouble)
-      case s:JInt => Option(s.values.toDouble)
-      case s:JLong => Option(s.values.toDouble)
-      case _ => None
-    }
-  }
-
-  def doubleOrZero(elem: JValue): Double = {
-    double(elem).getOrElse(0.0d)
-  }
-
-  def double(m: Map[String, Any], s: String): Option[Double] = {
-    val v = m.get(s)
-    v match {
-      case Some(value) => value match {
-        case d: Double => Some(d)
-        case bd: BigDecimal => Some(bd.toDouble)
-        case l: Long => Some(l.toDouble)
-        case i: Int => Some(i.toDouble)
-        case bi: BigInt => Some(bi.toDouble)
-        case _ => None
-      }
-      case None => None
-    }
-
-  }
-
-  def doubleOrZero(m: Map[String, Any], s: String): Double = {
-    double(m, s).getOrElse(0.0d)
-  }
+  private def int(jv: JValue) = jv.getInt.getOrElse(0)
+  private def long(jv: JValue) = jv.getLong.getOrElse(0L)
+  private def double(jv: JValue) = jv.getDouble.getOrElse(0.0d)
 
 
-  def obj(elem: JValue): Option[Map[String, Any]] = {
-    elem match {
-      case o:JObject => Some(o.values)
-      case _ => None
-    }
-  }
 
 }

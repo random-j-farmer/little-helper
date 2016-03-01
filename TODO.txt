@@ -1,5 +1,4 @@
 (A) only remember cache key in history for large responses
-(B) clean up json parsing code, use jawn ast
 (B) upper limit on priority queue size (potiential DOS)
 (B) logging to console in browsers that support it
 (C) crest login and api to determine current system for browser other than IGB +local_history
@@ -13,6 +12,7 @@
 (X) display militia information http https://api.eveonline.com/eve/CharacterAffiliation.xml.aspx?ids=95538430 +may_not_be_good_idea
 Shopping list
 
+x (B) clean up json parsing code, use jawn ast
 x (A) switch between local and d-scan tabs depending on input
 x (A) use non-existing target fragments in menu
 x (A) zero-object results not in history

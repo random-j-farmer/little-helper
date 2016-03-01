@@ -59,7 +59,7 @@ val app = crossProject.settings(
     "io.spray" %% "spray-routing" % sprayVersion,
     // ignore pure 2.83, that points to pure beebole which is something completely different
     "org.webjars" % "pure" % "0.6.0",
-    "org.json4s" %% "json4s-jackson" % "3.3.0",
+    "org.spire-math" %% "jawn-ast" % "0.8.3",
     "org.ehcache" % "ehcache" % "3.0.0.m4",
     "com.lihaoyi" % "ammonite-repl" % "0.5.4" % "test" cross CrossVersion.full
   )
