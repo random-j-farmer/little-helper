@@ -9,7 +9,7 @@ object Page {
 
   def boot(clientConfig: ClientConfig) = {
     val json = upickle.default.write(clientConfig)
-    raw( s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $json);""")
+    raw(s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $json);""")
   }
 
   def resourceLastModified(name: String): Long = {

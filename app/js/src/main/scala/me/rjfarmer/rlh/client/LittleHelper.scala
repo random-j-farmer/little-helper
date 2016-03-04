@@ -1,11 +1,12 @@
 package me.rjfarmer.rlh.client
 
 import me.rjfarmer.rlh.client.dscan.{DScanDetailsView, DScanTab}
-import me.rjfarmer.rlh.client.local.{LocalTab, LocalDetailsView}
+import me.rjfarmer.rlh.client.local.{LocalDetailsView, LocalTab}
 import me.rjfarmer.rlh.client.logging.{LoggerRLH, LoggingTab}
 import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
 import org.scalajs.dom
 import org.scalajs.dom.html
+import org.scalajs.dom.html.Span
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
@@ -18,14 +19,31 @@ object LittleHelper {
 
   val tabPanel = TabPanel(Vector(LocalTab, DScanTab, LoggingTab))
 
-  val mainView = div(id := "rlhMain",
-    tabPanel.linksView,
+  // need the lazy because loginLink accesses the shared client config which is only set when main is executed
+  lazy val mainView = div(id := "rlhMain",
+    div(id := "navbar",
+      style := "display: inline; position: absolute; top: 0px; right: 0px; width: 10cm; text-align: right;",
+      loginLink,
+      tabPanel.linksView),
     tabPanel.panelView
   ).render
 
   private[this] val FragmentPattern = """^#([\w/]*)$""".r
 
   private[this] var locationFrag: String = ""
+
+  private def loginLink: Span = {
+    SharedConfig.client.crestConfig match {
+      case None =>
+        span().render
+      case Some(cc) =>
+        val url = Vector[String]("https://login.eveonline.com/oauth/authorize?response_type=code",
+          s"redirect_uri=${cc.redirectUrl}",
+          s"client_id=${cc.clientID}",
+          "scope=characterLocationRead")
+        span(a(href := url.mkString("&"), "Login")).render
+    }
+  }
 
   /** set the location fragment (starting with #) for client side routing */
   def setLocationFragment(frag: String): Unit = {

@@ -1,14 +1,17 @@
 package me.rjfarmer.rlh.server
 
+import java.util.Base64
+
 import akka.routing.FromConfig
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve._
-import spray.http.{HttpEntity, HttpHeader, MediaTypes}
+import spray.http._
 import spray.httpx.encoding.{Deflate, Gzip, NoEncoding}
 import spray.routing.{RequestContext, SimpleRoutingApp}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Success, Failure}
 
 
 object Router extends autowire.Server[String, upickle.default.Reader, upickle.default.Writer] {
@@ -75,6 +78,11 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
                 HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
               }
             } ~
+            path("crestLoginCallback") {
+              parameter('code) { code =>
+                complete(handleCrestLoginCallback(code))
+              }
+            } ~
             getFromResourceDirectory("") ~
             getFromResourceDirectory("META-INF/resources")
           } ~
@@ -94,6 +102,31 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
     // does not work because we hang in opening ehc disk cache when started
     // multiple times
     shutdownIfNotBound(response)
+  }
+
+  def handleCrestLoginCallback(code: String): Future[HttpResponse] = {
+
+    crestConfig match {
+
+      case Failure(ex) =>
+        Boot.bootSystem.log.warning("crestLoginCallback but no crest configured!: {}", code)
+        Future(
+          HttpResponse(StatusCodes.TemporaryRedirect,
+            entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Get thee gone, fiend!"),
+            headers = List(HttpHeaders.Location(Uri("/")))))
+
+      case Success(cc) =>
+        Boot.bootSystem.log.info("crestLoginCallback: {}", code)
+        CrestLogin.login(cc.clientID, cc.clientSecret, code)
+          .map { token =>
+            val str = upickle.default.write(token)
+            val enc = Base64.getEncoder.encodeToString(str.getBytes("UTF-8"))
+            HttpResponse(StatusCodes.TemporaryRedirect,
+              entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Speak, friend, and enter!"),
+              headers = List(HttpHeaders.Location(Uri("/")),
+                HttpHeaders.`Set-Cookie`(HttpCookie("crestToken", enc, maxAge = Some(token.expires_in)))))
+          }
+    }
   }
 
   private def extractRequestData(ctx: RequestContext): (RequestHeaderData, String) = {

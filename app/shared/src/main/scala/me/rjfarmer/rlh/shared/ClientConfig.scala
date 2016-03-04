@@ -11,4 +11,9 @@ package me.rjfarmer.rlh.shared
  * @param clientSoftwareVersion version on the client, needs to match the server version in the web requests
  * @param staleOlderThanMillis cached data older than this is considered stale.
  */
-final case class ClientConfig(clientSoftwareVersion: String, staleOlderThanMillis: Long)
+final case class ClientConfig(clientSoftwareVersion: String,
+                              staleOlderThanMillis: Long,
+                              crestConfig: Option[ClientCrestConfig])
+
+
+final case class ClientCrestConfig(clientID: String, redirectUrl: String)

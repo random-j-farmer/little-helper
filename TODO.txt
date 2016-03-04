@@ -12,6 +12,7 @@
 (X) display militia information http https://api.eveonline.com/eve/CharacterAffiliation.xml.aspx?ids=95538430 +may_not_be_good_idea
 Shopping list
 
+x (A) config infrastructure for privileged configuration (crest setup)
 x (B) clean up json parsing code, use jawn ast
 x (A) switch between local and d-scan tabs depending on input
 x (A) use non-existing target fragments in menu

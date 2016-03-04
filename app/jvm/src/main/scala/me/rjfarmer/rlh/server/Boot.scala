@@ -4,10 +4,12 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.retriever.PriorityConfig
-import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
+import me.rjfarmer.rlh.shared.{ClientConfig, ClientCrestConfig, SharedConfig}
 import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
+
+import scala.util.{Failure, Success, Try}
 
 object BootLoader {
 
@@ -23,10 +25,25 @@ object BootLoader {
 object Boot extends RequestTimeout {
 
   val bootConfig = ConfigFactory.load()
+  implicit val bootSystem = ActorSystem("little-helper", bootConfig)
+
   val bootHost = bootConfig.getString("http.host")
   val bootPort = bootConfig.getInt("http.port")
 
   val cacheManager = CacheManagerBuilder.newCacheManager(BootLoader.cacheManagerConfiguration)
+
+  val crestConfig: Try[CrestConfig] = CrestConfig.readCrestConfig
+
+  def clientCrestConfig: Option[ClientCrestConfig] = {
+    crestConfig match {
+      case Failure(ex) =>
+        bootSystem.log.warning("No crest config found! (crest_config.json in classpath)")
+        None
+      case Success(cc) =>
+        Some(ClientCrestConfig(cc.clientID, cc.redirectUrl))
+    }
+  }
+
 
   import collection.JavaConversions._
 
@@ -38,11 +55,11 @@ object Boot extends RequestTimeout {
 
   cacheManager.init()
 
-  implicit val bootSystem = ActorSystem("little-helper", bootConfig)
   implicit val ajaxFutureTimeout = requestTimeout(bootConfig, "little-helper.ajax-future-timeout")
   val restTimeout = requestTimeout(bootConfig, "little-helper.rest-timeout")
   val staleIfOlderThan = requestTimeout(bootConfig, "little-helper.stale-if-older-than")
-  SharedConfig.client = ClientConfig(BuildInfo.version, staleIfOlderThan.duration.toMillis)
+  SharedConfig.client = ClientConfig(BuildInfo.version, staleIfOlderThan.duration.toMillis,
+    clientCrestConfig)
 
   object CacheManagerShutdownHook extends Thread {
 
