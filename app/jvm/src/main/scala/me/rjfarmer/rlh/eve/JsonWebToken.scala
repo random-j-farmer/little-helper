@@ -15,8 +15,8 @@ object JsonWebToken {
     val key = new SecretKeySpec(secret.getBytes(CS), ALG)
     hs256.init(key)
 
-    val ehdr = encodeBase64[Header](Header("HS256", "JWT"))
-    val epay = encodeBase64[Payload](payload)
+    val ehdr = pickleBase64[Header](Header("HS256", "JWT"))
+    val epay = pickleBase64[Payload](payload)
     val signBytes = (ehdr + "." + epay).getBytes(CS)
     val esig = Base64.getEncoder.encodeToString(hs256.doFinal(signBytes))
 
@@ -25,8 +25,8 @@ object JsonWebToken {
 
   def verify(jwtString: String, secret: String): Option[JsonWebToken] = {
     val Array(ehdr, epay, esig) = jwtString.split('.')
-    val header = decodeBase64[Header](ehdr)
-    val payload = decodeBase64[Payload](epay)
+    val header = unpickleBase64[Header](ehdr)
+    val payload = unpickleBase64[Payload](epay)
 
     header match {
       case Header("HS256", "JWT") =>
@@ -43,20 +43,24 @@ object JsonWebToken {
     }
   }
 
-  private def encodeBase64[T: upickle.default.Writer](t: T): String = {
+  def encodeBase64(str: String): String = Base64.getEncoder.encodeToString(str.getBytes(CS))
+
+  def decodeBase64(str: String): String = new String(Base64.getDecoder.decode(str), CS)
+
+  private def pickleBase64[T: upickle.default.Writer](t: T): String = {
     val str = upickle.default.write[T](t)
-    Base64.getEncoder.encodeToString(str.getBytes(CS))
+    encodeBase64(str)
   }
 
-  private def decodeBase64[T: upickle.default.Reader](s: String): T = {
-    val str = new String(Base64.getDecoder.decode(s), CS)
+  private def unpickleBase64[T: upickle.default.Reader](s: String): T = {
+    val str = decodeBase64(s)
     upickle.default.read[T](str)
   }
 
 
   final case class Header(alg: String, typ: String)
 
-  final case class Payload(username: String, crestToken: CrestToken)
+  final case class Payload(characterName: String, characterID: Long, crestToken: CrestToken)
 
 }
 

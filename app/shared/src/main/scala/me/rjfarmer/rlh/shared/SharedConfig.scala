@@ -5,4 +5,6 @@ object SharedConfig {
 
   var client: ClientConfig = null
 
+  var jsonWebToken: Option[String] = None
+
 }

@@ -60,9 +60,9 @@ object LittleHelper {
   }
 
   @JSExport
-  def main(_body: html.Body, configJson: js.Any) = {
-    val clientConfig = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
-    SharedConfig.client = clientConfig
+  def main(_body: html.Body, configJson: js.Any, jwtJson: js.Any) = {
+    SharedConfig.client = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
+    SharedConfig.jsonWebToken = upickle.default.readJs[Option[String]](upickle.json.readJs(jwtJson))
 
     _body.appendChild(mainView)
 

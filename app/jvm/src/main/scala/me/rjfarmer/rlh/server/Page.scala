@@ -1,5 +1,8 @@
 package me.rjfarmer.rlh.server
 
+import java.util.Base64
+
+import me.rjfarmer.rlh.eve.JsonWebToken
 import me.rjfarmer.rlh.shared.{SharedConfig, ClientConfig}
 
 import scalatags.Text.all._
@@ -9,8 +12,10 @@ object Page {
 
   def boot(clientConfig: ClientConfig, jwt: Option[String]) = {
     val config = upickle.default.write(clientConfig)
-    val jwtJson = upickle.default.write(jwt)
-    raw(s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $config, $jwtJson);""")
+    // XXX spray has a problem accepting a real JWT ... the second . in it is considered invalid
+    // so we use a custom one that is base64 encoded once again
+    val jwtJson = upickle.default.write(jwt.map(s => JsonWebToken.encodeBase64(s)))
+    raw( s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $config, $jwtJson);""")
   }
 
   def resourceLastModified(name: String): Long = {

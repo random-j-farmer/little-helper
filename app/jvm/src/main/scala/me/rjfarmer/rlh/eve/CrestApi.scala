@@ -13,21 +13,10 @@ import spray.http._
 import scala.concurrent.{Await, Future, Promise}
 import scala.util.Try
 
-object CrestLogin {
-
-  def login(clientID: String, clientSecret: String, code: String): Future[CrestToken] = {
-    val loginApi = new CrestLogin()
-    loginApi.complete(loginApi.requestEntity(code), headers = List(loginApi.authorizationHeader(clientID, clientSecret)))
-  }
-
-}
-
-trait CrestApi[T] extends ResponseBodyDecoder {
+abstract class CrestApiBase[T](parseBodyFn: (Uri, String) => T) extends ResponseBodyDecoder {
 
   // for the implicit actor system
   import Boot._
-
-  def uriPath: String
 
   def uriHostname: String
 
@@ -38,21 +27,19 @@ trait CrestApi[T] extends ResponseBodyDecoder {
   def hostConnectorSetup =   Http.HostConnectorSetup(uriHostname, port=443, sslEncryption = true,
     defaultHeaders = Retriever.defaultHeaders)
 
-  def httpPostUri: Uri = Uri(path = Uri.Path(uriPath))
-
   def log: LoggingAdapter = NoLogging
 
-  def complete(requestEntity: HttpEntity, headers: List[HttpHeader] = Nil): Future[T] = {
+  def complete(request: HttpRequest): Future[T] = {
     import scala.concurrent.ExecutionContext.Implicits.global
     val started = System.currentTimeMillis()
     // use the rest timeout here - this is where we want to fail so the incomplete answer logic works
-    val httpFuture = ask(hostConnector, HttpRequest(POST, httpPostUri, entity = requestEntity, headers = headers))(Boot.restTimeout.duration)
+    val httpFuture = ask(hostConnector, request)(Boot.restTimeout.duration)
     val promise = Promise[T]()
     httpFuture onSuccess {
       case resp: HttpResponse =>
         if (resp.status.isSuccess) {
-          log.debug("http get: {} ===> {} in {}ms", httpPostUri, resp.status.intValue, System.currentTimeMillis - started)
-          promise.complete(Try(parseResponseBody(httpPostUri, decodeResponseBody(resp))))
+          log.debug("http get: {} ===> {} in {}ms", request.uri, resp.status.intValue, System.currentTimeMillis - started)
+          promise.complete(Try(parseResponseBody(request.uri, decodeResponseBody(resp))))
         } else {
           log.debug("http get error: {} {} after {}ms", resp.status.intValue, resp.entity.data.asString,
             System.currentTimeMillis - started)
@@ -62,35 +49,85 @@ trait CrestApi[T] extends ResponseBodyDecoder {
     promise.future
   }
 
-  def parseResponseBody(uri: Uri, json: String): T
+  def parseResponseBody(uri: Uri, json: String): T = {
+    log.debug("CrestApiBase: parsing response body: {} {}", uri, json)
+    parseBodyFn(uri, json)
+  }
+
+  def authorizationBearer(token: CrestToken): HttpHeader = {
+    HttpHeaders.Authorization(OAuth2BearerToken(token.access_token))
+  }
 
 }
 
-class CrestLogin extends CrestApi[CrestToken] {
+
+object CrestApi {
+
+  def characterLocation(jwt: JsonWebToken) = {
+    val crestApi = new CrestApi((uri, json) => json)
+    crestApi.complete(crestApi.characterLocationRequest(jwt.payload.characterID, jwt.payload.crestToken))
+  }
+
+}
+
+class CrestApi[T] (parseBodyFn: (Uri, String) => T) extends CrestApiBase[T](parseBodyFn) {
+
+  override def uriHostname: String = "crest-tq.eveonline.com"
+
+  def characterLocationRequest(characterID: Long, token: CrestToken): HttpRequest = {
+    HttpRequest(GET, Uri(s"/characters/$characterID/location/"), headers = List(authorizationBearer(token)))
+  }
+
+}
+
+
+object CrestLogin {
+
+  def login(clientID: String, clientSecret: String, scope: String, code: String): Future[CrestToken] = {
+    val crestLogin = new CrestLogin((uri, json) => upickle.default.read[CrestToken](json))
+    crestLogin.complete(crestLogin.loginRequest(clientID, clientSecret, scope, code))
+  }
+
+  def verify(token: CrestToken): Future[JsonWebToken.Payload] = {
+    val crestLogin = new CrestLogin(parseVerifyBody(token))
+    crestLogin.complete(crestLogin.verifyRequest(token))
+  }
+
+  private def parseVerifyBody(token: CrestToken) (uri: Uri, json: String): JsonWebToken.Payload = {
+    val tree = jawn.ast.JParser.parseFromString(json).get
+    JsonWebToken.Payload(tree.get("CharacterName").asString,
+      tree.get("CharacterID").asLong,
+      token)
+  }
+
+}
+
+
+
+class CrestLogin[T] (parseBodyFn: (Uri, String) => T) extends CrestApiBase[T](parseBodyFn) {
 
   override def uriHostname: String = "login.eveonline.com"
 
-  override def uriPath: String = "/oauth/token"
-
   override val log: LoggingAdapter = Logging(Boot.bootSystem, "CrestApi")
 
-  override def parseResponseBody(uri: Uri, json: String): CrestToken = {
-    log.debug("CrestLogin: parsing response body: {}", json)
-    upickle.default.read[CrestToken](json)
+  def loginRequest(clientID: String, clientSecret: String, scope: String, code: String): HttpRequest = {
+    val body = s"grant_type=authorization_code&scope=$scope&code=$code"
+    log.debug("requestEntity: {}", body)
+    val entity = HttpEntity(ContentType(MediaTypes.`application/x-www-form-urlencoded`, HttpCharsets.`UTF-8`), body)
+    HttpRequest(POST, Uri("/oauth/token"), entity = entity, headers = List(loginAuthorizationHeader(clientID, clientSecret)))
   }
 
-  def authorizationHeader(clientID: String, clientSecret: String): HttpHeader = {
+  def loginAuthorizationHeader(clientID: String, clientSecret: String): HttpHeader = {
     log.debug("authorizationHeader: clientID {}, clientSecret {}", clientID, clientSecret)
     val header = HttpHeaders.Authorization(new BasicHttpCredentials(clientID, clientSecret))
     log.debug("final header: {}", header)
     header
   }
 
-  def requestEntity(code: String): HttpEntity = {
-    val body = s"grant_type=authorization_code&code=$code"
-    log.debug("requestEntity: {}", body)
-    HttpEntity(ContentType(MediaTypes.`application/x-www-form-urlencoded`, HttpCharsets.`UTF-8`), body)
+  def verifyRequest(token: CrestToken): HttpRequest = {
+    HttpRequest(GET, Uri("/oauth/verify"), headers=List(authorizationBearer(token)))
   }
+
 }
 
 /**

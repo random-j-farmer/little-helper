@@ -9,8 +9,6 @@ import org.ehcache.CacheManagerBuilder
 import org.ehcache.config.xml.XmlConfiguration
 import spray.can.Http
 
-import scala.util.{Failure, Success, Try}
-
 object BootLoader {
 
   var testEnvironment: Boolean = false
@@ -32,18 +30,13 @@ object Boot extends RequestTimeout {
 
   val cacheManager = CacheManagerBuilder.newCacheManager(BootLoader.cacheManagerConfiguration)
 
-  val crestConfig: Try[CrestConfig] = CrestConfig.readCrestConfig
+  val privateConfig: Option[PrivateConfig] = PrivateConfig.readPrivateConfig
 
   def clientCrestConfig: Option[ClientCrestConfig] = {
-    crestConfig match {
-      case Failure(ex) =>
-        bootSystem.log.warning("No crest config found! (crest_config.json in classpath)")
-        None
-      case Success(cc) =>
-        Some(ClientCrestConfig(cc.clientID, cc.redirectUrl))
+    privateConfig.map { pc =>
+      ClientCrestConfig(pc.crestConfig.clientID, pc.crestConfig.redirectUrl)
     }
   }
-
 
   import collection.JavaConversions._
 

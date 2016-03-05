@@ -1,0 +1,8 @@
+{
+  "jwtSecret": "A secret you choose yourself for signing your tokens",
+  "crestConfig": {
+    "clientID": "YourClientID - from your Eve Application Registration",
+    "redirectUrl": "http://localhost:5000/crestLoginCallback",
+    "clientSecret": "T0pSirkit!"
+  }
+}

@@ -1,7 +1,5 @@
 package me.rjfarmer.rlh.server
 
-import java.util.Base64
-
 import akka.routing.FromConfig
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve._
@@ -11,7 +9,6 @@ import spray.routing.{RequestContext, SimpleRoutingApp}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Success, Failure}
 
 
 object Router extends autowire.Server[String, upickle.default.Reader, upickle.default.Writer] {
@@ -106,30 +103,24 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
 
   def handleCrestLoginCallback(code: String): Future[HttpResponse] = {
 
-    crestConfig match {
+    privateConfig match {
 
-      case Failure(ex) =>
-        Boot.bootSystem.log.warning("crestLoginCallback but no crest configured!: {}", code)
+      case None =>
         Future(
           HttpResponse(StatusCodes.TemporaryRedirect,
             entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Get thee gone, fiend!"),
             headers = List(HttpHeaders.Location(Uri("/")))))
 
-      case Success(cc) =>
+      case Some(pc) =>
         Boot.bootSystem.log.info("crestLoginCallback: {}", code)
-        CrestLogin.login(cc.clientID, cc.clientSecret, code)
-          .map { token =>
-            // XXX username/secret
-            val jwt = JsonWebToken.sign(JsonWebToken.Payload("???", token), "SIKRIT!")
-            val str = upickle.default.write(token)
-            val enc = Base64.getEncoder.encodeToString(str.getBytes("UTF-8"))
+        CrestLogin.login(pc.crestConfig.clientID, pc.crestConfig.clientSecret, "characterLocationRead", code)
+          .flatMap { token =>
+            CrestLogin.verify(token)
+          }.map { payload =>
+            val jwt = JsonWebToken.sign(payload, pc.jwtSecret)
             HttpResponse(StatusCodes.OK,
               entity = HttpEntity(MediaTypes.`text/html`,
-                Page.skeleton(Some(jwt)).render),
-              headers = List(HttpHeaders.Location(Uri("/")),
-                HttpHeaders.`Set-Cookie`(HttpCookie("crestToken", enc,
-                  path = Some("/NoSuchPathUsed"),
-                  maxAge = Some(token.expires_in)))))
+                Page.skeleton(Some(jwt)).render))
           }
     }
   }
@@ -148,10 +139,41 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
 
     val forwarded = headers.mapFind(f("X-Forwarded-For"))
     val remoteAddress = headers.mapFind(f("Remote-Address"))
-    Pair(RequestHeaderData(forwarded.getOrElse(remoteAddress.get),
-      headers.mapFind(f("EVE_SOLARSYSTEMNAME")), headers.mapFind(f("EVE_CHARNAME"))),
+
+    val jsonWebToken = ctx.request.header[HttpHeaders.Authorization]
+      .map { x =>
+        val HttpHeaders.Authorization(OAuth2BearerToken(jwt)) = x
+        jwt
+      }
+      // XXX spray bug parsing JWT tokens, so ours are base64 encoded once more
+      .map(JsonWebToken.decodeBase64)
+      .flatMap(JsonWebToken.verify(_, privateConfig.get.jwtSecret))
+
+
+    val pilot: Option[String] = jsonWebToken.fold(headers.mapFind(f("EVE_CHARNAME"))) (x => Some(x.payload.characterName))
+    val solar = solarSystemFuture(headers.mapFind(f("EVE_SOLARSYSTEMNAME")), jsonWebToken)
+    solar.foreach(x => System.err.println("SOLAR SYSTEM FUTURE " + x))
+
+    Pair(
+      RequestHeaderData(forwarded.getOrElse(remoteAddress.get), headers.mapFind(f("EVE_SOLARSYSTEMNAME")), pilot),
       ctx.request.entity.asString)
 
+  }
+
+  private def solarSystemFuture(igbSolarSystem: Option[String], jsonWebToken: Option[JsonWebToken]): Future[Option[String]] = {
+    igbSolarSystem match {
+      case Some(solarSystem) =>
+        Future(igbSolarSystem)
+
+      case None =>
+        jsonWebToken match {
+          case None =>
+            Future(None)
+
+          case Some(jwt) =>
+            CrestApi.characterLocation(jwt).map { s => Some(s) }
+        }
+    }
   }
 
 }

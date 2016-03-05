@@ -1,4 +1,4 @@
-crest_config.json
+private_config.json
 target/
 .cache
 .classpath
