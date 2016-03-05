@@ -3,13 +3,14 @@ package me.rjfarmer.rlh.server
 import me.rjfarmer.rlh.shared.{SharedConfig, ClientConfig}
 
 import scalatags.Text.all._
-import scalatags.Text.tags2
+import scalatags.Text.{TypedTag, tags2}
 
 object Page {
 
-  def boot(clientConfig: ClientConfig) = {
-    val json = upickle.default.write(clientConfig)
-    raw(s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $json);""")
+  def boot(clientConfig: ClientConfig, jwt: Option[String]) = {
+    val config = upickle.default.write(clientConfig)
+    val jwtJson = upickle.default.write(jwt)
+    raw(s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $config, $jwtJson);""")
   }
 
   def resourceLastModified(name: String): Long = {
@@ -27,7 +28,7 @@ object Page {
 
   def scalaJsResource: String = newestResource("/little-helper-opt.js", "/little-helper-fastopt.js")
 
-  val skeleton =
+  def skeleton(jwt: Option[String]): TypedTag[String] =
     html(
       head(
         tags2.title("Random's Little Helper"),
@@ -39,7 +40,7 @@ object Page {
         link(rel := "stylesheet", href := "/little-helper.css")
       ),
       body(id := "body", padding := "24px",
-        script(boot(SharedConfig.client))
+        script(boot(SharedConfig.client, jwt))
       )
     )
 

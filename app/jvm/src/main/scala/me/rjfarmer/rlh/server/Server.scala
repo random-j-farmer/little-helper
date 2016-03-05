@@ -75,7 +75,7 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
           get {
             pathSingleSlash {
               complete {
-                HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
+                HttpEntity(MediaTypes.`text/html`, Page.skeleton(None).render)
               }
             } ~
             path("crestLoginCallback") {
@@ -119,12 +119,17 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
         Boot.bootSystem.log.info("crestLoginCallback: {}", code)
         CrestLogin.login(cc.clientID, cc.clientSecret, code)
           .map { token =>
+            // XXX username/secret
+            val jwt = JsonWebToken.sign(JsonWebToken.Payload("???", token), "SIKRIT!")
             val str = upickle.default.write(token)
             val enc = Base64.getEncoder.encodeToString(str.getBytes("UTF-8"))
-            HttpResponse(StatusCodes.TemporaryRedirect,
-              entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Speak, friend, and enter!"),
+            HttpResponse(StatusCodes.OK,
+              entity = HttpEntity(MediaTypes.`text/html`,
+                Page.skeleton(Some(jwt)).render),
               headers = List(HttpHeaders.Location(Uri("/")),
-                HttpHeaders.`Set-Cookie`(HttpCookie("crestToken", enc, maxAge = Some(token.expires_in)))))
+                HttpHeaders.`Set-Cookie`(HttpCookie("crestToken", enc,
+                  path = Some("/NoSuchPathUsed"),
+                  maxAge = Some(token.expires_in)))))
           }
     }
   }

@@ -1,4 +1,5 @@
-(A) only remember cache key in history for large responses
+(B) dedicated web resource directory - no access to config files
+(B) only remember cache key in history for large responses
 (B) upper limit on priority queue size (potiential DOS)
 (B) logging to console in browsers that support it
 (C) crest login and api to determine current system for browser other than IGB +local_history
