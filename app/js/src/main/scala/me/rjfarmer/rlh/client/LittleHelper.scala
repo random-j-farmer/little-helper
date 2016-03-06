@@ -3,7 +3,7 @@ package me.rjfarmer.rlh.client
 import me.rjfarmer.rlh.client.dscan.{DScanDetailsView, DScanTab}
 import me.rjfarmer.rlh.client.local.{LocalDetailsView, LocalTab}
 import me.rjfarmer.rlh.client.logging.{LoggerRLH, LoggingTab}
-import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
+import me.rjfarmer.rlh.shared.{JwtPayload, ClientConfig, SharedConfig}
 import org.scalajs.dom
 import org.scalajs.dom.html
 import org.scalajs.dom.html.Span
@@ -59,15 +59,34 @@ object LittleHelper {
     url + frag
   }
 
+
+  def readJwtCookie: Option[String] = {
+    Option(dom.document.cookie) match {
+      case None =>
+        None
+      case Some(allCookies) =>
+        allCookies.split(';')
+        .map { s => val Array(k, v) = s.split("=", 2); k -> v }
+        .find(_._1 == "jwt")
+        .map(_._2)
+    }
+  }
+
+  def jwtPayload(jwt: String): JwtPayload = {
+    val Array(_, epay, _) = dom.window.atob(jwt).split('.')
+    upickle.default.read[JwtPayload](epay)
+  }
+
   @JSExport
-  def main(_body: html.Body, configJson: js.Any, jwtJson: js.Any) = {
+  def main(_body: html.Body, configJson: js.Any) = {
     SharedConfig.client = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
-    SharedConfig.jsonWebToken = upickle.default.readJs[Option[String]](upickle.json.readJs(jwtJson))
+    SharedConfig.jsonWebToken = readJwtCookie
 
     _body.appendChild(mainView)
 
     // we cant log before the log div is added to the body
     log.info("LittleHelper.main: " + SharedConfig.client)
+    log.debug("LittleHelper.main: " + SharedConfig.jsonWebToken)
 
     // the fragment in the browser url
     val currentFragment = Option(js.Dynamic.global.location.hash.asInstanceOf[String])

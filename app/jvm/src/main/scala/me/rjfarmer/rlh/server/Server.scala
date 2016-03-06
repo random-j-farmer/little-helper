@@ -9,6 +9,7 @@ import spray.routing.{RequestContext, SimpleRoutingApp}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 
 object Router extends autowire.Server[String, upickle.default.Reader, upickle.default.Writer] {
@@ -72,10 +73,18 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
           get {
             pathSingleSlash {
               complete {
-                HttpEntity(MediaTypes.`text/html`, Page.skeleton(None).render)
+                HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
+              }
+            } ~
+            path("authenticated") {
+              // we use a different url because the jwt is stored as cookie in a non-/ path
+              complete {
+                HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
               }
             } ~
             path("crestLoginCallback") {
+              // redirect with cookie to authenticated, otherwise refreshing the browser will
+              // reuse the code which leads to an error
               parameter('code) { code =>
                 complete(handleCrestLoginCallback(code))
               }
@@ -117,10 +126,12 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
           .flatMap { token =>
             CrestLogin.verify(token)
           }.map { payload =>
-            val jwt = JsonWebToken.sign(payload, pc.jwtSecret)
-            HttpResponse(StatusCodes.OK,
-              entity = HttpEntity(MediaTypes.`text/html`,
-                Page.skeleton(Some(jwt)).render))
+            // XXX spray bug parsing bearer token with dots, so we base64 encode again
+            val jwt = JsonWebToken.encodeBase64(JsonWebToken.sign(payload, pc.jwtSecret))
+            HttpResponse(StatusCodes.TemporaryRedirect,
+              headers = List(HttpHeaders.Location(Uri("/authenticated")),
+                HttpHeaders.`Set-Cookie`(HttpCookie("jwt", jwt))),
+              entity = HttpEntity(MediaTypes.`text/plain`, "Speak, friend, and enter!"))
           }
     }
   }
@@ -149,10 +160,29 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
       .map(JsonWebToken.decodeBase64)
       .flatMap(JsonWebToken.verify(_, privateConfig.get.jwtSecret))
 
-
     val pilot: Option[String] = jsonWebToken.fold(headers.mapFind(f("EVE_CHARNAME"))) (x => Some(x.payload.characterName))
-    val solar = solarSystemFuture(headers.mapFind(f("EVE_SOLARSYSTEMNAME")), jsonWebToken)
-    solar.foreach(x => System.err.println("SOLAR SYSTEM FUTURE " + x))
+
+
+    val accessTokenExpired = jsonWebToken.fold(false)(x => x.payload.crestToken.expireTs < System.currentTimeMillis())
+    val jsonWebFuture = if (accessTokenExpired) {
+      val jwt = jsonWebToken.get
+      val cc = privateConfig.get.crestConfig
+      CrestLogin.refresh(cc.clientID, cc.clientSecret, jwt.payload.crestToken)
+        .map(ct => Some(jwt.copy(payload = jwt.payload.copy(crestToken = ct))))
+    } else {
+      Future(jsonWebToken)
+    }
+
+    System.err.println("Computing solar system future ...")
+    val solar = solarSystemFuture(headers.mapFind(f("EVE_SOLARSYSTEMNAME")), jsonWebFuture)
+
+    solar.onComplete {
+      case Failure(ex) =>
+        System.err.println("SOLAR FAILURE: " + ex)
+      case Success(ssi) =>
+        System.err.println("SOLAR SYSTEM INFORMATION: " + ssi)
+
+    }
 
     Pair(
       RequestHeaderData(forwarded.getOrElse(remoteAddress.get), headers.mapFind(f("EVE_SOLARSYSTEMNAME")), pilot),
@@ -160,18 +190,19 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
 
   }
 
-  private def solarSystemFuture(igbSolarSystem: Option[String], jsonWebToken: Option[JsonWebToken]): Future[Option[String]] = {
+  private def solarSystemFuture(igbSolarSystem: Option[String], jsonWebFuture: Future[Option[JsonWebToken]]): Future[Option[String]] = {
     igbSolarSystem match {
       case Some(solarSystem) =>
         Future(igbSolarSystem)
 
       case None =>
-        jsonWebToken match {
+        jsonWebFuture.flatMap {
           case None =>
             Future(None)
 
           case Some(jwt) =>
             CrestApi.characterLocation(jwt).map { s => Some(s) }
+
         }
     }
   }

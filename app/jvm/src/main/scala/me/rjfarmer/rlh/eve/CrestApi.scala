@@ -6,6 +6,7 @@ import akka.io.IO
 import akka.pattern.ask
 import me.rjfarmer.rlh.retriever.{ResponseBodyDecoder, Retriever}
 import me.rjfarmer.rlh.server.Boot
+import me.rjfarmer.rlh.shared.{JwtPayload, CrestToken}
 import spray.can.Http
 import spray.http.HttpMethods._
 import spray.http._
@@ -55,7 +56,7 @@ abstract class CrestApiBase[T](parseBodyFn: (Uri, String) => T) extends Response
   }
 
   def authorizationBearer(token: CrestToken): HttpHeader = {
-    HttpHeaders.Authorization(OAuth2BearerToken(token.access_token))
+    HttpHeaders.Authorization(OAuth2BearerToken(token.accessToken))
   }
 
 }
@@ -72,6 +73,8 @@ object CrestApi {
 
 class CrestApi[T] (parseBodyFn: (Uri, String) => T) extends CrestApiBase[T](parseBodyFn) {
 
+  override val log: LoggingAdapter = Logging(Boot.bootSystem, "CrestApi")
+
   override def uriHostname: String = "crest-tq.eveonline.com"
 
   def characterLocationRequest(characterID: Long, token: CrestToken): HttpRequest = {
@@ -84,21 +87,37 @@ class CrestApi[T] (parseBodyFn: (Uri, String) => T) extends CrestApiBase[T](pars
 object CrestLogin {
 
   def login(clientID: String, clientSecret: String, scope: String, code: String): Future[CrestToken] = {
-    val crestLogin = new CrestLogin((uri, json) => upickle.default.read[CrestToken](json))
+    val crestLogin = new CrestLogin[CrestToken](parseLoginBody)
     crestLogin.complete(crestLogin.loginRequest(clientID, clientSecret, scope, code))
   }
 
-  def verify(token: CrestToken): Future[JsonWebToken.Payload] = {
+  def refresh(clientID: String, clientSecret: String, token: CrestToken): Future[CrestToken] = {
+    val crestRefresh = new CrestLogin[CrestToken](parseLoginBody)
+    crestRefresh.complete(crestRefresh.refreshRequest(clientID, clientSecret, token))
+  }
+
+  private def parseLoginBody(uri: Uri, json: String): CrestToken = {
+    val ct = upickle.default.read[OrigCrestToken](json)
+    // 950: expire 5% early ;)
+    CrestToken(ct.access_token, System.currentTimeMillis() + ct.expires_in*950L, ct.refresh_token)
+  }
+
+  def verify(token: CrestToken): Future[JwtPayload] = {
     val crestLogin = new CrestLogin(parseVerifyBody(token))
     crestLogin.complete(crestLogin.verifyRequest(token))
   }
 
-  private def parseVerifyBody(token: CrestToken) (uri: Uri, json: String): JsonWebToken.Payload = {
+  private def parseVerifyBody(token: CrestToken) (uri: Uri, json: String): JwtPayload = {
     val tree = jawn.ast.JParser.parseFromString(json).get
-    JsonWebToken.Payload(tree.get("CharacterName").asString,
+    JwtPayload(tree.get("CharacterName").asString,
       tree.get("CharacterID").asLong,
       token)
   }
+
+  final case class OrigCrestToken(access_token: String,
+                                  token_type: String,
+                                  expires_in: Int,
+                                  refresh_token: String)
 
 }
 
@@ -108,7 +127,7 @@ class CrestLogin[T] (parseBodyFn: (Uri, String) => T) extends CrestApiBase[T](pa
 
   override def uriHostname: String = "login.eveonline.com"
 
-  override val log: LoggingAdapter = Logging(Boot.bootSystem, "CrestApi")
+  override val log: LoggingAdapter = Logging(Boot.bootSystem, "CrestLogin")
 
   def loginRequest(clientID: String, clientSecret: String, scope: String, code: String): HttpRequest = {
     val body = s"grant_type=authorization_code&scope=$scope&code=$code"
@@ -128,19 +147,12 @@ class CrestLogin[T] (parseBodyFn: (Uri, String) => T) extends CrestApiBase[T](pa
     HttpRequest(GET, Uri("/oauth/verify"), headers=List(authorizationBearer(token)))
   }
 
-}
+  def refreshRequest(clientID: String, clientSecret: String, token: CrestToken): HttpRequest = {
+    val body = s"grant_type=refresh_token&refresh_token=${token.refreshToken}"
+    log.debug("requestEntity: {}", body)
+    val entity = HttpEntity(ContentType(MediaTypes.`application/x-www-form-urlencoded`, HttpCharsets.`UTF-8`), body)
+    HttpRequest(POST, Uri("/oauth/token"), entity = entity, headers = List(loginAuthorizationHeader(clientID, clientSecret)))
 
-/**
- * CrestToken as returned by the Crest API
- *
- * the underscores are used because the input is like that
- *
- * @param access_token  access token
- * @param token_type Bearer
- * @param expires_in validity in seconds
- * @param refresh_token refresh token, can be used to get a new token
- */
-final case class CrestToken(access_token: String,
-                            token_type: String,
-                            expires_in: Int,
-                            refresh_token: String)
+  }
+
+}

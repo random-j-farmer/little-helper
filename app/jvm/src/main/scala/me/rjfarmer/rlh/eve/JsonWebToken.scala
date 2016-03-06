@@ -4,19 +4,20 @@ import java.nio.charset.Charset
 import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
+import me.rjfarmer.rlh.shared.JwtPayload
 
 object JsonWebToken {
 
   private[this] val CS = Charset.forName("UTF-8")
   private[this] val ALG = "HmacSHA256"
 
-  def sign(payload: Payload, secret: String): String = {
+  def sign(payload: JwtPayload, secret: String): String = {
     val hs256 = Mac.getInstance(ALG)
     val key = new SecretKeySpec(secret.getBytes(CS), ALG)
     hs256.init(key)
 
     val ehdr = pickleBase64[Header](Header("HS256", "JWT"))
-    val epay = pickleBase64[Payload](payload)
+    val epay = pickleBase64[JwtPayload](payload)
     val signBytes = (ehdr + "." + epay).getBytes(CS)
     val esig = Base64.getEncoder.encodeToString(hs256.doFinal(signBytes))
 
@@ -26,7 +27,7 @@ object JsonWebToken {
   def verify(jwtString: String, secret: String): Option[JsonWebToken] = {
     val Array(ehdr, epay, esig) = jwtString.split('.')
     val header = unpickleBase64[Header](ehdr)
-    val payload = unpickleBase64[Payload](epay)
+    val payload = unpickleBase64[JwtPayload](epay)
 
     header match {
       case Header("HS256", "JWT") =>
@@ -60,10 +61,8 @@ object JsonWebToken {
 
   final case class Header(alg: String, typ: String)
 
-  final case class Payload(characterName: String, characterID: Long, crestToken: CrestToken)
-
 }
 
 final case class JsonWebToken(header: JsonWebToken.Header,
-                              payload: JsonWebToken.Payload,
+                              payload: JwtPayload,
                               signature: String)

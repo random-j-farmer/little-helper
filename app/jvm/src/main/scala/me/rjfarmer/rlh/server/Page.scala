@@ -1,21 +1,15 @@
 package me.rjfarmer.rlh.server
 
-import java.util.Base64
-
-import me.rjfarmer.rlh.eve.JsonWebToken
-import me.rjfarmer.rlh.shared.{SharedConfig, ClientConfig}
+import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
 
 import scalatags.Text.all._
 import scalatags.Text.{TypedTag, tags2}
 
 object Page {
 
-  def boot(clientConfig: ClientConfig, jwt: Option[String]) = {
+  def boot(clientConfig: ClientConfig) = {
     val config = upickle.default.write(clientConfig)
-    // XXX spray has a problem accepting a real JWT ... the second . in it is considered invalid
-    // so we use a custom one that is base64 encoded once again
-    val jwtJson = upickle.default.write(jwt.map(s => JsonWebToken.encodeBase64(s)))
-    raw( s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $config, $jwtJson);""")
+    raw( s"""me.rjfarmer.rlh.client.LittleHelper().main(document.getElementById('body'), $config);""")
   }
 
   def resourceLastModified(name: String): Long = {
@@ -33,7 +27,7 @@ object Page {
 
   def scalaJsResource: String = newestResource("/little-helper-opt.js", "/little-helper-fastopt.js")
 
-  def skeleton(jwt: Option[String]): TypedTag[String] =
+  val skeleton: TypedTag[String] =
     html(
       head(
         tags2.title("Random's Little Helper"),
@@ -45,7 +39,7 @@ object Page {
         link(rel := "stylesheet", href := "/little-helper.css")
       ),
       body(id := "body", padding := "24px",
-        script(boot(SharedConfig.client, jwt))
+        script(boot(SharedConfig.client))
       )
     )
 
