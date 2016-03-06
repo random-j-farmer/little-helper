@@ -3,7 +3,7 @@ package me.rjfarmer.rlh.client
 import me.rjfarmer.rlh.client.dscan.{DScanDetailsView, DScanTab}
 import me.rjfarmer.rlh.client.local.{LocalDetailsView, LocalTab}
 import me.rjfarmer.rlh.client.logging.{LoggerRLH, LoggingTab}
-import me.rjfarmer.rlh.shared.{JwtPayload, ClientConfig, SharedConfig}
+import me.rjfarmer.rlh.shared.{ClientConfig, JwtPayload, SharedConfig}
 import org.scalajs.dom
 import org.scalajs.dom.html
 import org.scalajs.dom.html.Span
@@ -59,7 +59,6 @@ object LittleHelper {
     url + frag
   }
 
-
   def readJwtCookie: Option[String] = {
     Option(dom.document.cookie) match {
       case None =>
@@ -69,6 +68,20 @@ object LittleHelper {
         .map { s => val Array(k, v) = s.split("=", 2); k -> v }
         .find(_._1 == "jwt")
         .map(_._2)
+    }
+  }
+
+  /**
+   * Store the refreshed json web token we received in some request.
+   *
+   * @return
+   */
+  def refreshJsonWebToken(refreshed: Option[String]): Unit = {
+    refreshed match {
+      case None =>
+      case Some(jwt) =>
+        SharedConfig.jsonWebToken = refreshed
+        js.Dynamic.global.document.cookie = "jwt=" + jwt
     }
   }
 

@@ -1,3 +1,6 @@
+(A) do not refresh jwt when fetching cached responses
+(A) Share urls without authenticated
+(A) logout button
 (B) dedicated web resource directory - no access to config files
 (B) only remember cache key in history for large responses
 (B) upper limit on priority queue size (potiential DOS)

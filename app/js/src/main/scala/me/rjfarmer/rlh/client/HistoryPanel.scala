@@ -1,6 +1,6 @@
 package me.rjfarmer.rlh.client
 
-import me.rjfarmer.rlh.api.HasTimestampAndOptionalCacheKey
+import me.rjfarmer.rlh.api.CacheableResponse
 import me.rjfarmer.rlh.client.PimpedDomElement._
 import org.scalajs.dom
 import org.scalajs.dom.html
@@ -12,7 +12,7 @@ import scalatags.JsDom.all._
  * A panel with some kind of history.
  *
  */
-trait HistoryPanel[T <: HasTimestampAndOptionalCacheKey] {
+trait HistoryPanel[T <: CacheableResponse] {
 
   /** The history object that remembers the responses */
   def history: History[T]

@@ -58,8 +58,9 @@ trait HasCacheKey {
 
 // for easy use in type parameters
 trait HasCacheKeyAndVersion extends HasVersion with HasCacheKey
-trait HasTimestampAndOptionalCacheKey extends HasTimestamp {
+trait CacheableResponse extends HasTimestamp {
   def cacheKey: Option[String]
+  def refreshedJsonWebToken: Option[String]
 }
 
 
@@ -115,9 +116,10 @@ final case class ListCharactersResponse(message: Option[String],
                                         cacheKey: Option[String],
                                         // may be present if IGB
                                         solarSystem: Option[String],
+                                        refreshedJsonWebToken: Option[String],
                                         timestamp: Long,
                                         charinfos: Vector[CharInfo])
-  extends HasTimestampAndOptionalCacheKey
+  extends CacheableResponse
 
 
 //
@@ -135,9 +137,10 @@ final case class DScanParseResponse(message: Option[String],
                                     cacheKey: Option[String],
                                     // my be present if IGB
                                     solarSystem: Option[String],
+                                    refreshedJsonWebToken: Option[String],
                                     timestamp: Long,
                                     lines: Vector[DScanLine])
-  extends HasTimestampAndOptionalCacheKey
+  extends CacheableResponse
 
 final case class CachedDScanRequest(version: String, cacheKey: String)
   extends HasCacheKeyAndVersion

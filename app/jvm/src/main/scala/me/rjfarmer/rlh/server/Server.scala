@@ -3,12 +3,13 @@ package me.rjfarmer.rlh.server
 import akka.routing.FromConfig
 import me.rjfarmer.rlh.api._
 import me.rjfarmer.rlh.eve._
+import spray.http.HttpHeaders.Authorization
 import spray.http._
 import spray.httpx.encoding.{Deflate, Gzip, NoEncoding}
 import spray.routing.{RequestContext, SimpleRoutingApp}
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, Promise}
 import scala.util.{Failure, Success}
 
 
@@ -21,7 +22,20 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 }
 
 /** holds additional information from the request headers (IGB!) */
-final case class RequestHeaderData(clientIP: String, solarSystem: Option[String], pilot: Option[String])
+final case class RequestHeaderData(clientIP: String,
+                                   solarSystem: Option[String],
+                                   pilot: Option[String],
+                                   jwt: Option[JsonWebToken],
+                                   jwtRefreshed: Boolean) {
+
+  def refreshedJsonWebToken: Option[String] = {
+    if (jwtRefreshed) {
+      // XXX spray bug, double wrap!
+      Some(JsonWebToken.encodeBase64(JsonWebToken.sign(jwt.get.payload, Boot.privateConfig.get.jwtSecret)))
+    } else None
+  }
+
+}
 
 
 /** handles the client server api on the server side */
@@ -94,10 +108,12 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
           } ~
           post {
             path("ajax" / Segments) { s =>
-              extract(extractRequestData) { pair =>
-                val (rhd, body) = pair
-                val apiHandler = new ApiRequesthandler(listCharactersCache, dscanResultsCache, rhd)
-                complete(Router.route[Api](apiHandler)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](body))))
+              extract(extractRequestData) { future =>
+                complete(future.map { pair =>
+                  val (rhd, body) = pair
+                  val apiHandler = new ApiRequesthandler(listCharactersCache, dscanResultsCache, rhd)
+                  Router.route[Api](apiHandler)(autowire.Core.Request(s, upickle.default.read[Map[String, String]](body)))
+                })
               }
             }
           }
@@ -136,7 +152,7 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
     }
   }
 
-  private def extractRequestData(ctx: RequestContext): (RequestHeaderData, String) = {
+  private def extractRequestData(ctx: RequestContext): Future[(RequestHeaderData, String)] = {
 
     import spray.util._
 
@@ -150,8 +166,31 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
 
     val forwarded = headers.mapFind(f("X-Forwarded-For"))
     val remoteAddress = headers.mapFind(f("Remote-Address"))
+    val defaultSolar = headers.mapFind(f("EVE_SOLARSYSTEMNAME"))
+    val ip = forwarded.getOrElse(remoteAddress.get)
 
-    val jsonWebToken = ctx.request.header[HttpHeaders.Authorization]
+    val jsonWebToken = extractJsonWebToken(ctx)
+    val pilot: Option[String] = jsonWebToken.fold(headers.mapFind(f("EVE_CHARNAME"))) (x => Some(x.payload.characterName))
+    val accessTokenExpired = jsonWebToken.fold(false)(x => x.payload.crestToken.expireTs < System.currentTimeMillis())
+    val jsonWebFuture: Future[Option[JsonWebToken]] = refreshJsonWebToken(jsonWebToken, accessTokenExpired)
+    val solar = solarSystemFuture(defaultSolar, jsonWebFuture)
+    val promise = Promise[(RequestHeaderData, String)]()
+    val reqBody = ctx.request.entity.asString
+
+    solar.onComplete {
+      case Failure(ex) =>
+        bootSystem.log.warning("Solar system future: error: " + ex)
+        promise.complete(Success(Pair(RequestHeaderData(ip, defaultSolar, pilot, jsonWebToken, jwtRefreshed = false), reqBody)))
+      case Success(ssi) =>
+        promise.complete(Success(Pair(RequestHeaderData(ip, ssi, pilot,
+          jsonWebFuture.value.get.get, jwtRefreshed = accessTokenExpired), reqBody)))
+    }
+
+    promise.future
+  }
+
+  private def extractJsonWebToken(ctx: RequestContext): Option[JsonWebToken] = {
+    ctx.request.header[Authorization]
       .map { x =>
         val HttpHeaders.Authorization(OAuth2BearerToken(jwt)) = x
         jwt
@@ -159,35 +198,18 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
       // XXX spray bug parsing JWT tokens, so ours are base64 encoded once more
       .map(JsonWebToken.decodeBase64)
       .flatMap(JsonWebToken.verify(_, privateConfig.get.jwtSecret))
+  }
 
-    val pilot: Option[String] = jsonWebToken.fold(headers.mapFind(f("EVE_CHARNAME"))) (x => Some(x.payload.characterName))
-
-
-    val accessTokenExpired = jsonWebToken.fold(false)(x => x.payload.crestToken.expireTs < System.currentTimeMillis())
-    val jsonWebFuture = if (accessTokenExpired) {
+  private def refreshJsonWebToken(jsonWebToken: Option[JsonWebToken], accessTokenExpired: Boolean): Future[Option[JsonWebToken]] = {
+    if (accessTokenExpired) {
       val jwt = jsonWebToken.get
       val cc = privateConfig.get.crestConfig
       CrestLogin.refresh(cc.clientID, cc.clientSecret, jwt.payload.crestToken)
+        // this does not have a valid signature!
         .map(ct => Some(jwt.copy(payload = jwt.payload.copy(crestToken = ct))))
     } else {
       Future(jsonWebToken)
     }
-
-    System.err.println("Computing solar system future ...")
-    val solar = solarSystemFuture(headers.mapFind(f("EVE_SOLARSYSTEMNAME")), jsonWebFuture)
-
-    solar.onComplete {
-      case Failure(ex) =>
-        System.err.println("SOLAR FAILURE: " + ex)
-      case Success(ssi) =>
-        System.err.println("SOLAR SYSTEM INFORMATION: " + ssi)
-
-    }
-
-    Pair(
-      RequestHeaderData(forwarded.getOrElse(remoteAddress.get), headers.mapFind(f("EVE_SOLARSYSTEMNAME")), pilot),
-      ctx.request.entity.asString)
-
   }
 
   private def solarSystemFuture(igbSolarSystem: Option[String], jsonWebFuture: Future[Option[JsonWebToken]]): Future[Option[String]] = {
@@ -201,7 +223,7 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
             Future(None)
 
           case Some(jwt) =>
-            CrestApi.characterLocation(jwt).map { s => Some(s) }
+            CrestApi.characterLocation(jwt)
 
         }
     }

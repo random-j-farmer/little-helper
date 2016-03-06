@@ -1,9 +1,9 @@
 package me.rjfarmer.rlh.client
 
-import me.rjfarmer.rlh.api.HasTimestampAndOptionalCacheKey
+import me.rjfarmer.rlh.api.CacheableResponse
 
 /** history items have text with time information about the response */
-class HistoryItem[T <: HasTimestampAndOptionalCacheKey] (val item: T ) extends HasResponseTimeAgo {
+class HistoryItem[T <: CacheableResponse] (val item: T ) extends HasResponseTimeAgo {
 
   updateResponseTimestamp(item.timestamp)
 
@@ -16,7 +16,7 @@ class HistoryItem[T <: HasTimestampAndOptionalCacheKey] (val item: T ) extends H
  *
  * @tparam T result type
  */
-class History [T <: HasTimestampAndOptionalCacheKey] (_vector: Vector[HistoryItem[T]]){
+class History [T <: CacheableResponse] (_vector: Vector[HistoryItem[T]]){
 
   private[this] val maxEntries = 16
   private[this] var items: Vector[HistoryItem[T]] = _vector

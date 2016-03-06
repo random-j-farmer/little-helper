@@ -65,8 +65,13 @@ abstract class CrestApiBase[T](parseBodyFn: (Uri, String) => T) extends Response
 object CrestApi {
 
   def characterLocation(jwt: JsonWebToken) = {
-    val crestApi = new CrestApi((uri, json) => json)
+    val crestApi = new CrestApi(parseLocationBody)
     crestApi.complete(crestApi.characterLocationRequest(jwt.payload.characterID, jwt.payload.crestToken))
+  }
+
+  private def parseLocationBody(uri: Uri, json: String): Option[String] = {
+    val tree = jawn.ast.JParser.parseFromString(json).get
+    tree.get("solarSystem").get("name").getString
   }
 
 }

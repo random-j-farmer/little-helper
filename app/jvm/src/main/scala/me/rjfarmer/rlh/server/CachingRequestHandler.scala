@@ -8,7 +8,7 @@ import me.rjfarmer.rlh.cache.EhcCache
 import me.rjfarmer.rlh.server.Boot._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.Future
 
 
 /** handles client-server version mismatch */
@@ -22,7 +22,7 @@ trait VersionRequestHandler[Q <: HasVersion, T] {
 
   def handleRequest(headerData: RequestHeaderData, req: Q): Future[T] = {
     if (req.version != BuildInfo.version) {
-      Promise.successful(clientVersionError(headerData, req)).future
+      Future.successful(clientVersionError(headerData, req))
     } else {
       handleVersion(headerData, req)
     }
