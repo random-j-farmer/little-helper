@@ -18,7 +18,7 @@ object Page {
   }
 
   def newestResource(names: String*): String = {
-    val mods = names map resourceLastModified
+    val mods = names.map(x => s"/WEB-ROOT$x").map(resourceLastModified)
     val zipped = mods zip names
     val newest = zipped.max
     println( s"""newestResource: ${zipped mkString ", "} => $newest""")
@@ -35,7 +35,7 @@ object Page {
         script(src := "/es5-sham.min.js"),
         script(src := scalaJsResource),
         // script(src:="//localhost:12345/workbench.js"),
-        link(rel := "stylesheet", href := "/webjars/pure/0.6.0/pure.css"),
+        link(rel := "stylesheet", href := "/pure.css"),
         link(rel := "stylesheet", href := "/little-helper.css")
       ),
       body(id := "body", padding := "24px",

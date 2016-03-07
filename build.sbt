@@ -39,7 +39,7 @@ val app = crossProject.settings(
       </developers>
 ).enablePlugins(GitVersioning, BuildInfoPlugin, JavaAppPackaging
 ).jsSettings(
-  libraryDependencies ++= Seq(
+    libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.0"
   )
 ).jvmSettings(
@@ -57,8 +57,6 @@ val app = crossProject.settings(
     "ch.qos.logback"      %  "logback-classic" % "1.1.5",
     "io.spray" %% "spray-can" % sprayVersion,
     "io.spray" %% "spray-routing" % sprayVersion,
-    // ignore pure 2.83, that points to pure beebole which is something completely different
-    "org.webjars" % "pure" % "0.6.0",
     "org.spire-math" %% "jawn-ast" % "0.8.3",
     "org.ehcache" % "ehcache" % "3.0.0.m4",
     "com.lihaoyi" % "ammonite-repl" % "0.5.4" % "test" cross CrossVersion.full
@@ -68,12 +66,19 @@ val app = crossProject.settings(
 val appJS = app.js
 val appJVM = app.jvm.settings(
   (mainClass in Compile) := Some("me.rjfarmer.rlh.server.Server"),
+  artifactPath in (appJS, Compile, fastOptJS) := (resourceManaged in Compile).value / "WEB-ROOT" /
+    ((moduleName in fastOptJS).value + "-fastopt.js"),
   (resources in Compile) += {
     (fastOptJS in(appJS, Compile)).value
     (artifactPath in(appJS, Compile, fastOptJS)).value
   },
   (initialCommands in (Test, console)) := """ammonite.repl.Main.run("")"""
 )
+val appJS2 = app.js.settings(
+  artifactPath in fastOptJS := (resourceManaged in appJVM in Compile).value /
+    ((moduleName in fastOptJS).value + "-xxx.js")
+)
+
 
 val VersionRegex = "v([0-9]+.[0-9]+.[0-9]+)-?(.*)?".r
 git.gitTagToVersionNumber := {

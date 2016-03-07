@@ -103,8 +103,7 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
                 complete(handleCrestLoginCallback(code))
               }
             } ~
-            getFromResourceDirectory("") ~
-            getFromResourceDirectory("META-INF/resources")
+            getFromResourceDirectory("WEB-ROOT")
           } ~
           post {
             path("ajax" / Segments) { s =>
