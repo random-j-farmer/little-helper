@@ -17,7 +17,7 @@ class DScanRequestHandler(val cache: EhcCache[String, DScanParseResponse])
   extends CachingRequestHandler[DScanParseRequest, DScanParseResponse] {
 
   override def clientVersionError(headerData: RequestHeaderData, req: DScanParseRequest): DScanParseResponse = {
-    DScanParseResponse(Some(Server.clientVersionError), None, headerData.solarSystem, headerData.refreshedJsonWebToken,
+    DScanParseResponse(Some(Server.clientVersionError), None, headerData.solarSystem,
       System.currentTimeMillis(), Vector())
   }
 
@@ -26,12 +26,12 @@ class DScanRequestHandler(val cache: EhcCache[String, DScanParseResponse])
       try {
         bootSystem.log.info("<{}> parseDScan: successful response for {} objects",
           headerData.clientIP, req.lines.size)
-        DScanParseResponse(None, None, headerData.solarSystem, headerData.refreshedJsonWebToken,
+        DScanParseResponse(None, None, headerData.solarSystem,
           System.currentTimeMillis(), req.lines.map(DScanParser.parse))
       } catch {
         case ex: Exception =>
           DScanParseResponse(Some("Error parsing request lines: " + ex),
-            None, headerData.solarSystem, headerData.refreshedJsonWebToken, System.currentTimeMillis(), Vector())
+            None, headerData.solarSystem, System.currentTimeMillis(), Vector())
       })
   }
 

@@ -23,7 +23,7 @@ class ListCharactersRequestHandler(val cache: EhcCache[String, ListCharactersRes
 
   override def clientVersionError(headerData: RequestHeaderData, req: ListCharactersRequest): ListCharactersResponse = {
     ListCharactersResponse(Some(Server.clientVersionError), None, headerData.solarSystem,
-      headerData.refreshedJsonWebToken, System.currentTimeMillis(), Vector())
+      System.currentTimeMillis(), Vector())
   }
 
   private def listIds(headerData: RequestHeaderData, names: Vector[String]) = {
@@ -65,7 +65,7 @@ class ListCharactersRequestHandler(val cache: EhcCache[String, ListCharactersRes
       headerData.clientIP, req.names.size,
       cis.filterNot(_.isFresh).length,
       System.currentTimeMillis() - ts)
-    ListCharactersResponse(None, None, headerData.solarSystem, headerData.refreshedJsonWebToken, System.currentTimeMillis(), cis)
+    ListCharactersResponse(None, None, headerData.solarSystem, System.currentTimeMillis(), cis)
   }
 
   override def handleUncached(headerData: RequestHeaderData, req: ListCharactersRequest): Future[ListCharactersResponse] = {
@@ -74,7 +74,7 @@ class ListCharactersRequestHandler(val cache: EhcCache[String, ListCharactersRes
     idsFuture.flatMap(charinfoAndZkStats(headerData, req, ts))
       .map(combineResults(headerData, req, ts))
       .fallbackTo(Future.successful(ListCharactersResponse(Some("Error parsing request lines"), None, headerData.solarSystem,
-        headerData.refreshedJsonWebToken, System.currentTimeMillis(), Vector())))
+        System.currentTimeMillis(), Vector())))
   }
 
   /** abstract method that will produce a response with cachekey added */

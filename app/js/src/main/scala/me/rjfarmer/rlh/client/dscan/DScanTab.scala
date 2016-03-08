@@ -61,7 +61,6 @@ object DScanTab extends TabbedPanel with HistoryPanel[DScanParseResponse] with S
     log.info("parseDScan: received " + lines.size + " dscan lines in " +
       resp.solarSystem + " in " +
       (now - started) + "ms")
-    LittleHelper.refreshJsonWebToken(resp.refreshedJsonWebToken)
     DScanDetailsView.update(resp)
     addResultToHistory(resp, resp.lines.isEmpty)
     submitFinished(started, messages(resp))

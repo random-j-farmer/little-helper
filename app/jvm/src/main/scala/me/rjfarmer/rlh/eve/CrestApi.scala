@@ -6,7 +6,6 @@ import akka.io.IO
 import akka.pattern.ask
 import me.rjfarmer.rlh.retriever.{ResponseBodyDecoder, Retriever}
 import me.rjfarmer.rlh.server.Boot
-import me.rjfarmer.rlh.shared.{JwtPayload, CrestToken}
 import spray.can.Http
 import spray.http.HttpMethods._
 import spray.http._
@@ -14,6 +13,7 @@ import spray.http._
 import scala.concurrent.{Await, Future, Promise}
 import scala.util.Try
 
+/** Crest API Base class */
 abstract class CrestApiBase[T](parseBodyFn: (Uri, String) => T) extends ResponseBodyDecoder {
 
   // for the implicit actor system
@@ -61,10 +61,11 @@ abstract class CrestApiBase[T](parseBodyFn: (Uri, String) => T) extends Response
 
 }
 
-
+/** Crest API Interface. */
 object CrestApi {
 
-  def characterLocation(jwt: JsonWebToken) = {
+  /** get the characters current location */
+  def characterLocation(jwt: JsonWebToken): Future[Option[String]] = {
     val crestApi = new CrestApi(parseLocationBody)
     crestApi.complete(crestApi.characterLocationRequest(jwt.payload.characterID, jwt.payload.crestToken))
   }
@@ -88,14 +89,16 @@ class CrestApi[T] (parseBodyFn: (Uri, String) => T) extends CrestApiBase[T](pars
 
 }
 
-
+/** Crest Login API */
 object CrestLogin {
 
+  /** login into crest */
   def login(clientID: String, clientSecret: String, scope: String, code: String): Future[CrestToken] = {
     val crestLogin = new CrestLogin[CrestToken](parseLoginBody)
     crestLogin.complete(crestLogin.loginRequest(clientID, clientSecret, scope, code))
   }
 
+  /** refresh the crest token */
   def refresh(clientID: String, clientSecret: String, token: CrestToken): Future[CrestToken] = {
     val crestRefresh = new CrestLogin[CrestToken](parseLoginBody)
     crestRefresh.complete(crestRefresh.refreshRequest(clientID, clientSecret, token))
@@ -107,6 +110,7 @@ object CrestLogin {
     CrestToken(ct.access_token, System.currentTimeMillis() + ct.expires_in*950L, ct.refresh_token)
   }
 
+  /** verify the crest token, will refresh the token if necessary */
   def verify(token: CrestToken): Future[JwtPayload] = {
     val crestLogin = new CrestLogin(parseVerifyBody(token))
     crestLogin.complete(crestLogin.verifyRequest(token))

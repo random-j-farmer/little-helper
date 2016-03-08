@@ -3,7 +3,7 @@ package me.rjfarmer.rlh.client
 import me.rjfarmer.rlh.client.dscan.{DScanDetailsView, DScanTab}
 import me.rjfarmer.rlh.client.local.{LocalDetailsView, LocalTab}
 import me.rjfarmer.rlh.client.logging.{LoggerRLH, LoggingTab}
-import me.rjfarmer.rlh.shared.{ClientConfig, JwtPayload, SharedConfig}
+import me.rjfarmer.rlh.shared.{ClientConfig, SharedConfig}
 import org.scalajs.dom
 import org.scalajs.dom.html
 import org.scalajs.dom.html.Span
@@ -83,11 +83,6 @@ object LittleHelper {
         SharedConfig.jsonWebToken = refreshed
         js.Dynamic.global.document.cookie = "jwt=" + jwt
     }
-  }
-
-  def jwtPayload(jwt: String): JwtPayload = {
-    val Array(_, epay, _) = dom.window.atob(jwt).split('.')
-    upickle.default.read[JwtPayload](epay)
   }
 
   @JSExport

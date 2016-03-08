@@ -1,11 +1,8 @@
-(A) do not refresh jwt when fetching cached responses
 (A) Share urls without authenticated
 (A) logout button
-(A) store crest tokens in cache, access via own session id
 (B) only remember cache key in history for large responses
 (B) upper limit on priority queue size (potiential DOS)
 (B) logging to console in browsers that support it
-(C) crest login and api to determine current system for browser other than IGB +local_history
 (C) diffs for same system in local history
 (C) Help tab, maybe disable/hide Logging tab
 (C) display militia information - it seems we get the info is already there in the zkillboard stats
@@ -16,6 +13,9 @@
 (X) one chunk of disk space shared between all caches
 Shopping list
 
+x (C) crest login and api to determine current system for browser other than IGB +local_history
+x (B) store crest tokens in cache, only give the client the signatures.  refresh_tokens very critical
+x (A) do not refresh jwt when fetching cached responses
 x (B) dedicated web resource directory - no access to config files
 x (A) config infrastructure for privileged configuration (crest setup)
 x (B) clean up json parsing code, use jawn ast

@@ -65,7 +65,6 @@ object LocalTab extends TabbedPanel with HistoryPanel[ListCharactersResponse] wi
       resp.solarSystem + " in " +
       (now - started) + "ms")
 
-    LittleHelper.refreshJsonWebToken(resp.refreshedJsonWebToken)
     LocalDetailsView.update(resp)
     addResultToHistory(resp, pilots.isEmpty)
     submitFinished(started, messages(resp))

@@ -2,7 +2,9 @@ package me.rjfarmer.rlh.server
 
 import akka.routing.FromConfig
 import me.rjfarmer.rlh.api._
+import me.rjfarmer.rlh.cache.EhcStringCache
 import me.rjfarmer.rlh.eve._
+import org.ehcache.Cache
 import spray.http.HttpHeaders.Authorization
 import spray.http._
 import spray.httpx.encoding.{Deflate, Gzip, NoEncoding}
@@ -24,18 +26,7 @@ object Router extends autowire.Server[String, upickle.default.Reader, upickle.de
 /** holds additional information from the request headers (IGB!) */
 final case class RequestHeaderData(clientIP: String,
                                    solarSystem: Option[String],
-                                   pilot: Option[String],
-                                   jwt: Option[JsonWebToken],
-                                   jwtRefreshed: Boolean) {
-
-  def refreshedJsonWebToken: Option[String] = {
-    if (jwtRefreshed) {
-      // XXX spray bug, double wrap!
-      Some(JsonWebToken.encodeBase64(JsonWebToken.sign(jwt.get.payload, Boot.privateConfig.get.jwtSecret)))
-    } else None
-  }
-
-}
+                                   pilot: Option[String])
 
 
 /** handles the client server api on the server side */
@@ -60,6 +51,9 @@ class ApiRequesthandler(listCharactersCache: ListCharactersResponseCache,
   }
 }
 
+// jsonwebtoken cache helper
+class JsonWebTokenCache(cache: Cache[String, JsonWebToken]) extends EhcStringCache[JsonWebToken](cache)
+
 object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBound {
 
   import Boot._
@@ -74,6 +68,8 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
 
   val dscanResultsCache = new DScanResponseCache(cacheManager.getCache("dscanResultsCache", classOf[String], classOf[DScanParseResponse]))
   val listCharactersCache = new ListCharactersResponseCache(cacheManager.getCache("listCharactersCache", classOf[String], classOf[ListCharactersResponse]))
+
+  val jwtTokenCache = new JsonWebTokenCache(cacheManager.getCache("jwtTokenCache", classOf[String], classOf[JsonWebToken]))
 
 
   def main(args: Array[String]): Unit = {
@@ -90,11 +86,9 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
                 HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
               }
             } ~
-            path("authenticated") {
+            path("authenticated") { ctx =>
               // we use a different url because the jwt is stored as cookie in a non-/ path
-              complete {
-                HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)
-              }
+              ctx.complete(handleAuthenticated(ctx))
             } ~
             path("crestLoginCallback") {
               // redirect with cookie to authenticated, otherwise refreshing the browser will
@@ -125,12 +119,36 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
     shutdownIfNotBound(response)
   }
 
+
+  def handleAuthenticated(ctx: RequestContext): Future[HttpResponse] = {
+
+    val jwtSignature: Option[String] = ctx.request.cookies.find(cookie => cookie.name == "jwt") match {
+      case None => None
+      case Some(cookie) => Some(cookie.content)
+    }
+
+    jwtSignature.flatMap(jwtTokenCache.get) match {
+      case None =>
+        // not authenticated after all ... redirect to /
+        bootSystem.log.info("handleAuthenticated: no json web token!")
+        Future.successful(
+          HttpResponse(StatusCodes.TemporaryRedirect,
+            entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Get thee gone, fiend!"),
+            headers = List(HttpHeaders.Location(Uri("/")))))
+
+      case Some(jwt) =>
+        bootSystem.log.debug("handleAuthenticated: cache web token from cookie: {}", jwt)
+        Future.successful(HttpResponse(StatusCodes.OK, entity = HttpEntity(MediaTypes.`text/html`, Page.skeleton.render)))
+
+    }
+  }
+
   def handleCrestLoginCallback(code: String): Future[HttpResponse] = {
 
     privateConfig match {
 
       case None =>
-        Future(
+        Future.successful(
           HttpResponse(StatusCodes.TemporaryRedirect,
             entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, "Get thee gone, fiend!"),
             headers = List(HttpHeaders.Location(Uri("/")))))
@@ -141,13 +159,17 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
           .flatMap { token =>
             CrestLogin.verify(token)
           }.map { payload =>
-            // XXX spray bug parsing bearer token with dots, so we base64 encode again
-            val jwt = JsonWebToken.encodeBase64(JsonWebToken.sign(payload, pc.jwtSecret))
-            HttpResponse(StatusCodes.TemporaryRedirect,
-              headers = List(HttpHeaders.Location(Uri("/authenticated")),
-                HttpHeaders.`Set-Cookie`(HttpCookie("jwt", jwt))),
-              entity = HttpEntity(MediaTypes.`text/plain`, "Speak, friend, and enter!"))
-          }
+          // we don't actually send the json web token, only the signature
+          // and thats what we cache by
+          val jwtString = JsonWebToken.sign(payload, pc.jwtSecret)
+          val jwt = JsonWebToken.verify(jwtString, pc.jwtSecret).get
+          jwtTokenCache.put(jwt.signature, jwt)
+
+          HttpResponse(StatusCodes.TemporaryRedirect,
+            headers = List(HttpHeaders.Location(Uri("/authenticated")),
+              HttpHeaders.`Set-Cookie`(HttpCookie("jwt", jwt.signature))),
+            entity = HttpEntity(MediaTypes.`text/plain`, "Speak, friend, and enter!"))
+        }
     }
   }
 
@@ -169,7 +191,7 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
     val ip = forwarded.getOrElse(remoteAddress.get)
 
     val jsonWebToken = extractJsonWebToken(ctx)
-    val pilot: Option[String] = jsonWebToken.fold(headers.mapFind(f("EVE_CHARNAME"))) (x => Some(x.payload.characterName))
+    val pilot: Option[String] = jsonWebToken.fold(headers.mapFind(f("EVE_CHARNAME")))(x => Some(x.payload.characterName))
     val accessTokenExpired = jsonWebToken.fold(false)(x => x.payload.crestToken.expireTs < System.currentTimeMillis())
     val jsonWebFuture: Future[Option[JsonWebToken]] = refreshJsonWebToken(jsonWebToken, accessTokenExpired)
     val solar = solarSystemFuture(defaultSolar, jsonWebFuture)
@@ -179,10 +201,9 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
     solar.onComplete {
       case Failure(ex) =>
         bootSystem.log.warning("Solar system future: error: " + ex)
-        promise.complete(Success(Pair(RequestHeaderData(ip, defaultSolar, pilot, jsonWebToken, jwtRefreshed = false), reqBody)))
+        promise.complete(Success(Pair(RequestHeaderData(ip, defaultSolar, pilot), reqBody)))
       case Success(ssi) =>
-        promise.complete(Success(Pair(RequestHeaderData(ip, ssi, pilot,
-          jsonWebFuture.value.get.get, jwtRefreshed = accessTokenExpired), reqBody)))
+        promise.complete(Success(Pair(RequestHeaderData(ip, ssi, pilot), reqBody)))
     }
 
     promise.future
@@ -190,13 +211,14 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
 
   private def extractJsonWebToken(ctx: RequestContext): Option[JsonWebToken] = {
     ctx.request.header[Authorization]
-      .map { x =>
-        val HttpHeaders.Authorization(OAuth2BearerToken(jwt)) = x
+      .flatMap { x =>
+        val HttpHeaders.Authorization(OAuth2BearerToken(bearer)) = x
+        val jwt = jwtTokenCache.get(bearer)
+        if (jwt.isEmpty) {
+          bootSystem.log.warning("unknown token key, not authorized! {}", bearer)
+        }
         jwt
       }
-      // XXX spray bug parsing JWT tokens, so ours are base64 encoded once more
-      .map(JsonWebToken.decodeBase64)
-      .flatMap(JsonWebToken.verify(_, privateConfig.get.jwtSecret))
   }
 
   private def refreshJsonWebToken(jsonWebToken: Option[JsonWebToken], accessTokenExpired: Boolean): Future[Option[JsonWebToken]] = {
@@ -204,22 +226,27 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
       val jwt = jsonWebToken.get
       val cc = privateConfig.get.crestConfig
       CrestLogin.refresh(cc.clientID, cc.clientSecret, jwt.payload.crestToken)
-        // this does not have a valid signature!
-        .map(ct => Some(jwt.copy(payload = jwt.payload.copy(crestToken = ct))))
+        .map { ct =>
+          // the signature is never updated!!!  otherwise the cache key would change
+          val sig = jwt.signature
+          val copy = jwt.copy(payload = jwt.payload.copy(crestToken = ct))
+          jwtTokenCache.put(sig, copy)
+          Some(copy)
+        }
     } else {
-      Future(jsonWebToken)
+      Future.successful(jsonWebToken)
     }
   }
 
   private def solarSystemFuture(igbSolarSystem: Option[String], jsonWebFuture: Future[Option[JsonWebToken]]): Future[Option[String]] = {
     igbSolarSystem match {
       case Some(solarSystem) =>
-        Future(igbSolarSystem)
+        Future.successful(igbSolarSystem)
 
       case None =>
         jsonWebFuture.flatMap {
           case None =>
-            Future(None)
+            Future.successful(None)
 
           case Some(jwt) =>
             CrestApi.characterLocation(jwt)

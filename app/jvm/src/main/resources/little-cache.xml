@@ -9,7 +9,8 @@
     -->
     <ehcache:cache alias="characterIDCache">
         <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
-        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.CharacterIDAndName</ehcache:value-type>
+        <ehcache:value-type
+                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.CharacterIDAndName</ehcache:value-type>
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="5000" unit="entries"/>
@@ -39,7 +40,8 @@
 
     <ehcache:cache alias="listCharactersCache">
         <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
-        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.ListCharactersResponse</ehcache:value-type>
+        <ehcache:value-type
+                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.ListCharactersResponse</ehcache:value-type>
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="200" unit="entries"/>
@@ -49,11 +51,27 @@
 
     <ehcache:cache alias="dscanResultsCache">
         <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
-        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.DScanParseResponse</ehcache:value-type>
+        <ehcache:value-type
+                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.DScanParseResponse</ehcache:value-type>
         <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
             <ehcache:heap size="200" unit="entries"/>
             <ehcache:disk size="50" unit="mb" persistent="true"/>
+        </ehcache:resources>
+    </ehcache:cache>
+
+    <ehcache:cache alias="jwtTokenCache">
+        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:value-type
+                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.eve.JsonWebToken</ehcache:value-type>
+        <!-- EXPIRE THE REFRESH TOKEN!!!! -->
+        <ehcache:expiry>
+            <ehcache:ttl unit="hours">12</ehcache:ttl>
+        </ehcache:expiry>
+        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:resources>
+            <ehcache:heap size="100" unit="entries"/>
+            <ehcache:disk size="20" unit="mb" persistent="true"/>
         </ehcache:resources>
     </ehcache:cache>
 
