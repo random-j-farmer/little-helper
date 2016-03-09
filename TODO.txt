@@ -1,4 +1,3 @@
-(A) Share urls without authenticated
 (A) logout button
 (B) only remember cache key in history for large responses
 (B) upper limit on priority queue size (potiential DOS)
@@ -13,6 +12,7 @@
 (X) one chunk of disk space shared between all caches
 Shopping list
 
+x (A) Share urls without authenticated
 x (A) Fix IGB
 x (C) crest login and api to determine current system for browser other than IGB +local_history
 x (B) store crest tokens in cache, only give the client the signatures.  refresh_tokens very critical

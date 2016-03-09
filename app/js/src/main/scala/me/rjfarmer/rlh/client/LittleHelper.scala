@@ -48,15 +48,16 @@ object LittleHelper {
   /** set the location fragment (starting with #) for client side routing */
   def setLocationFragment(frag: String): Unit = {
     locationFrag = frag
-    // does not work in IGB, so we set a var as well
-    js.Dynamic.global.location.hash = locationFrag
+    // we want only the tab in the browsers url, no request cache id
+    js.Dynamic.global.location.hash = locationFrag.replaceAll("/[^/]*$".r.regex, "")
   }
 
   def getLocationUrl: String = getLocationUrl(locationFrag)
 
   def getLocationUrl(frag: String): String = {
-    val url = js.Dynamic.global.location.href.asInstanceOf[String].replaceAll("#.*".r.regex, "")
-    url + frag
+    val url = dom.document.location.href.replaceAll("#.*".r.regex, "")
+    val path = dom.document.location.pathname
+    url.substring(0, url.length - path.length) + "/" + frag
   }
 
   @JSExport
@@ -71,7 +72,7 @@ object LittleHelper {
       log.debug("LittleHelper.main: json web token:" + SharedConfig.jsonWebToken)
 
       // the fragment in the browser url
-      val currentFragment = Option(js.Dynamic.global.location.hash.asInstanceOf[String])
+      val currentFragment = Option(dom.document.location.hash)
       currentFragment match {
         case Some(FragmentPattern(panelId)) =>
           log.debug("document fragment: current panel id: " + panelId)
