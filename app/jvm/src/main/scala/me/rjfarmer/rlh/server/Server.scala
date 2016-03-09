@@ -167,7 +167,7 @@ object Server extends SimpleRoutingApp with RequestTimeout with ShutdownIfNotBou
 
           HttpResponse(StatusCodes.TemporaryRedirect,
             headers = List(HttpHeaders.Location(Uri("/authenticated")),
-              HttpHeaders.`Set-Cookie`(HttpCookie("jwt", jwt.signature))),
+              HttpHeaders.`Set-Cookie`(HttpCookie("jwt", jwt.signature, path = Some("/authenticated")))),
             entity = HttpEntity(MediaTypes.`text/plain`, "Speak, friend, and enter!"))
         }
     }

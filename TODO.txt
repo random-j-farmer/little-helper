@@ -12,6 +12,7 @@
 (X) one chunk of disk space shared between all caches
 Shopping list
 
+x (A) Cookie Path for /authenticated
 x (A) Share urls without authenticated
 x (A) Fix IGB
 x (C) crest login and api to determine current system for browser other than IGB +local_history
