@@ -59,60 +59,39 @@ object LittleHelper {
     url + frag
   }
 
-  def readJwtCookie: Option[String] = {
-    Option(dom.document.cookie) match {
-      case None =>
-        None
-      case Some(allCookies) =>
-        allCookies.split(';')
-        .map { s => val Array(k, v) = s.split("=", 2); k -> v }
-        .find(_._1 == "jwt")
-        .map(_._2)
-    }
-  }
-
-  /**
-   * Store the refreshed json web token we received in some request.
-   *
-   * @return
-   */
-  def refreshJsonWebToken(refreshed: Option[String]): Unit = {
-    refreshed match {
-      case None =>
-      case Some(jwt) =>
-        SharedConfig.jsonWebToken = refreshed
-        js.Dynamic.global.document.cookie = "jwt=" + jwt
-    }
-  }
-
   @JSExport
   def main(_body: html.Body, configJson: js.Any) = {
-    SharedConfig.client = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
-    SharedConfig.jsonWebToken = readJwtCookie
+    try {
+      SharedConfig.client = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
+      _body.appendChild(mainView)
 
-    _body.appendChild(mainView)
+      // we cant log before the log div is added to the body
+      log.info("LittleHelper.main: " + SharedConfig.client)
+      SharedConfig.jsonWebToken = PimpedDomElement.cookieMap.get("jwt")
+      log.debug("LittleHelper.main: json web token:" + SharedConfig.jsonWebToken)
 
-    // we cant log before the log div is added to the body
-    log.info("LittleHelper.main: " + SharedConfig.client)
-    log.debug("LittleHelper.main: " + SharedConfig.jsonWebToken)
+      // the fragment in the browser url
+      val currentFragment = Option(js.Dynamic.global.location.hash.asInstanceOf[String])
+      currentFragment match {
+        case Some(FragmentPattern(panelId)) =>
+          log.debug("document fragment: current panel id: " + panelId)
+          val path = panelId.split('/')
+          tabPanel.route(path)
+          setLocationFragment("#" + panelId)
+        case _ =>
+          log.debug("no fragment to route:" + currentFragment)
+      }
 
-    // the fragment in the browser url
-    val currentFragment = Option(js.Dynamic.global.location.hash.asInstanceOf[String])
-    currentFragment match {
-      case Some(FragmentPattern(panelId)) =>
-        log.debug("document fragment: current panel id: " + panelId)
-        val path = panelId.split('/')
-        tabPanel.route(path)
-        setLocationFragment("#" + panelId)
-      case _ =>
-        log.debug("no fragment to route:" + currentFragment)
+
+      dom.window.setInterval(LocalTab.refreshResponseTimeAgo _, 10000d)
+      dom.window.setInterval(DScanTab.refreshResponseTimeAgo _, 10000d)
+      dom.window.setInterval(LocalDetailsView.refreshResponseTimeAgo _, 10000d)
+      dom.window.setInterval(DScanDetailsView.refreshResponseTimeAgo _, 10000d)
+
+    } catch {
+      case ex: Throwable =>
+        log.error("Initialization error: " + ex)
     }
-
-
-    dom.window.setInterval(LocalTab.refreshResponseTimeAgo _, 10000d)
-    dom.window.setInterval(DScanTab.refreshResponseTimeAgo _, 10000d)
-    dom.window.setInterval(LocalDetailsView.refreshResponseTimeAgo _, 10000d)
-    dom.window.setInterval(DScanDetailsView.refreshResponseTimeAgo _, 10000d)
   }
 
 }

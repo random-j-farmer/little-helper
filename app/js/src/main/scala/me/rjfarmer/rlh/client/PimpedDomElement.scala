@@ -87,4 +87,23 @@ object PimpedDomElement {
     new PimpedDomElement(ev.target.asInstanceOf[dom.Element])
   }
 
+  /** get the documents cookies split into a map */
+  def cookieMap: Map[String, String] = {
+    val empty = Map.empty[String, String]
+    Option(dom.document.cookie) match {
+      case None =>
+        empty
+      case Some(allCookies) =>
+        empty ++ allCookies.split(';')
+          .flatMap { s: String =>
+            s.split("=", 2) match {
+              case Array(k, v) =>
+                Array(k -> v)
+              case _ =>
+                Array[Pair[String, String]]()
+            }
+          }.toSeq
+    }
+  }
+
 }
