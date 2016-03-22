@@ -32,17 +32,33 @@ object LittleHelper {
 
   private[this] var locationFrag: String = ""
 
+
   private def loginLink: Span = {
     SharedConfig.client.crestConfig match {
       case None =>
         span().render
+
       case Some(cc) =>
-        val url = Vector[String]("https://login.eveonline.com/oauth/authorize?response_type=code",
-          s"redirect_uri=${cc.redirectUrl}",
-          s"client_id=${cc.clientID}",
-          "scope=characterLocationRead")
-        span(a(href := url.mkString("&"), "Login")).render
+
+        SharedConfig.jsonWebToken match {
+
+          case None =>
+            val url = Vector[String]("https://login.eveonline.com/oauth/authorize?response_type=code",
+              s"redirect_uri=${cc.redirectUrl}",
+              s"client_id=${cc.clientID}",
+              "scope=characterLocationRead")
+            span(a(cls := "loginLogout", href := url.mkString("&"), "Login")).render
+
+          case Some(jwt) =>
+            span(a(cls := "loginLogout", href := "#", onclick := logoutClicked _, "Logout")).render
+        }
     }
+  }
+
+  private def logoutClicked(ev: dom.Event): Unit = {
+    ev.preventDefault()
+    ev.stopPropagation()
+    dom.document.location.assign("/")
   }
 
   /** set the location fragment (starting with #) for client side routing */
@@ -64,11 +80,11 @@ object LittleHelper {
   def main(_body: html.Body, configJson: js.Any) = {
     try {
       SharedConfig.client = upickle.default.readJs[ClientConfig](upickle.json.readJs(configJson))
+      SharedConfig.jsonWebToken = PimpedDomElement.cookieMap.get("jwt")
       _body.appendChild(mainView)
 
       // we cant log before the log div is added to the body
       log.info("LittleHelper.main: " + SharedConfig.client)
-      SharedConfig.jsonWebToken = PimpedDomElement.cookieMap.get("jwt")
       log.debug("LittleHelper.main: json web token:" + SharedConfig.jsonWebToken)
 
       // the fragment in the browser url

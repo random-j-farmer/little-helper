@@ -80,3 +80,9 @@
     padding-left: 4em;
 }
 
+.loginLogout {
+    text-decoration: none;
+    background-color: transparent;
+    color: #000;
+    padding: 0.5em 1em;
+}

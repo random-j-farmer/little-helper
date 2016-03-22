@@ -3,7 +3,7 @@ package me.rjfarmer.rlh.client
 import me.rjfarmer.rlh.client.logging.LoggerRLH
 import org.scalajs.dom
 import org.scalajs.dom.html
-import org.scalajs.dom.raw.{HTMLAnchorElement, HTMLLIElement, HTMLDivElement}
+import org.scalajs.dom.raw.{HTMLSpanElement, HTMLAnchorElement, HTMLLIElement, HTMLDivElement}
 
 import scalatags.JsDom.all._
 
@@ -56,8 +56,8 @@ class TabPanel(val tabs: Seq[TabbedPanel]) {
 
 
   /** the view with the links that switch between tabs */
-  val linksView: HTMLDivElement =
-    div(cls := "pure-menu pure-menu-horizontal", onclick := menuClick _,
+  val linksView: HTMLSpanElement =
+    span(cls := "pure-menu pure-menu-horizontal", onclick := menuClick _,
       ul(cls := "pure-menu-list", linkListItems)
     ).render
 

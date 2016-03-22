@@ -1,4 +1,4 @@
-(A) logout button
+(A) warning messages for crest api failures
 (B) only remember cache key in history for large responses
 (B) upper limit on priority queue size (potiential DOS)
 (B) logging to console in browsers that support it
@@ -12,6 +12,7 @@
 (X) one chunk of disk space shared between all caches
 Shopping list
 
+x (A) logout button
 x (A) Cookie Path for /authenticated
 x (A) Share urls without authenticated
 x (A) Fix IGB
