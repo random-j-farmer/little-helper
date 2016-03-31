@@ -12,6 +12,7 @@
 (X) one chunk of disk space shared between all caches
 Shopping list
 
+x (A) zkillboard api broken - need to append slash now
 x (A) logout button
 x (A) Cookie Path for /authenticated
 x (A) Share urls without authenticated

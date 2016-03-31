@@ -185,6 +185,7 @@ class Retriever[K, V <: HasTimestamp](cache: EhcCache[K, V],
       } catch {
         case e: Exception =>
           log.error("error parsing response body: {}", e)
+          // log.debug("response body: {}", decodeResponseBody(resp))
           throw e
       }
     } else {

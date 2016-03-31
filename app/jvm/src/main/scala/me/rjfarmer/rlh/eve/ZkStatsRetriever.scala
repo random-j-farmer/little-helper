@@ -43,7 +43,7 @@ final case class ZkStatsRetrievable(key: Long, priority: Int, replyTo: ActorRef)
 
   private[this] val uriPath: String = "/api/stats"
 
-  override def httpGetUri: Uri = Uri(path = Uri.Path(uriPath + "/characterID/" + key.toLong))
+  override def httpGetUri: Uri = Uri(path = Uri.Path(uriPath + "/characterID/" + key.toLong + "/"))
 
 }
 
