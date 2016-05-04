@@ -1,7 +1,6 @@
 package me.rjfarmer.rlh.eve
 
 import utest._
-import utest.framework.TestSuite
 
 import scala.io.Source
 

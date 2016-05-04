@@ -1,7 +1,7 @@
 import sbt.Keys._
 import spray.revolver.RevolverPlugin.Revolver
 
-val akkaVersion = "2.3.14"
+val akkaVersion = "2.3.15"
 val sprayVersion = "1.3.3"
 
 val app = crossProject.settings(
@@ -11,13 +11,13 @@ val app = crossProject.settings(
   unmanagedSourceDirectories in Compile +=
     baseDirectory.value / "shared" / "main" / "scala",
   libraryDependencies ++= Seq(
-    "com.lihaoyi" %%% "scalatags" % "0.5.4",
-    "com.lihaoyi" %%% "upickle" % "0.3.8",
-    "com.lihaoyi" %%% "utest" % "0.3.1",
+    "com.lihaoyi" %%% "scalatags" % "0.5.5",
+    "com.lihaoyi" %%% "upickle" % "0.4.0",
+    "com.lihaoyi" %%% "utest" % "0.4.3",
     "com.lihaoyi" %%% "autowire" % "0.2.5"
   ),
   testFrameworks += new TestFramework("utest.runner.Framework"),
-  scalaVersion := "2.11.7",
+  scalaVersion := "2.11.8",
   pomExtra :=
     <url>https://github.com/random-j-farmer/little-helper</url>
       <licenses>
@@ -54,12 +54,12 @@ val app = crossProject.settings(
     "com.typesafe.akka" %% "akka-actor" % akkaVersion,
     "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
-    "ch.qos.logback"      %  "logback-classic" % "1.1.5",
+    "ch.qos.logback"      %  "logback-classic" % "1.1.7",
     "io.spray" %% "spray-can" % sprayVersion,
     "io.spray" %% "spray-routing" % sprayVersion,
-    "org.spire-math" %% "jawn-ast" % "0.8.3",
-    "org.ehcache" % "ehcache" % "3.0.0.m4",
-    "com.lihaoyi" % "ammonite-repl" % "0.5.4" % "test" cross CrossVersion.full
+    "org.spire-math" %% "jawn-ast" % "0.8.4",
+    "org.ehcache" % "ehcache" % "3.0.0",
+    "com.lihaoyi" % "ammonite-repl" % "0.5.7" % "test" cross CrossVersion.full
   )
 )
 

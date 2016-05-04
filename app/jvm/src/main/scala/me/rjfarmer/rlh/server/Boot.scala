@@ -5,8 +5,8 @@ import akka.util.Timeout
 import com.typesafe.config.{Config, ConfigFactory}
 import me.rjfarmer.rlh.retriever.PriorityConfig
 import me.rjfarmer.rlh.shared.{ClientConfig, ClientCrestConfig, SharedConfig}
-import org.ehcache.CacheManagerBuilder
-import org.ehcache.config.xml.XmlConfiguration
+import org.ehcache.config.builders.CacheManagerBuilder
+import org.ehcache.xml.XmlConfiguration
 import spray.can.Http
 
 object BootLoader {

@@ -1,6 +1,6 @@
 <ehcache:config xmlns:ehcache="http://www.ehcache.org/v3">
 
-    <ehcache:persistence directory="little-cache.ehc" />
+    <ehcache:persistence directory="little-cache.ehc"/>
 
     <!-- we do  not use ehc expiration.
 
@@ -8,70 +8,66 @@
     is not responding (zkillboard on busy weekends)
     -->
     <ehcache:cache alias="characterIDCache">
-        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
-        <ehcache:value-type
-                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.CharacterIDAndName</ehcache:value-type>
-        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:key-type>java.lang.String</ehcache:key-type>
+        <ehcache:value-type>me.rjfarmer.rlh.api.CharacterIDAndName</ehcache:value-type>
         <ehcache:resources>
-            <ehcache:heap size="5000" unit="entries"/>
-            <ehcache:disk size="50" unit="mb" persistent="true"/>
+            <ehcache:heap unit="entries">5000</ehcache:heap>
+            <ehcache:disk unit="MB" persistent="true">50</ehcache:disk>
         </ehcache:resources>
     </ehcache:cache>
 
     <ehcache:cache alias="characterInfoCache">
-        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.Long</ehcache:key-type>
-        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.CharacterInfo</ehcache:value-type>
-        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:key-type>java.lang.Long</ehcache:key-type>
+        <ehcache:value-type>me.rjfarmer.rlh.api.CharacterInfo</ehcache:value-type>
         <ehcache:resources>
-            <ehcache:heap size="2000" unit="entries"/>
-            <ehcache:disk size="100" unit="mb" persistent="true"/>
+            <ehcache:heap unit="entries">2000</ehcache:heap>
+            <ehcache:disk unit="MB" persistent="true">100</ehcache:disk>
         </ehcache:resources>
     </ehcache:cache>
 
     <ehcache:cache alias="zkStatsCache">
-        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.Long</ehcache:key-type>
-        <ehcache:value-type copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.ZkStats</ehcache:value-type>
-        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+        <ehcache:key-type>java.lang.Long</ehcache:key-type>
+        <ehcache:value-type>me.rjfarmer.rlh.api.ZkStats</ehcache:value-type>
         <ehcache:resources>
-            <ehcache:heap size="2000" unit="entries"/>
-            <ehcache:disk size="100" unit="mb" persistent="true"/>
+            <ehcache:heap unit="entries">2000</ehcache:heap>
+            <ehcache:disk unit="MB" persistent="true">100</ehcache:disk>
         </ehcache:resources>
     </ehcache:cache>
 
     <ehcache:cache alias="listCharactersCache">
-        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:key-type>java.lang.String</ehcache:key-type>
         <ehcache:value-type
-                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.ListCharactersResponse</ehcache:value-type>
-        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+                >me.rjfarmer.rlh.api.ListCharactersResponse
+        </ehcache:value-type>
         <ehcache:resources>
-            <ehcache:heap size="200" unit="entries"/>
-            <ehcache:disk size="50" unit="mb" persistent="true"/>
+            <ehcache:heap unit="entries">200</ehcache:heap>
+            <ehcache:disk unit="MB" persistent="true">50</ehcache:disk>
         </ehcache:resources>
     </ehcache:cache>
 
     <ehcache:cache alias="dscanResultsCache">
-        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:key-type>java.lang.String</ehcache:key-type>
         <ehcache:value-type
-                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.api.DScanParseResponse</ehcache:value-type>
-        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
+                >me.rjfarmer.rlh.api.DScanParseResponse
+        </ehcache:value-type>
         <ehcache:resources>
-            <ehcache:heap size="200" unit="entries"/>
-            <ehcache:disk size="50" unit="mb" persistent="true"/>
+            <ehcache:heap unit="entries">200</ehcache:heap>
+            <ehcache:disk unit="MB" persistent="true">50</ehcache:disk>
         </ehcache:resources>
     </ehcache:cache>
 
     <ehcache:cache alias="jwtTokenCache">
-        <ehcache:key-type copier="org.ehcache.internal.copy.SerializingCopier">java.lang.String</ehcache:key-type>
+        <ehcache:key-type>java.lang.String</ehcache:key-type>
         <ehcache:value-type
-                copier="org.ehcache.internal.copy.SerializingCopier">me.rjfarmer.rlh.eve.JsonWebToken</ehcache:value-type>
+                >me.rjfarmer.rlh.eve.JsonWebToken
+        </ehcache:value-type>
         <!-- EXPIRE THE REFRESH TOKEN!!!! -->
         <ehcache:expiry>
             <ehcache:ttl unit="hours">12</ehcache:ttl>
         </ehcache:expiry>
-        <ehcache:eviction-prioritizer>LRU</ehcache:eviction-prioritizer>
         <ehcache:resources>
-            <ehcache:heap size="100" unit="entries"/>
-            <ehcache:disk size="20" unit="mb" persistent="true"/>
+            <ehcache:heap unit="entries">100</ehcache:heap>
+            <ehcache:disk unit="MB" persistent="true">20</ehcache:disk>
         </ehcache:resources>
     </ehcache:cache>
 
