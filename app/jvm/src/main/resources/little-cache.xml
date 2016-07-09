@@ -1,74 +1,83 @@
-<ehcache:config xmlns:ehcache="http://www.ehcache.org/v3">
+<eh:config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns:eh='http://www.ehcache.org/v3'
+        xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+        xsi:schemaLocation="
+        http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.1.xsd
+        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.1.xsd">
 
-    <ehcache:persistence directory="little-cache.ehc"/>
+    <eh:persistence directory="little-cache.ehc"/>
 
     <!-- we do  not use ehc expiration.
 
     it is done by the application so it can use stale information if a webservice
     is not responding (zkillboard on busy weekends)
     -->
-    <ehcache:cache alias="characterIDCache">
-        <ehcache:key-type>java.lang.String</ehcache:key-type>
-        <ehcache:value-type>me.rjfarmer.rlh.api.CharacterIDAndName</ehcache:value-type>
-        <ehcache:resources>
-            <ehcache:heap unit="entries">5000</ehcache:heap>
-            <ehcache:disk unit="MB" persistent="true">50</ehcache:disk>
-        </ehcache:resources>
-    </ehcache:cache>
+    <eh:cache alias="characterIDCache">
+        <eh:key-type>java.lang.String</eh:key-type>
+        <eh:value-type>me.rjfarmer.rlh.api.CharacterIDAndName</eh:value-type>
+        <eh:resources>
+            <eh:heap unit="entries">5000</eh:heap>
+            <eh:disk unit="MB" persistent="true">50</eh:disk>
+        </eh:resources>
+    </eh:cache>
 
-    <ehcache:cache alias="characterInfoCache">
-        <ehcache:key-type>java.lang.Long</ehcache:key-type>
-        <ehcache:value-type>me.rjfarmer.rlh.api.CharacterInfo</ehcache:value-type>
-        <ehcache:resources>
-            <ehcache:heap unit="entries">2000</ehcache:heap>
-            <ehcache:disk unit="MB" persistent="true">100</ehcache:disk>
-        </ehcache:resources>
-    </ehcache:cache>
+    <eh:cache alias="characterInfoCache">
+        <eh:key-type>java.lang.Long</eh:key-type>
+        <eh:value-type>me.rjfarmer.rlh.api.CharacterInfo</eh:value-type>
+        <eh:resources>
+            <eh:heap unit="entries">2000</eh:heap>
+            <eh:disk unit="MB" persistent="true">100</eh:disk>
+        </eh:resources>
+    </eh:cache>
 
-    <ehcache:cache alias="zkStatsCache">
-        <ehcache:key-type>java.lang.Long</ehcache:key-type>
-        <ehcache:value-type>me.rjfarmer.rlh.api.ZkStats</ehcache:value-type>
-        <ehcache:resources>
-            <ehcache:heap unit="entries">2000</ehcache:heap>
-            <ehcache:disk unit="MB" persistent="true">100</ehcache:disk>
-        </ehcache:resources>
-    </ehcache:cache>
+    <eh:cache alias="zkStatsCache">
+        <eh:key-type>java.lang.Long</eh:key-type>
+        <eh:value-type>me.rjfarmer.rlh.api.ZkStats</eh:value-type>
+        <eh:resources>
+            <eh:heap unit="entries">2000</eh:heap>
+            <eh:disk unit="MB" persistent="true">100</eh:disk>
+        </eh:resources>
+    </eh:cache>
 
-    <ehcache:cache alias="listCharactersCache">
-        <ehcache:key-type>java.lang.String</ehcache:key-type>
-        <ehcache:value-type
-                >me.rjfarmer.rlh.api.ListCharactersResponse
-        </ehcache:value-type>
-        <ehcache:resources>
-            <ehcache:heap unit="entries">200</ehcache:heap>
-            <ehcache:disk unit="MB" persistent="true">50</ehcache:disk>
-        </ehcache:resources>
-    </ehcache:cache>
+    <eh:cache alias="listCharactersCache">
+        <eh:key-type>java.lang.String</eh:key-type>
+        <eh:value-type
+        >me.rjfarmer.rlh.api.ListCharactersResponse
+        </eh:value-type>
+        <eh:resources>
+            <eh:heap unit="entries">200</eh:heap>
+            <eh:disk unit="MB" persistent="true">50</eh:disk>
+        </eh:resources>
+    </eh:cache>
 
-    <ehcache:cache alias="dscanResultsCache">
-        <ehcache:key-type>java.lang.String</ehcache:key-type>
-        <ehcache:value-type
-                >me.rjfarmer.rlh.api.DScanParseResponse
-        </ehcache:value-type>
-        <ehcache:resources>
-            <ehcache:heap unit="entries">200</ehcache:heap>
-            <ehcache:disk unit="MB" persistent="true">50</ehcache:disk>
-        </ehcache:resources>
-    </ehcache:cache>
+    <eh:cache alias="dscanResultsCache">
+        <eh:key-type>java.lang.String</eh:key-type>
+        <eh:value-type
+        >me.rjfarmer.rlh.api.DScanParseResponse
+        </eh:value-type>
+        <eh:resources>
+            <eh:heap unit="entries">200</eh:heap>
+            <eh:disk unit="MB" persistent="true">50</eh:disk>
+        </eh:resources>
+    </eh:cache>
 
-    <ehcache:cache alias="jwtTokenCache">
-        <ehcache:key-type>java.lang.String</ehcache:key-type>
-        <ehcache:value-type
-                >me.rjfarmer.rlh.eve.JsonWebToken
-        </ehcache:value-type>
+    <eh:cache alias="jwtTokenCache">
+        <eh:key-type>java.lang.String</eh:key-type>
+        <eh:value-type
+        >me.rjfarmer.rlh.eve.JsonWebToken
+        </eh:value-type>
         <!-- EXPIRE THE REFRESH TOKEN!!!! -->
-        <ehcache:expiry>
-            <ehcache:ttl unit="hours">12</ehcache:ttl>
-        </ehcache:expiry>
-        <ehcache:resources>
-            <ehcache:heap unit="entries">100</ehcache:heap>
-            <ehcache:disk unit="MB" persistent="true">20</ehcache:disk>
-        </ehcache:resources>
-    </ehcache:cache>
+        <eh:expiry>
+            <eh:ttl unit="hours">12</eh:ttl>
+        </eh:expiry>
+        <eh:resources>
+            <eh:heap unit="entries">100</eh:heap>
+            <eh:disk unit="MB" persistent="true">20</eh:disk>
+        </eh:resources>
+    </eh:cache>
 
-</ehcache:config>
+
+</eh:config>
+
+

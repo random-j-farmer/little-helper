@@ -12,7 +12,7 @@ val app = crossProject.settings(
     baseDirectory.value / "shared" / "main" / "scala",
   libraryDependencies ++= Seq(
     "com.lihaoyi" %%% "scalatags" % "0.5.5",
-    "com.lihaoyi" %%% "upickle" % "0.4.0",
+    "com.lihaoyi" %%% "upickle" % "0.4.1",
     "com.lihaoyi" %%% "utest" % "0.4.3",
     "com.lihaoyi" %%% "autowire" % "0.2.5"
   ),
@@ -40,7 +40,7 @@ val app = crossProject.settings(
 ).enablePlugins(GitVersioning, BuildInfoPlugin, JavaAppPackaging
 ).jsSettings(
     libraryDependencies ++= Seq(
-    "org.scala-js" %%% "scalajs-dom" % "0.9.0"
+    "org.scala-js" %%% "scalajs-dom" % "0.9.1"
   )
 ).jvmSettings(
   Revolver.settings: _*
@@ -58,8 +58,8 @@ val app = crossProject.settings(
     "io.spray" %% "spray-can" % sprayVersion,
     "io.spray" %% "spray-routing" % sprayVersion,
     "org.spire-math" %% "jawn-ast" % "0.8.4",
-    "org.ehcache" % "ehcache" % "3.0.0",
-    "com.lihaoyi" % "ammonite-repl" % "0.5.7" % "test" cross CrossVersion.full
+    "org.ehcache" % "ehcache" % "3.1.0",
+    "com.lihaoyi" % "ammonite-repl" % "0.6.2" % "test" cross CrossVersion.full
   )
 )
 

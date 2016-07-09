@@ -1,16 +1,18 @@
+(A) upgrade to current versions
 (A) warning messages for crest api failures
-(B) only remember cache key in history for large responses
-(B) upper limit on priority queue size (potiential DOS)
-(B) logging to console in browsers that support it
 (C) diffs for same system in local history
-(C) Help tab, maybe disable/hide Logging tab
 (C) display militia information - it seems we get the info is already there in the zkillboard stats
-(D) event system
-(D) help tab, logging tab only show if configured by client
+(X) upper limit on priority queue size (potiential DOS)
+(X) logging to console in browsers that support it
+(X) Help tab, maybe disable/hide Logging tab
+(X) event system
+(X) help tab, logging tab only show if configured by client
+(X) only remember cache key in history for large responses
 (X) client-side routing with push-state https://developer.mozilla.org/en-US/docs/Web/API/History_API
 (X) error message when started multiple times
 (X) one chunk of disk space shared between all caches
 Shopping list
+Store Killmails in DB: https://zkillboard.com/api/kills/characterID/95538430/afterKillID/46328700/
 
 x (A) update dependencies, use compression
 x (A) zkillboard api broken - need to append slash now
